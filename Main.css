@@ -1,0 +1,19 @@
+@charset "utf-8";
+
+container
+{
+	min-height: 100%;
+	position: relative;
+}
+header,footer {
+    padding: 1em;
+    color: black;
+    background-color: hotpink;
+    clear: left;
+    text-align: center;
+}
+
+article {
+    border-left: 1px solid gray;
+    overflow: hidden;
+}
