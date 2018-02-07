@@ -1,19 +1,31 @@
 @charset "utf-8";
-
-container
-{
+container {
 	min-height: 100%;
 	position: relative;
 }
-header,footer {
-    padding: 1em;
-    color: black;
-    background-color: hotpink;
-    clear: left;
-    text-align: center;
+header, footer {
+	padding: 1em;
+	color: black;
+	background-color: hotpink;
+	clear: left;
+	text-align: center;
 }
-
 article {
-    border-left: 1px solid gray;
-    overflow: hidden;
+	margin-left: 270px;
+	border-left: 1px solid gray;
+	padding: 1em;
+	overflow: hidden;
+}
+aside {
+	float: left;
+	max-width: 160px;
+	margin: 0;
+	padding: 1em;
+}
+table{
+	width: 500px;
+}
+td{
+	text-align: center;
+	width: 500px;
 }
