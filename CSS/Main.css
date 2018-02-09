@@ -1,31 +1,44 @@
 @charset "utf-8";
-container {
+body{
 	min-height: 100%;
-	position: relative;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 header, footer {
-	padding: 1em;
 	color: black;
 	background-color: hotpink;
 	clear: left;
 	text-align: center;
-}
-article {
-	margin-left: 270px;
-	border-left: 1px solid gray;
-	padding: 1em;
-	overflow: hidden;
-}
-aside {
-	float: left;
-	max-width: 160px;
-	margin: 0;
 	padding: 1em;
 }
-table{
-	width: 500px;
+article{
+	width: 100%;
+	display: table;
+	}
+.description
+{
+	display: table-cell;
+	width: 25%;
+	background-color: lightpink;
+	vertical-align: top;
+	padding: 1em;
 }
-td{
+#tool-info{
 	text-align: center;
-	width: 500px;
 }
+.table
+{
+	text-align: center;
+	display: table-cell;
+	width: 75%;
+	border-left: 1px solid grey;
+}
+table {
+	width: 100%;
+	text-align: center;
+}
+td
+{
+	padding-top: 2em;
+	padding-bottom: 2em;
+}
+table td:hover{background-color: #ddd;}
