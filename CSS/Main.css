@@ -42,3 +42,7 @@ td
 	padding-bottom: 2em;
 }
 table td:hover{background-color: #ddd;}
+a{
+	color: black;
+	text-decoration-line: none;
+}
