@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <title>Main</title>
 <link rel = "stylesheet" href = "CSS/Main.css">
-//<script src="Script/Main.js"></script>
 </head>
 
 <body>
@@ -45,37 +44,11 @@
 </article>
 <div id="uploadModal" class="modal">
   <div class="modal-content"> <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
+    <p>Upload XML File</p>
   </div>
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
+<script src="Script/Main.js"></script>
 </body>
-<script>
-// Get the modal
-var modal = document.getElementById("uploadModal");
-
-// Get the button that opens the modal
-var btn = document.getElementById("uploadBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.style.cursor = "pointer";
-btn.onclick = function() {
-    modal.style.display = "block";
-};
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-    modal.style.display = "none";
-};
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-};</script>
 </html>
