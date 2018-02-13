@@ -84,3 +84,4 @@ a{
     text-decoration: none;
     cursor: pointer;
 }
+.uploadButton:hover{cursor: pointer;}
