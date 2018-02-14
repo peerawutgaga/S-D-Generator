@@ -1,0 +1,24 @@
+@charset "UTF-8";
+/* CSS Document */
+header, footer {
+	color: black;
+	background-color: hotpink;
+	clear: left;
+	text-align: center;
+	padding: 1em;
+}
+article{
+	width: 100%;
+	display: table;
+	}
+#SelectDiagram{
+	width: 50%;
+	display: table-cell;
+}
+#SetProperties{
+	width: 50%;
+	display: table-cell;
+}
+#SDSelect, #CDSelect{
+	width: 100%;
+}
