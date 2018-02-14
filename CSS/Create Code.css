@@ -1,5 +1,8 @@
 @charset "UTF-8";
-/* CSS Document */
+body{
+	min-height: 100%;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
 header, footer {
 	color: black;
 	background-color: hotpink;
@@ -11,14 +14,3 @@ article{
 	width: 100%;
 	display: table;
 	}
-#SelectDiagram{
-	width: 50%;
-	display: table-cell;
-}
-#SetProperties{
-	width: 50%;
-	display: table-cell;
-}
-#SDSelect, #CDSelect{
-	width: 100%;
-}

@@ -1,6 +1,9 @@
-var modal = document.getElementById("uploadModal");
+var uploadModal = document.getElementById("uploadModal");
+var createCodeModal = document.getElementById("createCodeModal");
 var uploadBtn = document.getElementById("uploadBtn");
-var span = document.getElementsByClassName("close")[0];
+var createCodeBtn = document.getElementById("createCodeBtn");
+var uploadClose = document.getElementsByClassName("close")[0];
+var createCodeClose= document.getElementsByClassName("close")[1];
 var uploadSDBtn =document.getElementById("uploadSD");
 var SDuploader = document.getElementById("SDuploader");
 var uploadCDBtn =document.getElementById("uploadCD");
@@ -8,16 +11,29 @@ var CDuploader = document.getElementById("CDuploader");
 
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
-	modal.style.display = "block";
+	uploadModal.style.display = "block";
 };
 
-span.onclick = function () {
-	modal.style.display = "none";
+createCodeBtn.style.cursor = "pointer";
+createCodeBtn.onclick = function () {
+	createCodeModal.style.display = "block";
+};
+
+uploadClose.onclick = function () {
+	uploadModal.style.display = "none";
+};
+
+createCodeClose.onclick =function(){
+	createCodeModal.style.display = "none";
 };
 
 window.onclick = function (event) {
-	if (event.target == modal) {
-		modal.style.display = "none";
+	console.log(event.target);
+	if (event.target == uploadModal) {
+		uploadModal.style.display = "none";
+	}
+	if(event.target == createCodeModal){
+		createCodeModal.style.display = "none";
 	}
 };
 
