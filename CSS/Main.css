@@ -103,7 +103,7 @@ a{
     border: 1px solid #888;
     width: 40%;
     height: 55%;
-    overflow: scroll;
+    overflow: auto;
 }
 #SelectDiagram{
     width: 50%;
@@ -122,8 +122,9 @@ a{
 	width: 100%;
 	padding: 1em;
 }
-
 #submitBtn{
-    width:50%;
+    width: 70%;
+    height: 30px;
     text-align: center;
+    margin-left: 20%;
 }

@@ -53,5 +53,6 @@ function uploadCDFile()
 	
 }
 function createCode(){
-	console.log("submited");
+	var form = document.forms["codeProperties"];
+	console.log(form["Filename"].value);
 }
