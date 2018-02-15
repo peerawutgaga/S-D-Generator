@@ -52,3 +52,6 @@ function uploadCDFile()
 {
 	
 }
+function createCode(){
+	console.log("submited");
+}

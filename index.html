@@ -11,7 +11,6 @@
   <h1>Stub and Driver Generator Online Tool</h1>
 </header>
 <article>
-<!-->Side Bar<-->
   <div class = "description">
     <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating an stub or driver for Object-Oriented program testing for sequence diagram and class diagram</p>
     <h3>Instruction</h3>
@@ -24,7 +23,6 @@
       <li>Export</li>
     </ol>
   </div>
-<!-->Button Panel<-->
   <div class = "table">
     <table>
       <tbody>
@@ -44,7 +42,6 @@
     </table>
   </div>
 </article>
-<!-->Upload Modal<-->
 <div id="uploadModal" class="uploadModal">
   <div class="uploadModal-content"> <span class="close">&times;</span>
     <h3>Upload XML File</h3>
@@ -64,7 +61,6 @@
 	<p align="center">XML must be generated from Visual Paradigm</p>
   </div>
 </div>
-<!-->Create Code Modal<-->
 <div id="createCodeModal" class="createCodeModal">
   <div class = "createCodeModal-header"><span class="close">&times;</span>
     <h3>Set Code Property</h3>
@@ -79,20 +75,18 @@
         </select>
       </div>
       <div id = "SetProperties">
-        <h4>Select Source Code Type</h4>
-        <form>
-          <input type = "radio" name = "sourceCodeType" value = "stub">Stub</br>
-          <input type = "radio" name = "sourceCodeType" value = "driver">Driver</br>
+        <form onsubmit = "createCode()">
+          <h4>Filename</h4>
+          <input type = "text" name = "Filename" size = "30"></form>
+          <h4>Select Source Code Type</h4>
+          <input type = "radio" name = "sourceCodeType" value = "stub"> Stub</br>
+          <input type = "radio" name = "sourceCodeType" value = "driver"> Driver</br>
+          <h4>Select Source Code Language</h4>
+          <input type = "radio" name = "sourceCodeLang" value = "Java"> Java</br>
+          <input type = "radio" name = "sourceCodeLang" value = "PHP"> PHP</br></br>
+          <input id = "submitBtn" type = "submit" name = "Create" value = "Create Code">
         </form>
-        <h4>Select Source Code Language</h4>
-        <form>
-          <input type = "radio" name = "sourceCodeLang" value = "Java">Java</br>
-          <input type = "radio" name = "sourceCodeLang" value = "PHP">PHP</br>
-        </form>
-      </div>
-      <div id = "createButton">
-        <p>test</p>
-      </div>
+      </div>   
   </div>
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>

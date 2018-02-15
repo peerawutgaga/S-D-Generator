@@ -80,18 +80,19 @@ a{
     padding: 20px;
     border: 1px solid #888;
     width: 30%;
-	height: 40%;
+    height: 40%;
+    overflow: auto;
 }
 .createCodeModal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
+    overflow: auto; /* Enable scroll if needed */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
@@ -101,19 +102,28 @@ a{
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
-	height: 50%;
+    height: 55%;
+    overflow: scroll;
 }
 #SelectDiagram{
-	width: 60%;
-	display: table-cell;
-	padding: 1em;
+    width: 50%;
+    padding-left: 1em;
+    padding-right: 1em;
+    display: table-cell;
 }
 #SetProperties{
-	width: 40%;
-	display: table-cell;
-	padding: 1em;
+    width: 50%;
+    padding-left: 1em;
+    padding-right: 1em;
+    display: table-cell;
+    
 }
 #SDSelect, #CDSelect{
 	width: 100%;
 	padding: 1em;
+}
+
+#submitBtn{
+    width:50%;
+    text-align: center;
 }
