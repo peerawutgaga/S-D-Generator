@@ -126,5 +126,5 @@ a{
     width: 70%;
     height: 30px;
     text-align: center;
-    margin-left: 20%;
+    float: right;
 }

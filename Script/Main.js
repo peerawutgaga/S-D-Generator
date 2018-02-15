@@ -55,4 +55,5 @@ function uploadCDFile()
 function createCode(){
 	var form = document.forms["codeProperties"];
 	console.log(form["Filename"].value);
+	window.location.href = "Create Code.html";
 }

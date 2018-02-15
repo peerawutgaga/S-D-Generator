@@ -5,12 +5,20 @@
 <title>Create Code</title>
 	<link rel = "stylesheet" href = "CSS/Create Code.css">
 </head>
-<body onload="addItemToSelect()">
+<body>
 	<header>
-		<h1>Create Code</h1>
+		<h1>Stub and Driver Generator Online Tool</h1>
 	</header>
 <article>
-	
+	<div id = "fileInfo">
+		Filename: <input type = "text" name = "filename" size = "50" >
+		<button id = "renameBtn">Rename</button>
+		<button id = "exportBtn" class = "button">Export</button>
+		<button id = "saveBtn" class = "button">Save</button>
+	</div>
+	<div id = "editor">
+		<textarea id = "codeEditor"></textarea>
+	</div>
 </article>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
