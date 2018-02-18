@@ -1,0 +1,12 @@
+@charset "UTF-8";
+body{
+	min-height: 100%;
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+}
+header, footer {
+	color: black;
+	background-color: hotpink;
+	clear: left;
+	text-align: center;
+	padding: 1em;
+}
