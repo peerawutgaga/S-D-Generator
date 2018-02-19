@@ -81,12 +81,12 @@
       <div id = "SetProperties">
         <form id = "codeProperties">
           <h4>Filename</h4>
-          <input type = "text" name = "Filename" size = "30">
+          <input type = "text" name = "Filename" id = "filename">
           <h4>Select Source Code Type</h4>
-          <input type = "radio" name = "sourceCodeType" value = "stub"> Stub</br>
+          <input type = "radio" name = "sourceCodeType" value = "stub" checked = "checked"> Stub</br>
           <input type = "radio" name = "sourceCodeType" value = "driver"> Driver</br>
           <h4>Select Source Code Language</h4>
-          <input type = "radio" name = "sourceCodeLang" value = "Java"> Java</br>
+          <input type = "radio" name = "sourceCodeLang" value = "Java" checked = "checked"> Java</br>
           <input type = "radio" name = "sourceCodeLang" value = "PHP"> PHP</br></br>
         </form>
         <button id = "submitBtn" onclick="createCode()">Create Code</button>

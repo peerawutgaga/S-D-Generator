@@ -79,6 +79,7 @@ a{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
+    border-radius: 4px;
     width: 30%;
     height: 40%;
     overflow: auto;
@@ -101,6 +102,7 @@ a{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
+    border-radius: 4px;
     width: 40%;
     height: 55%;
     overflow: auto;
@@ -120,11 +122,33 @@ a{
 }
 #SDSelect, #CDSelect{
 	width: 100%;
-	padding: 1em;
+    padding: 14px 20px;
+    margin: 4px 2px;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: 14px;
 }
 #submitBtn{
-    width: 70%;
-    height: 30px;
+	background-color: white;
+	border: 2px solid gray;
+	border-radius: 4px;
+	width: 50;
+	padding: 8px 10px;
+	margin: 4px 2px;
     text-align: center;
+	text-decoration: none;
+	margin-left: 8px;
+    font-size: 14px;
+    cursor: pointer;
     float: right;
+}
+#submitBtn:hover {background-color: #e7e7e7;}
+
+#filename{
+	width: 100%;
+	padding: 4px 10px;
+	box-sizing: border-box;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: 14px;
 }
