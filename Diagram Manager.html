@@ -3,10 +3,40 @@
 <head>
 <meta charset="utf-8">
 <title>Diagram Manager</title>
+<link rel = "stylesheet" href = "CSS/Diagram Manager.css">
 </head>
 
 <body>
-<p>Diagram Manager</p>
-<p>Diagram Manager</p>
+    <header>
+        <h1>Stub and Driver Generator Online Tool</h1>
+    </header>
+    <article>
+        <!-- Tab links -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTable(event, 'CallGraph')" id="defaultOpen">Call Graph</button>
+            <button class="tablinks" onclick="openTable(event, 'ClassDiagram')">Class Diagram</button>
+        </div>
+        <div id="CallGraph" class="tabcontent">
+            <table>
+                <tr>
+                    <th>File Name</th>
+                    <th>File Size</th>
+                    <th>Created Time</th>
+                </tr>
+            </table>
+        </div>
+        <div id="ClassDiagram" class="tabcontent">
+            <table>
+                <tr>
+                    <th>File Name</th>
+                    <th>File Size</th>
+                    <th>Created Time</th>
+                </tr>
+            </table>
+        </div>
+    </article>
+    <footer>2018 Copyright &copy; Department of Computer Engineering
+        <br/> Faculty of Engineering, Chulalongkorn University</footer>
+    <script src="Script/Diagram Manager.js"></script>
 </body>
 </html>
