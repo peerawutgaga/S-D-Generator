@@ -120,10 +120,9 @@ a{
     display: table-cell;
     
 }
-#SDSelect, #CDSelect{
+#SDSelect, #CDSelect, #ClassSelect{
 	width: 100%;
-    padding: 14px 20px;
-    margin: 4px 2px;
+    padding: 4px 10px;
 	border: 2px solid gray;
 	border-radius: 4px;
 	font-size: 14px;
