@@ -5,9 +5,11 @@ var createCodeBtn = document.getElementById("createCodeBtn");
 var uploadClose = document.getElementsByClassName("close")[0];
 var createCodeClose= document.getElementsByClassName("close")[1];
 var uploadSDBtn =document.getElementById("uploadSD");
-var SDuploader = document.getElementById("SDuploader");
+var SDFile = document.getElementById("SDFile");
 var uploadCDBtn =document.getElementById("uploadCD");
-var CDuploader = document.getElementById("CDuploader");
+var CDFile = document.getElementById("CDFile");
+var SDSubmit = document.getElementById("SDSubmit");
+var CDSubmit = document.getElementById("CDSubmit");
 
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
@@ -38,19 +40,19 @@ window.onclick = function (event) {
 };
 
 uploadSDBtn.onclick = function(){
-	SDuploader.click();
+	SDFile.click();
 };
 uploadCDBtn.onclick = function(){
-	CDuploader.click();
+	CDFile.click();
 };
 
 function uploadSDFile()
 {
-	
+	SDSubmit.click();
 }
 function uploadCDFile()
 {
-	
+	CDSubmit.click();
 }
 function createCode(){
 	var form = document.forms["codeProperties"];

@@ -48,8 +48,12 @@
 <div id="uploadModal" class="uploadModal">
   <div class="uploadModal-content"> <span class="close">&times;</span>
     <h3>Upload XML File</h3>
-	  <input type = "file" id ="SDuploader" style = "display: none" onchange="uploadSDFile()" multiple size= "1">
-	  <input type = "file" id ="CDuploader" style = "display: none" onchange="uploadCDFile()" multiple size= "1">
+    <form action="./PHP/Main.php" method="post" enctype="multipart/form-data">
+	    <input type = "file" id = "SDFile" name = "SDFile" style = "display: none" onchange="uploadSDFile()" multiple size= "1">
+      <input type = "file" id = "CDFile" name = "CDFile" style = "display: none" onchange="uploadCDFile()" multiple size= "1">
+      <input type = "submit" id = "SDSubmit" name = "SDSubmit" style = "display: none">
+      <input type = "submit" id = "CDSubmit" name = "CDSubmit" style = "display: none">
+    </form>
     <table>
       <tbody>
         <tr>
@@ -93,7 +97,7 @@
           <input type = "radio" name = "sourceCodeLang" value = "Java" checked = "checked"> Java</br>
           <input type = "radio" name = "sourceCodeLang" value = "PHP"> PHP</br></br>
         </form>
-        <button id = "submitBtn" onclick="createCode()">Create Code</button>
+        <button id = "createBtn" onclick="createCode()">Create Code</button>
       </div> 
   </div>
 </div>
