@@ -1,19 +1,19 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "root";
+    
     function connectToDB(){
+        $servername = "localhost";
+        $username = "root";
+        $password = "root";
         $conn = new mysqli($servername, $username, $password);
-        // Check connection
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         } 
         return $conn;
     }
-    function selectDB(){
-        $db_selected = mysql_select_db('foo', $link);
+    function selectDB($db_name,$conn){
+        $db_selected = mysql_select_db($db_name, $conn);
         if (!$db_selected) {
-            die ('Can\'t use foo : ' . mysql_error());
+            die ('Cannnot select database: ' . mysql_error());
         }
         return $db_selected;
     }
@@ -25,8 +25,14 @@
             echo "Error creating database: " . $conn->error;
         }
     }
-    function testCreateDB(){
-       
+    function createTableIfNotExist($db_name, $table_name,$conn){
+        $sql = "CREATE TABLE IF NOT EXISTS $table";
     }
-    testCreateDB();
+    function saveFileToDB($db_name,$file){
+        $conn = connectToDB();
+        createIfNotExist($db_name,$conn);
+
+    }
+
+
 ?>
