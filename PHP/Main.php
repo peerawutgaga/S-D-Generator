@@ -1,7 +1,6 @@
 <?php
     require "Database.php";
-    if(isset($_POST['SDSubmit']))
-    {
+    if(isset($_POST['SDSubmit'])){
         upload("../Sequence Diagrams/", "SDFile");
     }
     else if(isset($_POST['CDSubmit'])){
