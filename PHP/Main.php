@@ -25,7 +25,7 @@
             }else{
                 processClassDiagram($target_file);
             }
-            alert("The file ". basename( $_FILES[$diagramType]["name"]). " has been uploaded.");
+           alert("The file ". basename( $_FILES[$diagramType]["name"]). " has been uploaded.");
         } else {
             alert("Upload failed.");
         }
@@ -37,7 +37,11 @@
         </script>";
     }
     function createCallGraph($target_file){
+        $xml = simplexml_load_file($target_file) or die("Error: cannot create object");
 
+    }
+    function processClassDiagram($target_file){
+        $xml = simplexml_load_file($target_file) or die("Error: cannot create object");
     }
     
 ?> 

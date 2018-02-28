@@ -4,13 +4,13 @@
         $createGraphTableSQL =  "CREATE TABLE IF NOT EXISTS graph(
             graphID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
             graphName VARCHAR(30) NOT NULL,
-            fileName VARCHAR(100) NOT NULL,
+            fileTarget VARCHAR(100) NOT NULL,
             createDate TIMESTAMP
         )";
         if ($conn->query($createGraphTableSQL) === TRUE) {
-            echo "Graph table created successfully";
+            consoleLog("Graph table created successfully");
         } else {
-            echo "Error creating graph table: " . $conn->error;
+            consoleLog("Error creating graph table: " . $conn->error);
         }
     }
     function createNodeTable($conn){
@@ -20,9 +20,9 @@
             graphID INT(6) NOT NULL
         )";
         if ($conn->query($createNodeTableSQL) === TRUE) {
-            echo "Node table created successfully";
+            consoleLog("Node table created successfully");
         } else {
-            echo "Error creating node table: " . $conn->error;
+            consoleLog("Error creating node table: " . $conn->error);
         }
     }
     function createMessageTable($conn){
@@ -33,9 +33,9 @@
             receivedNodeID INT(6) NOT NULL
         )";
         if ($conn->query($createMessageTableSQL) === TRUE) {
-            echo "Message table created successfully";
+            consoleLog("Message table created successfully");
         } else {
-            echo "Error creating message table: " . $conn->error;
+            consoleLog("Error creating message table: " . $conn->error);
         }
     } 
     function initialCallGraphDatabase($conn){
@@ -44,5 +44,32 @@
         createGraphTable($conn);
         createNodeTable($conn);
         createMessageTable($conn);
+    }
+    function insertToGraphTable($conn, $graphName, $fileTarget){
+        $insertSQL = "INSERT TO graph (graphName, fileTarget)
+        VALUE ($graphName, $fileTarget)";
+        if($conn->query($insertSQL) === TRUE){
+            consoleLog("Insert to graph table successfully");
+        }else{
+            consoleLog("Error inserting graph table");
+        }
+    }
+    function insertToNodeTable($conn, $nodeName, $graphID){
+        $insertSQL = "INSERT TO node (nodeName, graphID)
+        VALUE ($nodeName, $graphID)";
+        if($conn->query($insertSQL) === TRUE){
+            consoleLog("Insert to node table successfully");
+        }else{
+            consoleLog("Error inserting node table");
+        }
+    }
+    function insertToMessageTable($conn, $messageName, $sentNodeID, $receivedNodeID){
+        $insertSQL = "INSERT TO node (messageName, sentNodeID, messageNodeID)
+        VALUE ($messageName, $sentNodeID, $receivedNodeID)";
+        if($conn->query($insertSQL) === TRUE){
+            consoleLog("Insert to message table successfully");
+        }else{
+            consoleLog("Error inserting message table");
+        }
     }
 ?>

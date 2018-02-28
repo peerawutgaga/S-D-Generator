@@ -11,15 +11,23 @@
     }
     function selectDB($conn,$db_name){
         $db_selected = mysqli_select_db($conn, $db_name);
-        return $db_selected;
+        if (!$db_selected) {
+            die ('Cannot select database : ' . mysql_error());
+        }
     }
     function createDatabaseIfNotExist($conn, $db_name){
         $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
         if ($conn->query($sql) === TRUE) {
-            echo "Database created successfully";
+            consoleLog("Database created successfully");
         } else {
-            echo "Error creating database: " . $conn->error;
+            consoleLog("Error creating database: " . $conn->error);
         }
-    } 
+    }
+    function consoleLog( $message ) {
+        $output = $message;
+        if ( is_array( $output ) )
+            $output = implode( ',', $output);
     
+        echo "<script>console.log( '" . $output . "' );</script>";
+    }
 ?>
