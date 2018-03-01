@@ -48,7 +48,7 @@
 <div id="uploadModal" class="uploadModal">
   <div class="uploadModal-content"> <span class="close">&times;</span>
     <h3>Upload XML File</h3>
-    <form id = "uploadForm" action = "./PHP/Main.php" method = "post" enctype="multipart/form-data">
+    <form id = "uploadForm" action = "./PHP/Uploader.php" method = "post" enctype="multipart/form-data">
 	    <input type = "file" id = "SDFile" name = "SDFile" style = "display: none" onchange="uploadSDFile()" multiple size= "1">
       <input type = "file" id = "CDFile" name = "CDFile" style = "display: none" onchange="uploadCDFile()" multiple size= "1">
       <input type = "submit" id = "SDSubmit" name = "SDSubmit" style = "display: none">
