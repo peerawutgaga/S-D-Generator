@@ -1,4 +1,5 @@
 <?php
+    require_once "Script.php";
     function connectToDB(){
         $servername = "localhost";
         $username = "root";
@@ -23,11 +24,5 @@
             consoleLog("Error creating database: " . $conn->error);
         }
     }
-    function consoleLog( $message ) {
-        $output = $message;
-        if ( is_array( $output ) )
-            $output = implode( ',', $output);
     
-        echo "<script>console.log( '" . $output . "' );</script>";
-    }
 ?>

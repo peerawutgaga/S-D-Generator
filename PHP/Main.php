@@ -1,6 +1,6 @@
 <?php
-    require "CallGraphService.php";
-    require "ClassDiagramService.php";
+    require_once "CallGraphService.php";
+    require_once "ClassDiagramService.php";
 
     if(isset($_POST['SDSubmit'])){
         upload("../Sequence Diagrams/", "SDFile");
@@ -30,18 +30,11 @@
             alert("Upload failed.");
         }
     }
-    function alert($message){
-        echo "<script type='text/javascript'>
-            alert('$message');
-            window.location.href='../index.html';
-        </script>";
-    }
     function createCallGraph($target_file){
         $xml = simplexml_load_file($target_file) or die("Error: cannot create object");
-
     }
     function processClassDiagram($target_file){
         $xml = simplexml_load_file($target_file) or die("Error: cannot create object");
     }
-    
+    consoleLog('test');
 ?> 

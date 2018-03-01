@@ -1,5 +1,5 @@
 <?php
-    require "Database.php";
+    require_once "Database.php";
     function createGraphTable($conn){
         $createGraphTableSQL =  "CREATE TABLE IF NOT EXISTS graph(
             graphID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 

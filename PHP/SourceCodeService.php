@@ -1,5 +1,5 @@
 <?php
-    require "Database.php";
+    require_once "Database.php";
     function createSourceCodeTable($conn){
         $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
             fileID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
