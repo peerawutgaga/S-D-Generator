@@ -53,9 +53,6 @@
                 Script::consoleLog( "Error creating parameter table: " . $conn->error);
             }
         }
-        private static function test($conn){
-            Script::consoleLog('test');
-        }
         public static function initialClassDiagramDatabase(){
             $conn = Database::connectToDB();
             Database::createDatabaseIfNotExist($conn,'ClassDiagram');

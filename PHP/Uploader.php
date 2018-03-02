@@ -1,6 +1,7 @@
 <?php
     require_once "CallGraphService.php";
     require_once "ClassDiagramService.php";
+    require_once "XMLProcessor.php";
 
     if(isset($_POST['SDSubmit'])){
         Uploader::upload("../Sequence Diagrams/", "SDFile");
@@ -22,9 +23,9 @@
             }
             if (move_uploaded_file($_FILES[$diagramType]["tmp_name"], $target_file)) {
                 if($diagramType == "SDFile"){
-
+                    XMLProcessor::readSequenceDiagram($target_file);
                 }else{
-                   
+                    XMLProcessor::readClassDiagram($target_file);
                 }
                 Script::alert("The file ". basename( $_FILES[$diagramType]["name"]). " has been uploaded.");
             } else {
