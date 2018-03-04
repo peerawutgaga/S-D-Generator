@@ -8,7 +8,20 @@
             $conn = new mysqli($servername, $username, $password);
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);
-            } 
+            }  
+            return $conn;
+        }
+        public static function connectToDBUsingPDO($db_name){
+            $servername = "localhost";
+            $username = "root";
+            $password = "root";
+            try {
+                $conn = new PDO("mysql:host=$servername;dbname=$db_name", $username, $password);
+                // set the PDO error mode to exception
+                $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            }catch(PDOException $e){
+                die("Connection failed: " . $e->getMessage());
+            }
             return $conn;
         }
         public static function selectDB($conn,$db_name){
@@ -19,12 +32,17 @@
         }
         public static function createDatabaseIfNotExist($conn, $db_name){
             $sql = "CREATE DATABASE IF NOT EXISTS $db_name";
-            if ($conn->query($sql) === TRUE) {
-                Script::consoleLog("Database created successfully");
-            } else {
-                Script::consoleLog("Error creating database: " . $conn->error);
+            if ($conn->query($sql) === FALSE) {
+                echo "Error at creating database: ".$conn->error."<br>";
             }
         }
+        public static function dropDatabase($conn,$db_name){
+            $sql = "DROP DATABASE $db_name";
+            if ($conn->query($sql) === FALSE) {
+                echo "Error at deleting database: ".$conn->error."<br>";
+            }
+        }
+
     }
     
 ?>
