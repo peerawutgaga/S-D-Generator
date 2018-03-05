@@ -21,7 +21,7 @@
         }
         private static function saveFileToDB($fileName,$targetFile){
             self::$conn = Database::connectToDB();
-            Database::dropDatabase(self::$conn,'callGraph');
+            //Database::dropDatabase(self::$conn,'callGraph');
             CallGraphService::initialCallGraphDatabase(self::$conn);
             CallGraphService::insertToGraphTable(self::$conn, $fileName, $targetFile);
             self::$graphID = CallGraphService::selectFromGraphTable('graphID','graphName',$fileName);
@@ -33,9 +33,6 @@
             self::identifyNodeSimple($nodeList);
             self::identifyMessageSimple($messageList,$connectorList);
             self::$conn->close();
-        }
-        private static function processTraditionalSD($xml){
-            
         }
         private static function identifyNodeSimple($nodeList){
             $nodeID; $nodeName;
@@ -66,6 +63,47 @@
                     CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
                 }
             }
+        }
+        private static function processTraditionalSD($xml){
+            $nodeList = $xml->Models->Model[11]->ChildModels;
+            $messageList = $xml->Models->Model[10]->ChildModels->Model->ChildModels;
+            self::identifyNodeTraditional($nodeList);
+            self::identifyMessageTraditional($messageList);
+            self::$conn->close();
+        }
+        private static function identifyNodeTraditional($nodeList){
+            $nodeID; $nodeName;
+            foreach($nodeList->children() as $node){
+                $nodeID = $node['id'];
+                if($node['modelType'] == "InteractionActor"){
+                    $nodeName = $node['name'];
+                }else{
+                    $nodeName = $node->ModelProperties->TextModelProperty->StringValue['value'];
+                }
+                CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
+            }
+        }
+        private static function identifyMessageTraditional($messageList){
+            $messageID; $messageName; $sentNodeID; $receivedNodeID;
+            foreach($messageList->children() as $message){
+                if(self::isReturn($message)==false){
+                    $messageID = $message['id'];
+                    $messageName = $message['name'];
+                    $sentNodeID = $message->FromEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
+                    $receivedNodeID = $message->ToEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
+                    CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                }
+            }
+        }
+        private static function isReturn($message){
+            foreach($message->ModelProperties->children() as $property){
+                if(strcmp($property['name'],"actionType")==0){
+                    if($property->Model['name']=='Return'){
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 ?>
