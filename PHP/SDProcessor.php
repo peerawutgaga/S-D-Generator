@@ -27,17 +27,18 @@
             self::$graphID = CallGraphService::selectFromGraphTable('graphID','graphName',$fileName);
         }
         private static function processSimpleSD($xml){
-            // print_r($xml);
             $nodeList = $xml->Models->Frame->ModelChildren;
+            $messageList = $xml->Models->ModelRelationshipContainer->ModelChildren->ModelRelationshipContainer->ModelChildren;
+            $connectorList = $xml->Diagrams->InteractionDiagram->Connectors;
             self::identifyNodeSimple($nodeList);
+            self::identifyMessageSimple($messageList,$connectorList);
             self::$conn->close();
         }
         private static function processTraditionalSD($xml){
             
         }
         private static function identifyNodeSimple($nodeList){
-            $nodeID;
-            $nodeName;
+            $nodeID; $nodeName;
             foreach($nodeList->children() as $node){
                 if($node->getName() == 'InteractionLifeLine'){
                     $nodeName = $node['BaseClassifier'];
@@ -49,8 +50,22 @@
                 CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
             }
         }
-        private static function identifyMessageSimple($messageList){
-            
+        private static function identifyMessageSimple($messageList,$connectorList){
+            $messageID; $messageName; $sentNodeID; $receivedNodeID;
+            foreach($messageList->children() as $message){
+                if($message->ActionType->ActionTypeReturn == null){
+                    $messageID = $message->MasterView->Message['Idref'];
+                    $messageName = $message['Name'];
+                    foreach($connectorList->children() as $connector){
+                        if(strcmp($connector['Id'],$messageID)==0){
+                            $sentNodeID = $connector['From']; 
+                            $receivedNodeID = $connector['To'];
+                            break;
+                        }
+                    }
+                    CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                }
+            }
         }
     }
 ?>

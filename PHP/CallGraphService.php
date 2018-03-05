@@ -80,6 +80,7 @@
             $result = $sql->fetch();
             return $result[$value];
         }
+        
     }
 
 ?>
