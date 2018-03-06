@@ -14,7 +14,8 @@
         }
         private static function createClassTable($conn){
             $sql = "CREATE TABLE IF NOT EXISTS class(
-                classID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+                classID VARCHAR(16) NOT NULL,
                 className VARCHAR(30) NOT NULL,
                 diagramID INT(6) NOT NULL
             )";

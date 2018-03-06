@@ -11,6 +11,8 @@ var CDFile = document.getElementById("CDFile");
 var SDSubmit = document.getElementById("SDSubmit");
 var CDSubmit = document.getElementById("CDSubmit");
 var SDSelect = document.getElementById("SDSelect");
+var CDSelect = document.getElementById("CDSelect");
+var ClassSelect = document.getElementById("ClassSelect");
 
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
@@ -55,11 +57,6 @@ function uploadCDFile()
 {
 	CDSubmit.click();
 }
-function createCode(){
-	var form = document.forms["codeProperties"];
-	console.log(form["Filename"].value);
-	window.location.href = "Create Code.html";
-}
 function selectSD(selected){
 	if (window.XMLHttpRequest) {
 		// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -75,4 +72,32 @@ function selectSD(selected){
 	};
 	xmlhttp.open("GET","Page/RefreshSelectClass.php?q="+selected,true);
 	xmlhttp.send(); 
+}
+function createCode(){
+	// if(!isAllSelected()){
+	// 	return;
+	// }
+	$.ajax({
+		url: "Create Code.php",
+		type: "Post",
+		data:{},
+		success:function(msg){
+			
+		}
+	});
+}
+function isAllSelected(){
+	if(SDSelect.options[SDSelect.selectedIndex].value==0){
+		alert("Please Select Call Graph");
+		return false;
+	}
+	if(CDSelect.options[CDSelect.selectedIndex].value==0){
+		alert("Please Select Class Diagram");
+		return false;
+	}
+	if(ClassSelect.options[ClassSelect.selectedIndex].value==0){
+		alert("Please Select Class Under Test");
+		return false;
+	}
+	return true;
 }
