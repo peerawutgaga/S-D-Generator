@@ -2,11 +2,13 @@
     require_once "./PHP/CallGraphService.php";
     function initialSDSelect(){
         echo "<h4>Select Call Graph</h4>";
-        echo "<select id = 'SDSelect'>";
+        echo "<select id = 'SDSelect' onchange = selectSD(this.value)>";
         echo "<option value = '0' selected disabled hidden>Please Select Call Graph</option>";
-        $graphList = CallGraphService::selectAllFromGraph('graphName');
-        foreach ($graphList as $graphName) {
-            echo "<option value=$graphName>$graphName</option>";
+        $graphList = CallGraphService::selectAllFromGraph();
+        foreach ($graphList as $graph) {
+            $graphID = $graph['graphID'];
+            $graphName = $graph['graphName'];
+            echo "<option value=$graphID>$graphName</option>";
         }    
         echo "</select>";
     }
@@ -21,6 +23,12 @@
                 echo "<option value=$file>$file</option>";
             }
         }   
+        echo "</select>";
+    }
+    function initialClassSelect(){
+        echo "<h4>Select Class Under Test</h4>";
+        echo "<select id = 'ClassSelect'>";
+        echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
         echo "</select>";
     }
 ?>

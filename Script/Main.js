@@ -11,7 +11,6 @@ var CDFile = document.getElementById("CDFile");
 var SDSubmit = document.getElementById("SDSubmit");
 var CDSubmit = document.getElementById("CDSubmit");
 var SDSelect = document.getElementById("SDSelect");
-var CDSelect = document.getElementById("CDSelect");
 
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
@@ -21,7 +20,6 @@ uploadBtn.onclick = function () {
 createCodeBtn.style.cursor = "pointer";
 createCodeBtn.onclick = function () {
 	createCodeModal.style.display = "block";
-	addItemToDropDown();
 };
 
 uploadClose.onclick = function () {
@@ -62,7 +60,19 @@ function createCode(){
 	console.log(form["Filename"].value);
 	window.location.href = "Create Code.html";
 }
-function addItemToDropDown(){
-	console.log("call");
-	
+function selectSD(selected){
+	if (window.XMLHttpRequest) {
+		// code for IE7+, Firefox, Chrome, Opera, Safari
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		// code for IE6, IE5
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("ClassSelect").innerHTML = this.responseText;
+		}
+	};
+	xmlhttp.open("GET","Page/RefreshSelectClass.php?q="+selected,true);
+	xmlhttp.send(); 
 }

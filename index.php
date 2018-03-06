@@ -77,11 +77,8 @@
             require "Page/SetCodeProperties.php";
             initialSDSelect();
             initialCDSelect();
-          ?>
-        <h4>Select Class Under Test</h4>
-        <select id = "ClassSelect">
-          <option value = "0"selected disabled hidden>Please Select Call Graph</option>
-        </select>
+            initialClassSelect();
+          ?>  
       </div>
       <div id = "SetProperties">
         <form id = "codeProperties">
@@ -100,6 +97,7 @@
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="Script/Main.js"></script>
 </body>
 </html>
