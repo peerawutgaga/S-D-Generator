@@ -80,6 +80,17 @@
             $result = $sql->fetch();
             return $result[$value];
         }
+        public static function selectAllFromGraph($field){
+            $conn = Database::connectToDBUsingPDO('callGraph');
+            $sql = $conn->prepare("SELECT * FROM graph");
+            $sql->execute();
+            $result = $sql->fetchAll();
+            $returnData = array();
+            foreach($result as $data){
+                array_push($returnData,$data[$field]);
+            }
+            return $returnData;
+        }
         
     }
 

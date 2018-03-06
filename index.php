@@ -73,14 +73,11 @@
   <div class = "createCodeModal-header"><span class="close">&times;</span>
     <h3>Set Code Property</h3>
     <div id = "SelectDiagram">
-        <h4>Select Call Graph</h4>
-        <select id = "SDSelect">
-          <option value = "0"selected disabled hidden>Please Select Call Graph</option>
-        </select>
-        <h4>Select Class Diagram</h4>
-        <select id = "CDSelect">
-          <option value = "0"selected disabled hidden>Please Select Class Diagram</option>
-        </select>
+          <?php
+            require "Page/SetCodeProperties.php";
+            initialSDSelect();
+            initialCDSelect();
+          ?>
         <h4>Select Class Under Test</h4>
         <select id = "ClassSelect">
           <option value = "0"selected disabled hidden>Please Select Call Graph</option>

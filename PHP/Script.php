@@ -3,7 +3,7 @@
         public static function alert($message){
             echo "<script type='text/javascript'>
                 alert('$message');
-                window.location.href='../index.html';
+                window.location.href='../index.php';
             </script>";
         }
 
