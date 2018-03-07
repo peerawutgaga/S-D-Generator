@@ -30,7 +30,7 @@
                 classID VARCHAR(16) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
-                returnType VARCHAR(30)
+                returnType VARCHAR(30) NOT NULL
             )";
             if ($conn->query($sql) === FALSE) {
                 echo "Error at creating graph table: ".$conn->error."<br>";
@@ -93,9 +93,9 @@
         public static function selectFromDiagramTable($value,$field,$keyword){
             $conn = Database::connectToDBUsingPDO('classdiagram');
             if($field == 'diagramID'){
-                $sql = $conn->prepare("SELECT * FROM graph WHERE diagramID = :keyword LIMIT 1");
+                $sql = $conn->prepare("SELECT * FROM diagram WHERE diagramID = :keyword LIMIT 1");
             }else if($field == 'diagramName'){
-                $sql = $conn->prepare("SELECT * FROM graph WHERE diagramName = :keyword LIMIT 1");
+                $sql = $conn->prepare("SELECT * FROM diagram WHERE diagramName = :keyword LIMIT 1");
             }
             $sql->bindParam(':keyword',$keyword);
             $sql->execute();
