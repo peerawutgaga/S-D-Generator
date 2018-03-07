@@ -75,6 +75,7 @@
     <div id = "SelectDiagram">
           <?php
             require "Page/SetCodeProperties.php";
+            initialDatabase();
             initialSDSelect();
             initialCDSelect();
             initialClassSelect();

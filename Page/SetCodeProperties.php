@@ -1,5 +1,10 @@
 <?php
     require_once "./PHP/CallGraphService.php";
+    function initialDatabase(){
+        $conn = Database::connectToDB();
+        CallGraphService::initialCallGraphDatabase($conn);
+        $conn->close();
+    }
     function initialSDSelect(){
         echo "<h4>Select Call Graph</h4>";
         echo "<select id = 'SDSelect' onchange = selectSD(this.value)>";

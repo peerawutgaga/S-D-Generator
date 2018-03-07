@@ -36,12 +36,23 @@
                 echo "Error at creating message table: ".$conn->error."<br>";
             }
         } 
+        private static function addUniqueKey($conn){
+            $uniqueNode = "ALTER TABLE node ADD UNIQUE INDEX (graphID, nodeID)";
+            if ($conn->query($uniqueNode) === FALSE) {
+                echo "Error at alter node table: ".$conn->error."<br>";
+            }
+            $uniqueMessage = "ALTER TABLE message ADD UNIQUE INDEX (graphID, messageID)";
+            if ($conn->query($uniqueMessage) === FALSE) {
+                echo "Error at alter message table: ".$conn->error."<br>";
+            }
+        }
         public static function initialCallGraphDatabase($conn){
             Database::createDatabaseIfNotExist($conn,'CallGraph');
             Database::selectDB($conn,'CallGraph');
             self::createGraphTable($conn);
             self::createNodeTable($conn);
             self::createMessageTable($conn);
+            self::addUniqueKey($conn);
         }
         public static function insertToGraphTable($conn, $graphName, $fileTarget){
            $sql = $conn->prepare("INSERT INTO graph(graphName, fileTarget) VALUES(?,?)");
