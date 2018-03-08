@@ -30,7 +30,8 @@
                 classID VARCHAR(16) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
-                returnType VARCHAR(30) NOT NULL
+                returnType VARCHAR(30) NOT NULL,
+                typeModifier VARCHAR(3)
             )";
             if ($conn->query($sql) === FALSE) {
                 echo "Error at creating graph table: ".$conn->error."<br>";
@@ -43,7 +44,8 @@
                 methodID VARCHAR(16) NOT NULL,
                 parameterID VARCHAR(16) NOT NULL, 
                 parameterName VARCHAR(30) NOT NULL,
-                parameterType VARCHAR(30) NOT NULL
+                parameterType VARCHAR(30) NOT NULL,
+                typeModifier VARCHAR(3)
             )";
             if ($conn->query($sql) === FALSE) {
                 echo "Error at creating graph table: ".$conn->error."<br>";
@@ -74,17 +76,19 @@
             }
             $sql->close();
         }
-        public static function insertToMethodTable($conn, $diagramID, $classID, $methodID, $methodName, $returnType){
-            $sql = $conn->prepare("INSERT INTO method(diagramID, classID, methodID, methodName, returnType) VALUES(?,?,?,?,?)");
-            $sql->bind_param("issss",$diagramID,$classID, $methodID, $methodName, $returnType);
+        public static function insertToMethodTable($conn, $diagramID, $classID, $methodID, $methodName, $returnType,$typeModifier){
+            $sql = $conn->prepare("INSERT INTO method(diagramID, classID, methodID, methodName, returnType,typeModifier) 
+            VALUES(?,?,?,?,?,?)");
+            $sql->bind_param("isssss",$diagramID,$classID, $methodID, $methodName, $returnType, $typeModifier);
             if($sql->execute()===FALSE){
                     echo "Error at inserting to method table: ".$sql->error."<br>";
             }
             $sql->close();
         }
-        public static function insertToParameterTable($conn, $diagramID, $methodID, $parameterID, $parameterName, $parameterType){
-            $sql = $conn->prepare("INSERT INTO parameter(diagramID,methodID, parameterID, parameterName, parameterType) VALUES(?,?,?,?,?)");
-            $sql->bind_param("issss",$diagramID,$methodID, $parameterID, $parameterName, $parameterType);
+        public static function insertToParameterTable($conn, $diagramID, $methodID, $parameterID, $parameterName, $parameterType, $typeModifier){
+            $sql = $conn->prepare("INSERT INTO parameter(diagramID,methodID, parameterID, parameterName, parameterType, typeModifier) 
+            VALUES(?,?,?,?,?,?)");
+            $sql->bind_param("isssss",$diagramID,$methodID, $parameterID, $parameterName, $parameterType, $typeModifier);
             if($sql->execute()===FALSE){
                     echo "Error at inserting to parameter table: ".$sql->error."<br>";
             }

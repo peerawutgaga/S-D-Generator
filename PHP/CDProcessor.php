@@ -21,7 +21,7 @@
         }
         private static function saveFileToDB($filename,$fileTarget){
             self::$conn = Database::connectToDB();
-            //Database::dropDatabase(self::$conn,'classDiagram');
+            Database::dropDatabase(self::$conn,'classDiagram');
             ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
             ClassDiagramService::insertToDiagramTable(self::$conn, $filename, $fileTarget);
             self::$diagramID = ClassDiagramService::selectFromDiagramTable('diagramID','diagramName',$filename);
@@ -41,22 +41,24 @@
             }
         }
         private static function identifyMethodSimple($methodList, $classID){
-            $methodID; $methodName; $returnType;
+            $methodID; $methodName; $returnType; $typeModifier;
             foreach($methodList->Operation as $method){
                 $methodID = $method['Id'];
                 $methodName = $method['Name'];
                 $returnType = self::getReturnType($method->ReturnType);
-                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $classID, $methodID, $methodName, $returnType);
+                $typeModifier = $method['TypeModifier'];
+                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $classID, $methodID, $methodName, $returnType, $typeModifier);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
         }
         private static function identifyParameterSimple($parameterList, $methodID){
-            $parameterID; $parameterName; $parameterType;
+            $parameterID; $parameterName; $parameterType; $typeModifier;
             foreach($parameterList->children() as $parameter){
                 $parameterID = $parameter['Id'];
                 $parameterName = $parameter['Name'];
                 $parameterType = self::getParameterType($parameter->Type);
-                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID, $parameterID, $parameterName, $parameterType);
+                $typeModifier = $parameter['TypeModifier'];
+                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID, $parameterID, $parameterName, $parameterType, $typeModifier);
             }
         }
         private static function getReturnType($returnType){
