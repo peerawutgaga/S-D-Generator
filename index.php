@@ -35,9 +35,9 @@
             Create Source Code</div></td>
         </tr>
         <tr>
-          <td><a href="Diagram Manager.html"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/></br>
+          <td><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/></br>
             Diagram Manager</a></td>
-          <td><a href="Source Code Manager.html"><img src="Image/File Manager.png" width="170" height="170" alt=""/></br>
+          <td><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/></br>
             Source Code Manager</a></td>
         </tr>
       </tbody>
@@ -84,13 +84,13 @@
       <div id = "SetProperties">
         <form id = "codeProperties">
           <h4>Filename</h4>
-          <input type = "text" name = "Filename" id = "filename">
+          <input type = "text" name = "filename" id = "filename">
           <h4>Select Source Code Type</h4>
-          <input type = "radio" name = "sourceCodeType" value = "stub" checked = "checked"> Stub</br>
-          <input type = "radio" name = "sourceCodeType" value = "driver"> Driver</br>
+          <input type = "radio" name = "sourceCodeType" id = "stub" value = "stub" checked = "checked"> Stub</br>
+          <input type = "radio" name = "sourceCodeType" id = "driver" value = "driver"> Driver</br>
           <h4>Select Source Code Language</h4>
-          <input type = "radio" name = "sourceCodeLang" value = "Java" checked = "checked"> Java</br>
-          <input type = "radio" name = "sourceCodeLang" value = "PHP"> PHP</br></br>
+          <input type = "radio" name = "sourceCodeLang" id = "Java" value = "Java" checked = "checked"> Java</br>
+          <input type = "radio" name = "sourceCodeLang" id = "PHP" value = "PHP"> PHP</br></br>
         </form>
         <button id = "createBtn" onclick="createCode()">Create Code</button>
       </div> 

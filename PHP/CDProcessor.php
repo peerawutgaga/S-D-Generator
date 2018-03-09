@@ -22,7 +22,8 @@
         private static function saveFileToDB($filename,$fileTarget){
             self::$conn = Database::connectToDB();
            // Database::dropDatabase(self::$conn,'classDiagram');
-            ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
+            //ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
+            Database::selectDB(self::$conn,'classDiagram');
             ClassDiagramService::insertToDiagramTable(self::$conn, $filename, $fileTarget);
             self::$diagramID = ClassDiagramService::selectFromDiagramTable('diagramID','diagramName',$filename);
         }

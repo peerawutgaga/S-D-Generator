@@ -4,6 +4,8 @@
     $nodeList = CallGraphService::selectAllFromNode($q,'nodeName');
     echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
     foreach($nodeList as $node){
-        echo "<option value = $node>$node</option>";
+        $nodeID = $node['nodeID'];
+        $nodeName = $node['nodeName'];
+        echo "<option value = $nodeID>$nodeName</option>";
     }
 ?>

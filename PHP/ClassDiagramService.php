@@ -137,5 +137,12 @@
             $result = $sql->fetch();
             return $result['name'];
         }
+        public static function selectAllFromDiagram(){
+            $conn = Database::connectToDBUsingPDO('classdiagram');
+            $sql = $conn->prepare("SELECT * FROM diagram");
+            $sql->execute();
+            $result = $sql->fetchAll();
+            return $result;
+        }
     }
 ?>

@@ -41,11 +41,12 @@
                 if($node->getName() == 'InteractionLifeLine'){
                     $nodeName = $node['BaseClassifier'];
                     $nodeID = $node->MasterView->InteractionLifeLine['Idref'];
+                    CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
                 }else if($node->getName() == 'InteractionActor'){
                     $nodeName = $node['Name'];
                     $nodeID = $node->MasterView->InteractionActor['Idref'];
+                    CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
                 }
-                CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
             }
         }
         private static function identifyMessageSimple($messageList,$connectorList){

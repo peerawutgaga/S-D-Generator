@@ -74,19 +74,35 @@ function selectSD(selected){
 	xmlhttp.send(); 
 }
 function createCode(){
-	// if(!isAllSelected()){
-	// 	return;
-	// }
-	$.ajax({
-		url: "Create Code.php",
-		type: "Post",
-		data:{},
-		success:function(msg){
-			
-		}
+	var form = document.getElementById('codeProperties');
+	var filename = form.elements.namedItem('filename');
+	var sourceType;
+	var sourceLang;
+	if(!isFormValid(filename)){
+		return;
+	}
+	if(form.elements.namedItem('sourceCodeType')[0].checked){
+		sourceType = 'stub';
+	}else{
+		sourceType = 'driver';
+	}
+	if(form.elements.namedItem('sourceCodeLang')[0].checked){
+		sourceLang = 'Java';
+	}else{
+		sourceLang = 'PHP';
+	}
+	$.post('Page/CreateSourceCode.php', { 
+		'graphID': SDSelect.options[SDSelect.selectedIndex].value,
+		'diagramID' : CDSelect.options[CDSelect.selectedIndex].value, 
+		'CUT' : ClassSelect.options[ClassSelect.selectedIndex].value,
+		'filename' : filename.value,
+		'sourceType' : sourceType,
+		'sourceLang' : sourceLang
+	}, function(returnedData){
+         console.log(returnedData);
 	});
 }
-function isAllSelected(){
+function isFormValid(filename){
 	if(SDSelect.options[SDSelect.selectedIndex].value==0){
 		alert("Please Select Call Graph");
 		return false;
@@ -97,6 +113,10 @@ function isAllSelected(){
 	}
 	if(ClassSelect.options[ClassSelect.selectedIndex].value==0){
 		alert("Please Select Class Under Test");
+		return false;
+	}
+	if(filename.value === ""){
+		alert("Filename cannot be blanked");
 		return false;
 	}
 	return true;

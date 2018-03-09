@@ -98,17 +98,13 @@
             $result = $sql->fetchAll();
             return $result;
         }
-        public static function selectAllFromNode($graphID,$field){
+        public static function selectAllFromNode($graphID){
             $conn = Database::connectToDBUsingPDO('callGraph');
             $sql = $conn->prepare("SELECT * FROM node WHERE graphID = :graphID");
             $sql->bindParam(':graphID',$graphID);
             $sql->execute();
             $result = $sql->fetchAll();
-            $returnData = array();
-            foreach($result as $data){
-                array_push($returnData,$data[$field]);
-            }
-            return $returnData;
+            return $result;
         }
         
     }
