@@ -27,13 +27,20 @@
             self::$diagramID = ClassDiagramService::selectFromDiagramTable('diagramID','diagramName',$filename);
         }
         private static function processSimpleCD($xml){
-            $classList = $xml->Models->Package->ModelChildren->Package->ModelChildren;
+            $classList = $xml->Models;
+            self::identifyPackageSimple($classList);
             self::identifyClassSimple($classList);
             self::$conn->close();
         }
+        private static function identifyPackageSimple($classList){
+            foreach($classList->Package as $package){
+                self::identifyPackageSimple($package->ModelChildren);
+                self::identifyClassSimple($package->ModelChildren);
+            }
+        }
         private static function identifyClassSimple($classList){
             $classID; $className;
-            foreach($classList->children() as $class){
+            foreach($classList->Class as $class){
                 $classID = $class['Id'];
                 $className = $class['Name'];
                 ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $classID, $className);

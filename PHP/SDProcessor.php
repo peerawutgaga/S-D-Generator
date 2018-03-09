@@ -21,6 +21,8 @@
         }
         private static function saveFileToDB($fileName,$targetFile){
             self::$conn = Database::connectToDB();
+            // Database::dropDatabase(self::$conn,'callGraph');
+            // CallGraphService::initialCallGraphDatabase(self::$conn);
             Database::selectDB(self::$conn,'callGraph');
             CallGraphService::insertToGraphTable(self::$conn, $fileName, $targetFile);
             self::$graphID = CallGraphService::selectFromGraphTable('graphID','graphName',$fileName);
