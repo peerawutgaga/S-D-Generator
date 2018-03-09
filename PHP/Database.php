@@ -37,7 +37,7 @@
             }
         }
         public static function dropDatabase($conn,$db_name){
-            $sql = "DROP DATABASE $db_name";
+            $sql = "DROP DATABASE IF EXISTS $db_name";
             if ($conn->query($sql) === FALSE) {
                 echo "Error at deleting database: ".$conn->error."<br>";
             }

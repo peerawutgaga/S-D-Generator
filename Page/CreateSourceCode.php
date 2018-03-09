@@ -8,5 +8,13 @@
     $filename = $_POST['filename'];
     $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    echo $graphID." ".$diagramID." ".$classID." ".$filename." ".$sourceType." ".$sourceLang;
+    //SourceCodeGenerator::initialFile($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
+    // class SourceCodeGenerator{
+    //     public static function initialFile($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
+    //         echo $graphID." ".$diagramID." ".$classID." ".$filename." ".$sourceType." ".$sourceLang;
+            
+    //     }
+    // }
+    
+    
 ?>
