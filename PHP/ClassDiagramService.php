@@ -51,6 +51,21 @@
                 echo "Error at creating graph table: ".$conn->error."<br>";
             } 
         }
+        public static function createDataTypeRefTable($conn){
+            $sql = "CREATE TABLE dataTypeRef(
+                id VARCHAR(16) PRIMARY KEY,
+                name VARCHAR(30) NOT NULL
+            )";
+            if ($conn->query($sql) === FALSE) {
+                echo "Error at creating dataTypeRef table: ".$conn->error."<br>";
+            } 
+        }
+        public static function dropDataTypeRefTable($conn){
+            $sql = "DROP TABLE dataTypeRef";
+            if ($conn->query($sql) === FALSE) {
+                echo "Error at deleting table: ".$conn->error."<br>";
+            }
+        }
         public static function initialClassDiagramDatabase($conn){
             Database::createDatabaseIfNotExist($conn,'ClassDiagram');
             Database::selectDB($conn,'ClassDiagram');
@@ -105,6 +120,22 @@
             $sql->execute();
             $result = $sql->fetch();
             return $result[$value];
+        }
+        public static function insertToDataRefTable($conn, $id, $name){
+            $sql = $conn->prepare("INSERT INTO dataTypeRef(id, name) VALUES(?,?)");
+            $sql->bind_param("ss",$id,$name);
+            if($sql->execute()===FALSE){
+                echo "Error at inserting to dataTypeRef table: ".$sql->error."<br>";
+            }
+            $sql->close();
+        }
+        public static function selectDataType($id){
+            $conn = Database::connectToDBUsingPDO('classdiagram');
+            $sql = $conn->prepare("SELECT * FROM dataTypeRef WHERE id = :id LIMIT 1");
+            $sql->bindParam(':id',$id);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result['name'];
         }
     }
 ?>
