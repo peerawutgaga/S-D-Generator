@@ -36,29 +36,12 @@
                 echo "Error at creating message table: ".$conn->error."<br>";
             }
         } 
-        public static function addUniqueKey($conn){
+        private static function addUniqueKey($conn){
             $uniqueNode = "ALTER TABLE node ADD CONSTRAINT nodeIdx UNIQUE INDEX (graphID, nodeID)";
-            if ($conn->query($uniqueNode) === FALSE) {
-                self::removeIndex($conn, 'node');
-                echo "Error at alter node table: ".$conn->error."<br>";
-            }
+            $conn->query($uniqueNode);
             $uniqueMessage = "ALTER TABLE message ADD CONSTRAINT messageIdx UNIQUE INDEX (graphID, messageID)";
-            if ($conn->query($uniqueMessage) === FALSE) {
-                self::removeIndex($conn, 'message');
-                echo "Error at alter message table: ".$conn->error."<br>";
-            }
+            $conn->query($uniqueMessage);
         }
-        public static function removeIndex($conn, $table){
-            if($table == 'node'){
-                $sql = "ALTER TABLE node DROP INDEX nodeIdx";
-            }
-            else if($table == 'message'){
-                $sql = "ALTER TABLE message DROP INDEX messageIdx";
-            }
-            if ($conn->query($sql) === FALSE) {
-                echo "Error drop index at ".$table." table: ".$conn->error."<br>";
-            }
-        } 
         public static function initialCallGraphDatabase($conn){
             Database::createDatabaseIfNotExist($conn,'CallGraph');
             Database::selectDB($conn,'CallGraph');

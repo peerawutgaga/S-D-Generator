@@ -8,10 +8,9 @@
     // SDProcessor::readSequenceDiagram("Test3","Example XML/project.xml");
     //SourceCodeGenerator::initialFile( 1,1,"gzxIJfqGAqACJQew", "aaa", "stub", "Java");
     $conn = Database::connectToDB();
-    Database::dropDatabase($conn,'callGraph');
+    //Database::dropDatabase($conn,'callGraph');
     CallGraphService::initialCallGraphDatabase($conn);
-    // CallGraphService::insertToNodeTable($conn, 1, 'a', 'aaa');
-    // CallGraphService::insertToNodeTable($conn, 1, 'a', 'aaa');
-    CallGraphService::removeIndex($conn,'node');
+    CallGraphService::insertToNodeTable($conn, 1, 'a', 'aaa');
+    CallGraphService::insertToNodeTable($conn, 1, 'a', 'aaa');
     $conn->close();
 ?>
