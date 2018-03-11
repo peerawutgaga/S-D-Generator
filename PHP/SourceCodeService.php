@@ -5,22 +5,33 @@
         private static function createSourceCodeTable($conn){
             $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
                 fileID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                fileName VARCHAR(30) NOT NULL,
-                fileType VARCHAR(4) NOT NULL,
-                fileLocation VARCHAR(100) NOT NULL,
+                name VARCHAR(30) NOT NULL,
+                fileType VARCHAR(6) NOT NULL,
+                language VARCHAR(6) NOT NULL,
+                location VARCHAR(100) NOT NULL,
                 createDate TIMESTAMP
             )";
-            if ($conn->query($createFileTableSQL) === TRUE) {
-                Script::consoleLog("Source code table created successfully");
-            } else {
-                Script::consoleLog("Error creating source code table: " . $conn->error);
-            }
+            if ($conn->query($createFileTableSQL) === FALSE) {
+                echo "Error creating source code table: " . $conn->error;
+            } 
         }
         public static function initialSourceCodeDatabase(){
             $conn = Database::connectToDB();
             Database::createDatabaseIfNotExist($conn,'SourceCode');
             Database::selectDB($conn,'SourceCode');
-            createSourceCodeTable($conn);
+            self::createSourceCodeTable($conn);
+            $conn->close();
+        }
+        public static function insertFile($name, $fileType, $language, $location){
+            $conn = Database::connectToDB();
+            Database::selectDB($conn,'SourceCode');
+            $sql = $conn->prepare("INSERT INTO fileTable(name,fileType, language, location) 
+            VALUES(?,?,?,?)");
+            $sql->bind_param("ssss",$name, $fileType, $language, $location);
+            if($sql->execute()===FALSE){
+                echo "Error at inserting to source code table: ".$sql->error."<br>";
+            }
+            $sql->close();
             $conn->close();
         }
     }

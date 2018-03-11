@@ -102,7 +102,6 @@
             $result = $sql->fetchAll();
             return $result;
         }
-        
     }
 
 ?>

@@ -1,6 +1,10 @@
 <?php
-    require_once "./PHP/CallGraphService.php";
-    require_once "./PHP/ClassDiagramService.php";
+    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+    require_once "$root/PHP/CallGraphService.php";
+    require_once "$root/PHP/ClassDiagramService.php";
+    if(isset($_POST['CUT'])){
+        refreshClassSelect($_POST['CUT']);
+    }
     function initialDatabase(){
         $conn = Database::connectToDB();
         CallGraphService::initialCallGraphDatabase($conn);
@@ -36,5 +40,14 @@
         echo "<select id = 'ClassSelect'>";
         echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
         echo "</select>";
+    }
+    function refreshClassSelect($cut){
+        $nodeList = CallGraphService::selectAllFromNode($cut,'nodeName');
+        echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
+        foreach($nodeList as $node){
+            $nodeID = $node['nodeID'];
+            $nodeName = $node['nodeName'];
+            echo "<option value = $nodeID>$nodeName</option>";
+        }
     }
 ?>
