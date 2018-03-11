@@ -16,7 +16,6 @@
             $sql = "CREATE TABLE IF NOT EXISTS class(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
                 diagramID INT(6) NOT NULL,
-                classID VARCHAR(16) NOT NULL,
                 className VARCHAR(30) NOT NULL
             )";
             if ($conn->query($sql) === FALSE) {
@@ -27,7 +26,7 @@
             $sql = "CREATE TABLE IF NOT EXISTS method(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 diagramID INT(6) NOT NULL,
-                classID VARCHAR(16) NOT NULL,
+                className VARCHAR(16) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
                 returnType VARCHAR(30) NOT NULL,
@@ -83,18 +82,18 @@
             }
             $sql->close();
         }
-        public static function insertToClassTable($conn, $diagramID, $classID, $className){
-            $sql = $conn->prepare("INSERT INTO class(diagramID, classID, className) VALUES(?,?,?)");
-            $sql->bind_param("iss",$diagramID,$classID, $className);
+        public static function insertToClassTable($conn, $diagramID, $className){
+            $sql = $conn->prepare("INSERT INTO class(diagramID,className) VALUES(?,?)");
+            $sql->bind_param("is",$diagramID,$className);
             if($sql->execute()===FALSE){
                     echo "Error at inserting to class table: ".$sql->error."<br>";
             }
             $sql->close();
         }
-        public static function insertToMethodTable($conn, $diagramID, $classID, $methodID, $methodName, $returnType,$typeModifier){
-            $sql = $conn->prepare("INSERT INTO method(diagramID, classID, methodID, methodName, returnType,typeModifier) 
+        public static function insertToMethodTable($conn, $diagramID,$className, $methodID, $methodName, $returnType,$typeModifier){
+            $sql = $conn->prepare("INSERT INTO method(diagramID,className,methodID, methodName, returnType,typeModifier) 
             VALUES(?,?,?,?,?,?)");
-            $sql->bind_param("isssss",$diagramID,$classID, $methodID, $methodName, $returnType, $typeModifier);
+            $sql->bind_param("isssss",$diagramID,$className,$methodID, $methodName, $returnType, $typeModifier);
             if($sql->execute()===FALSE){
                     echo "Error at inserting to method table: ".$sql->error."<br>";
             }
@@ -143,6 +142,9 @@
             $sql->execute();
             $result = $sql->fetchAll();
             return $result;
+        }
+        public static function selectMethodByClassID($diagramID,$className,$methodID){
+
         }
     }
 ?>

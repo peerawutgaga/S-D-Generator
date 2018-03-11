@@ -54,12 +54,6 @@
                 array_push($receivedNodeList,$node);
             }
             $receivedNodeList = array_unique($receivedNodeList,SORT_REGULAR);
-            echo "<pre>";
-            print_r($messageList);
-            echo "</pre>";
-            echo "<pre>";
-            print_r($receivedNodeList);
-            echo "</pre>";
         }
         private static function identifyDriver(){
             $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID,self::$classID);
@@ -69,18 +63,18 @@
                 array_push($sentNodeList,$node);
             }
             $sentNodeList = array_unique($sentNodeList);
-            echo "<pre>";
-            print_r($messageList);
-            echo "</pre>";
-            echo "<pre>";
-            print_r($sentNodeList);
-            echo "</pre>";
         }
         private static function writeStubHeader(){
 
         }
         private static function writeDriverHeader(){
 
+        }
+        private static function writeJavaMethod(){
+
+        }
+        private static function writePHPMethod(){
+            
         }
     }
     

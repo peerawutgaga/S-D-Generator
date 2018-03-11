@@ -21,8 +21,8 @@
         }
         private static function saveFileToDB($filename,$fileTarget){
             self::$conn = Database::connectToDB();
-           // Database::dropDatabase(self::$conn,'classDiagram');
-            //ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
+            // Database::dropDatabase(self::$conn,'classDiagram');
+            // ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
             Database::selectDB(self::$conn,'classDiagram');
             ClassDiagramService::insertToDiagramTable(self::$conn, $filename, $fileTarget);
             self::$diagramID = ClassDiagramService::selectFromDiagramTable('diagramID','diagramName',$filename);
@@ -40,22 +40,20 @@
             }
         }
         private static function identifyClassSimple($classList){
-            $classID; $className;
             foreach($classList->Class as $class){
-                $classID = $class['Id'];
                 $className = $class['Name'];
-                ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $classID, $className);
-                self::identifyMethodSimple($class->ModelChildren, $classID);
+                ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className);
+                self::identifyMethodSimple($class->ModelChildren, $className);
             }
         }
-        private static function identifyMethodSimple($methodList, $classID){
+        private static function identifyMethodSimple($methodList, $className){
             $methodID; $methodName; $returnType; $typeModifier;
             foreach($methodList->Operation as $method){
                 $methodID = $method['Id'];
                 $methodName = $method['Name'];
                 $returnType = self::getReturnType($method->ReturnType);
                 $typeModifier = $method['TypeModifier'];
-                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $classID, $methodID, $methodName, $returnType, $typeModifier);
+                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, $methodName, $returnType, $typeModifier);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
         }
@@ -115,12 +113,11 @@
             }
         }
         private static function identifyClassTraditional($class){
-            $classID = $class['id'];
             $className = $class['name'];
-            ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $classID, $className);
-            self::identifyMethodTraditional($class->ChildModels, $classID);
+            ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className);
+            self::identifyMethodTraditional($class->ChildModels, $className);
         }
-        private static function identifyMethodTraditional($methodList, $classID){
+        private static function identifyMethodTraditional($methodList, $className){
             $methodID; $methodName; $returnType; $typeModifier;
             foreach($methodList->Model as $method){
                 if($method['modelType']=='Operation'){
@@ -128,7 +125,7 @@
                     $methodName = $method['name'];
                     $returnType = ClassDiagramService::selectDataType($method->ModelProperties->TextModelProperty->ModelRef[id]);
                     $typeModifier = self::getTypeModifier($method->ModelProperties);
-                    ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $classID, $methodID, $methodName, $returnType, $typeModifier);
+                    ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, $methodName, $returnType, $typeModifier);
                     self::identifyParameterTraditional($method->ChildModels, $methodID);
                 }
             }
