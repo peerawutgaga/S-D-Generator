@@ -3,13 +3,13 @@
     require_once "$root/PHP/SourceCodeService.php";
     require_once "$root/PHP/CallGraphService.php";
     require_once "$root/PHP/ClassDiagramService.php";
-    $graphID = $_POST['graphID'];
-    $diagramID = $_POST['diagramID'];
-    $classID = $_POST['CUT'];
-    $filename = $_POST['filename'];
-    $sourceType = $_POST['sourceType'];
-    $sourceLang = $_POST['sourceLang'];
-    SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
+    // $graphID = $_POST['graphID'];
+    // $diagramID = $_POST['diagramID'];
+    // $classID = $_POST['CUT'];
+    // $filename = $_POST['filename'];
+    // $sourceType = $_POST['sourceType'];
+    // $sourceLang = $_POST['sourceLang'];
+    // SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -40,6 +40,47 @@
                 self::$file = fopen($filePath,'w');
             }
             SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
+            if(self::$sourceType == 'stub'){
+                self::identifyStub();
+            }else{
+                self::identifyDriver();
+            }
+        }
+        private static function identifyStub(){
+            $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID,self::$classID);
+            $receivedNodeList = array();
+            foreach($messageList as $message){
+                $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['receivedNodeID']);
+                array_push($receivedNodeList,$node);
+            }
+            $receivedNodeList = array_unique($receivedNodeList,SORT_REGULAR);
+            echo "<pre>";
+            print_r($messageList);
+            echo "</pre>";
+            echo "<pre>";
+            print_r($receivedNodeList);
+            echo "</pre>";
+        }
+        private static function identifyDriver(){
+            $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID,self::$classID);
+            $sentNodeList = array();
+            foreach($messageList as $message){
+                $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['sentNodeID']);
+                array_push($sentNodeList,$node);
+            }
+            $sentNodeList = array_unique($sentNodeList);
+            echo "<pre>";
+            print_r($messageList);
+            echo "</pre>";
+            echo "<pre>";
+            print_r($sentNodeList);
+            echo "</pre>";
+        }
+        private static function writeStubHeader(){
+
+        }
+        private static function writeDriverHeader(){
+
         }
     }
     

@@ -102,6 +102,33 @@
             $result = $sql->fetchAll();
             return $result;
         }
+        public static function selectMessageBySentNodeID($graphID, $sentNodeID){
+            $conn = Database::connectToDBUsingPDO('callGraph');
+            $sql = $conn->prepare("SELECT * FROM message WHERE graphID = :graphID AND sentNodeID = :sentNodeID");
+            $sql->bindParam(':graphID',$graphID);
+            $sql->bindParam(':sentNodeID',$sentNodeID);
+            $sql->execute();
+            $result = $sql->fetchAll();
+            return $result;
+        }
+        public static function selectMessageByReceivedNodeID($graphID, $receivedNodeID){
+            $conn = Database::connectToDBUsingPDO('callGraph');
+            $sql = $conn->prepare("SELECT * FROM message WHERE graphID = :graphID AND receivedNodeID = :receivedNodeID");
+            $sql->bindParam(':graphID',$graphID);
+            $sql->bindParam(':receivedNodeID',$receivedNodeID);
+            $sql->execute();
+            $result = $sql->fetchAll();
+            return $result;
+        }
+        public static function selectNodeByNodeID($graphID, $nodeID){
+            $conn = Database::connectToDBUsingPDO('callGraph');
+            $sql = $conn->prepare("SELECT * FROM node WHERE graphID = :graphID AND nodeID = :nodeID LIMIT 1");
+            $sql->bindParam(':graphID',$graphID);
+            $sql->bindParam(':nodeID',$nodeID);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result;
+        }
     }
 
 ?>

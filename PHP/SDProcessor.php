@@ -21,9 +21,9 @@
         }
         private static function saveFileToDB($fileName,$targetFile){
             self::$conn = Database::connectToDB();
-            // Database::dropDatabase(self::$conn,'callGraph');
-            // CallGraphService::initialCallGraphDatabase(self::$conn);
-            Database::selectDB(self::$conn,'callGraph');
+            Database::dropDatabase(self::$conn,'callGraph');
+            CallGraphService::initialCallGraphDatabase(self::$conn);
+            //Database::selectDB(self::$conn,'callGraph');
             CallGraphService::insertToGraphTable(self::$conn, $fileName, $targetFile);
             self::$graphID = CallGraphService::selectFromGraphTable('graphID','graphName',$fileName);
         }
@@ -62,7 +62,9 @@
                             break;
                         }
                     }
-                    CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                    if(strcmp($sentNodeID,$receivedNodeID) !== 0){
+                        CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                    }
                 }
             }
         }
@@ -93,7 +95,9 @@
                     $messageName = $message['name'];
                     $sentNodeID = $message->FromEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
                     $receivedNodeID = $message->ToEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
-                    CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                    if(strcmp($sentNodeID,$receivedNodeID) !== 0){
+                        CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                    }
                 }
             }
         }
