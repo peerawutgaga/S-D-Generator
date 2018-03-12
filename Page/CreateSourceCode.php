@@ -39,7 +39,7 @@
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
                 self::$file = fopen($filePath,'w');
             }
-            SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
+            //SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
             if(self::$sourceType == 'stub'){
                 self::identifyStub();
             }else{
@@ -47,34 +47,41 @@
             }
         }
         private static function identifyStub(){
-            $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID,self::$classID);
-            $receivedNodeList = array();
-            foreach($messageList as $message){
-                $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['receivedNodeID']);
-                array_push($receivedNodeList,$node);
-            }
-            $receivedNodeList = array_unique($receivedNodeList,SORT_REGULAR);
+           
         }
         private static function identifyDriver(){
-            $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID,self::$classID);
-            $sentNodeList = array();
-            foreach($messageList as $message){
-                $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['sentNodeID']);
-                array_push($sentNodeList,$node);
+           
+        }
+        private static function writeStubFile($methodList){
+            $txt = "class ".self::$filename."{\n";
+            fwrite(self::$file, $txt);
+            self::closeFile();
+        }
+        private static function writeDriverFile($methodList){
+            if(self::$sourceLang === 'Java'){
+                $txt = "import static org.junit.jupiter.api.Assertions.*;\n";
+                fwrite(self::$file, $txt);
+                $txt = "import org.junit.jupiter.api.Test;\n";
+                fwrite(self::$file, $txt);
+                $txt = "class ".self::$filename."{\n";
+            }else{
+                $txt = "class ".self::$filename."{\n";
             }
-            $sentNodeList = array_unique($sentNodeList);
+            fwrite(self::$file, $txt);
+            self::closeFile();
         }
-        private static function writeStubHeader(){
-
-        }
-        private static function writeDriverHeader(){
-
-        }
-        private static function writeJavaMethod(){
-
+        private static function writeJavaMethod($methodName, $returnType){
+            $txt = "public ".$returnType." ".$methodName."(";
+            fwrite(self::$file,$txt);
+            
         }
         private static function writePHPMethod(){
             
+        }
+        private static function closeFile(){
+            $txt = "}";
+            fwrite(self::$file, $txt);
+            fclose(self::$file);
         }
     }
     

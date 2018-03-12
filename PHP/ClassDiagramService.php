@@ -26,7 +26,7 @@
             $sql = "CREATE TABLE IF NOT EXISTS method(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 diagramID INT(6) NOT NULL,
-                className VARCHAR(16) NOT NULL,
+                className VARCHAR(30) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
                 returnType VARCHAR(30) NOT NULL,
@@ -143,8 +143,27 @@
             $result = $sql->fetchAll();
             return $result;
         }
-        public static function selectMethodByClassID($diagramID,$className,$methodID){
-
+        public static function selectClassFromNodeName($diagramID, $nodeName){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("SELECT * FROM class WHERE diagramID = :diagramID AND className = :nodeName LIMIT 1");
+            $sql->bindParam(':diagramID',$diagramID);
+            $sql->bindParam(':nodeName',$nodeName);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result;
+        }
+        public static function selectMethodFromMessageName($diagramID,$className,$messageName){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND 
+             className = :className AND
+             methodName = :messageName
+             LIMIT 1");
+            $sql->bindParam(':diagramID',$diagramID);
+            $sql->bindParam(':className',$className);
+            $sql->bindParam(':messageName',$messageName);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result;
         }
     }
 ?>
