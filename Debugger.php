@@ -5,8 +5,12 @@
     // $conn = Database::connectToDB();
     // Database::dropDatabase($conn,'SourceCode');
     // $conn->close();
-    SourceCodeGenerator::createSourceCode(1,1,'HW5IJfqGAqACJQe_','test','driver','Java');
+    SourceCodeGenerator::createSourceCode(1,1,'gzxIJfqGAqACJQew','test','stub','Java');
+    // SourceCodeGenerator::createSourceCode(1,1,'HW5IJfqGAqACJQe_','test','driver','Java');
     // SourceCodeGenerator::createSourceCode(2,1,'r7IcwEaGAqACJQoX','test','driver','PHP');
     //SDProcessor::readSequenceDiagram('test','./Example XML/getGPAX Simple.xml');
     //CDProcessor::readClassDiagram('test','./Example XML/Register Traditional.xml');
+    // $file = fopen("hello.java","w");
+    // fwrite($file,"class");
+    // fclose($file);
 ?>

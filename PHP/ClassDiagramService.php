@@ -165,5 +165,15 @@
             $result = $sql->fetch();
             return $result;
         }
+        public static function selectParameterByMethodID($diagramID, $methodID){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("SELECT * FROM parameter WHERE diagramID = :diagramID AND
+            methodID = :methodID");
+            $sql->bindParam(':diagramID',$diagramID);
+            $sql->bindParam(':methodID', $methodID);
+            $sql->execute();
+            $result = $sql->fetchAll();
+            return $result;
+        }
     }
 ?>

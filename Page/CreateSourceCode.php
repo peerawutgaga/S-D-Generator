@@ -47,14 +47,31 @@
             }
         }
         private static function identifyStub(){
-           
+            $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID,self::$classID);
+            $methodList = self::getMethodListFromMessageList($messageList);
+            self::writeStubFile($methodList);
         }
         private static function identifyDriver(){
-           
+            $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID,self::$classID);
+            $methodList = self::getMethodListFromMessageList($messageList);     
+            self::writeDriverFile($methodList);       
+        }
+        private static function getMethodListFromMessageList($messageList){
+            $methodList = array();
+            foreach($messageList as $message){
+                $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['receivedNodeID']);
+                $class = ClassDiagramService::selectClassFromNodeName(self::$diagramID,$node['nodeName']);
+                $method = ClassDiagramService::selectMethodFromMessageName(self::$diagramID,$class['className'],$message['messageName']);
+                array_push($methodList,$method);
+            }
+            return $methodList;
         }
         private static function writeStubFile($methodList){
             $txt = "class ".self::$filename."{\n";
             fwrite(self::$file, $txt);
+            foreach($methodList as $method){
+                self::writeJavaMethod($method);
+            }
             self::closeFile();
         }
         private static function writeDriverFile($methodList){
@@ -70,12 +87,27 @@
             fwrite(self::$file, $txt);
             self::closeFile();
         }
-        private static function writeJavaMethod($methodName, $returnType){
-            $txt = "public ".$returnType." ".$methodName."(";
-            fwrite(self::$file,$txt);
-            
+        private static function writeJavaMethod($method){
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);
+            $txt = "\tpublic ".$method['returnType']." ".$method['methodName']."(";
+            fwrite(self::$file, $txt);
+            foreach($cit as $parameter){
+                $paramType = $parameter['parameterType'];
+                if($paramType === 'string'){
+                    $paramType = "String";
+                }
+                $txt = $paramType.$parameter['typeModifier']." ".$parameter['parameterName'];
+                fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+            fwrite(self::$file,"){\n");
+            fwrite(self::$file,"\t}\n");
         }
-        private static function writePHPMethod(){
+        private static function writePHPMethod($method){
             
         }
         private static function closeFile(){
