@@ -13,5 +13,10 @@
                 $output = implode( ',', $output);
             echo "<script>console.log( '" . $output . "' );</script>";
         }
+        public static function printObject($object){
+            echo "<pre>";
+            print_r($object);
+            echo "</pre>";
+        }
     }
 ?>

@@ -67,10 +67,19 @@
             return $methodList;
         }
         private static function writeStubFile($methodList){
+            if(self::$sourceLang === "PHP"){
+                fwrite(self::$file,"<?php\n");
+            }
             $txt = "class ".self::$filename."{\n";
             fwrite(self::$file, $txt);
-            foreach($methodList as $method){
-                self::writeJavaMethod($method);
+            if(self::$sourceLang === "Java"){
+                foreach($methodList as $method){
+                    self::writeJavaMethod($method);
+                } 
+            }else{
+                foreach($methodList as $method){
+                    self::writePHPMethod($method);
+                } 
             }
             self::closeFile();
         }
@@ -105,14 +114,66 @@
                 }
             }
             fwrite(self::$file,"){\n");
+            foreach($parameterList as $parameter){
+                $txt = "\t\tSystem.out.println(".$parameter['parameterName'].");\n";
+                fwrite(self::$file,$txt);
+            }
+            if($method['typeModifier'] === ""){
+                $returnType = self::getDefaultValue($method['returnType']);
+            }else{
+                $returnType = "null";
+            }
+            $txt = "\t\treturn ".$returnType.";\n";
+            fwrite(self::$file,$txt);
             fwrite(self::$file,"\t}\n");
         }
+        private static function getDefaultValue($returnType){
+            switch($returnType){
+                case "float" : return "0.0";
+                case "int" : return "0";
+                case "double" : return "0.0";
+                case "char" : return "''";
+                case "string" : return "\"\"";
+                case "boolean" : return "false";
+                case "long" : return "0";
+                case "short" : return "0";
+                case "byte" : return "0";
+                default : return "null";
+            }
+        }
         private static function writePHPMethod($method){
-            
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);
+            $txt = "\tpublic function ".$method['methodName']."(";
+            fwrite(self::$file, $txt);
+            foreach($cit as $parameter){
+                $txt = "$".$parameter['parameterName'];
+                fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+            fwrite(self::$file,"){\n");
+            foreach($parameterList as $parameter){
+                $txt = "\t\tprint_r($".$parameter['parameterName'].");\n";
+                fwrite(self::$file,$txt);
+            }
+            if($method['typeModifier'] === ""){
+                $returnType = self::getDefaultValue($method['returnType']);
+            }else{
+                $returnType = "null";
+            }
+            $txt = "\t\treturn ".$returnType.";\n";
+            fwrite(self::$file,$txt);
+            fwrite(self::$file,"\t}\n");
         }
         private static function closeFile(){
             $txt = "}";
             fwrite(self::$file, $txt);
+            if(self::$sourceLang === "PHP"){
+                fwrite(self::$file,"\n?>\n");
+            }
             fclose(self::$file);
         }
     }

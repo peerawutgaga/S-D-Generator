@@ -5,7 +5,7 @@
     // $conn = Database::connectToDB();
     // Database::dropDatabase($conn,'SourceCode');
     // $conn->close();
-    SourceCodeGenerator::createSourceCode(1,1,'gzxIJfqGAqACJQew','test','stub','Java');
+    SourceCodeGenerator::createSourceCode(1,1,'gzxIJfqGAqACJQew','test','stub','PHP');
     // SourceCodeGenerator::createSourceCode(1,1,'HW5IJfqGAqACJQe_','test','driver','Java');
     // SourceCodeGenerator::createSourceCode(2,1,'r7IcwEaGAqACJQoX','test','driver','PHP');
     //SDProcessor::readSequenceDiagram('test','./Example XML/getGPAX Simple.xml');
