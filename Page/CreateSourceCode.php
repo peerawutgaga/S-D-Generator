@@ -91,7 +91,10 @@
                 fwrite(self::$file, $txt);
                 $txt = "class ".self::$filename."{\n";
             }else{
-                $txt = "class ".self::$filename."{\n";
+                fwrite(self::$file, "<?php\n");
+                $txt = "use PHPUnit\Framework\TestCase;\n";
+                fwrite(self::$file, $txt);
+                $txt = "class ".self::$filename." extends TestCase{\n";
             }
             fwrite(self::$file, $txt);
             self::closeFile();
@@ -177,6 +180,4 @@
             fclose(self::$file);
         }
     }
-    
-    
 ?>
