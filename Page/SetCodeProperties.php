@@ -43,7 +43,7 @@
     }
     function refreshClassSelect($cut){
         $nodeList = CallGraphService::selectAllFromNode($cut,'nodeName');
-        echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
+        initialClassSelect();
         foreach($nodeList as $node){
             $nodeID = $node['nodeID'];
             $nodeName = $node['nodeName'];

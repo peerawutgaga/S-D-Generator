@@ -3,13 +3,13 @@
     require_once "$root/PHP/SourceCodeService.php";
     require_once "$root/PHP/CallGraphService.php";
     require_once "$root/PHP/ClassDiagramService.php";
-    // $graphID = $_POST['graphID'];
-    // $diagramID = $_POST['diagramID'];
-    // $classID = $_POST['CUT'];
-    // $filename = $_POST['filename'];
-    // $sourceType = $_POST['sourceType'];
-    // $sourceLang = $_POST['sourceLang'];
-    // SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
+    $graphID = $_POST['graphID'];
+    $diagramID = $_POST['diagramID'];
+    $classID = $_POST['CUT'];
+    $filename = $_POST['filename'];
+    $sourceType = $_POST['sourceType'];
+    $sourceLang = $_POST['sourceLang'];
+    SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -39,7 +39,7 @@
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
                 self::$file = fopen($filePath,'w');
             }
-            //SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
+            SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
             if(self::$sourceType == 'stub'){
                 self::identifyStub();
             }else{

@@ -61,7 +61,8 @@ function selectSD(selected){
 	$.post('Page/SetCodeProperties.php', {  
 		'CUT' : selected,
 	}, function(returnedData){
-         console.log(returnedData);
+		 //console.log(returnedData);
+		 ClassSelect.innerHTML = returnedData;
 	});
 }
 function createCode(){
