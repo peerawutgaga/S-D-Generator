@@ -28,7 +28,25 @@
            self::$sourceLang = $sourceLang;
            self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
            SourceCodeService::initialSourceCodeDatabase();
-           self::createFile();
+           if(!self::checkIfMessagesAreEmpty()){
+            self::createFile();
+           }
+        }
+        private static function checkIfMessagesAreEmpty(){
+            if(self::$sourceType === "stub"){
+                $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID,self::$classID);
+            } else{
+                $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID,self::$classID);
+            }
+            if(empty($messageList)){
+                if(self::$sourceType === "stub"){
+                    echo "stub error";
+                }else{
+                    echo "driver error";
+                }
+                return true;
+            }
+            return false;
         }
         private static function createFile(){
             //echo $graphID." ".$diagramID." ".$classID." ".$filename." ".$sourceType." ".$sourceLang;

@@ -90,7 +90,11 @@ function createCode(){
 		'sourceType' : sourceType,
 		'sourceLang' : sourceLang
 	}, function(returnedData){
-         console.log(returnedData);
+         if(returnedData == "stub error"){
+			alert("Cannot create stub for this class because this class does not call any methods in other classes");
+		 }else if(returnedData == "driver error"){
+			alert("Cannot create driver for this class because this class does not be called by other classes");
+		 }
 	});
 }
 function isFormValid(filename){
