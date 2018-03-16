@@ -19,6 +19,7 @@
         private static $sourceType;
         private static $sourceLang;
         private static $root;
+        private static $filePath;
         public static function createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
            self::$graphID = $graphID;
            self::$diagramID = $diagramID;
@@ -49,12 +50,13 @@
             return false;
         }
         private static function createFile(){
-            //echo $graphID." ".$diagramID." ".$classID." ".$filename." ".$sourceType." ".$sourceLang;
             if(self::$sourceLang == 'Java'){
                 $filePath = self::$root."/Source Code Files/".self::$filename.".java";
+                self::$filePath = "/Source Code Files/".self::$filename.".java";
                 self::$file = fopen($filePath,'w');
             }else{
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
+                self::$filePath = "/Source Code Files/".self::$filename.".php";
                 self::$file = fopen($filePath,'w');
             }
             SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
@@ -108,13 +110,20 @@
                 $txt = "import org.junit.jupiter.api.Test;\n";
                 fwrite(self::$file, $txt);
                 $txt = "class ".self::$filename."{\n";
+                fwrite(self::$file, $txt);
+                foreach($methodList as $method){
+                    self::writeJavaUnit($method);
+                }
             }else{
                 fwrite(self::$file, "<?php\n");
                 $txt = "use PHPUnit\Framework\TestCase;\n";
                 fwrite(self::$file, $txt);
                 $txt = "class ".self::$filename." extends TestCase{\n";
+                fwrite(self::$file, $txt);
+                foreach($methodList as $method){
+                    self::writePHPUnit($method);
+                }
             }
-            fwrite(self::$file, $txt);
             self::closeFile();
         }
         private static function writeJavaMethod($method){
@@ -148,19 +157,11 @@
             fwrite(self::$file,$txt);
             fwrite(self::$file,"\t}\n");
         }
-        private static function getDefaultValue($returnType){
-            switch($returnType){
-                case "float" : return "0.0";
-                case "int" : return "0";
-                case "double" : return "0.0";
-                case "char" : return "''";
-                case "string" : return "\"\"";
-                case "boolean" : return "false";
-                case "long" : return "0";
-                case "short" : return "0";
-                case "byte" : return "0";
-                default : return "null";
-            }
+        private static function writeJavaUnit($method){
+            fwrite(self::$file, "\t@test\n");
+            $txt = "\tvoid test".$method['methodName']."(){\n";
+            fwrite(self::$file, $txt);
+            fwrite(self::$file, "\t}\n");
         }
         private static function writePHPMethod($method){
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
@@ -189,6 +190,25 @@
             fwrite(self::$file,$txt);
             fwrite(self::$file,"\t}\n");
         }
+        private static function writePHPUnit($method){
+            $txt = "\tfunction test".$method['methodName']."(){\n";
+            fwrite(self::$file, $txt);
+            fwrite(self::$file, "\t}\n");
+        }
+        private static function getDefaultValue($returnType){
+            switch($returnType){
+                case "float" : return "0.0";
+                case "int" : return "0";
+                case "double" : return "0.0";
+                case "char" : return "''";
+                case "string" : return "\"\"";
+                case "boolean" : return "false";
+                case "long" : return "0";
+                case "short" : return "0";
+                case "byte" : return "0";
+                default : return "null";
+            }
+        }
         private static function closeFile(){
             $txt = "}";
             fwrite(self::$file, $txt);
@@ -196,6 +216,7 @@
                 fwrite(self::$file,"\n?>\n");
             }
             fclose(self::$file);
+            echo self::$filePath;
         }
     }
 ?>

@@ -30,20 +30,22 @@
         }
         private static function processSimpleCD($xml){
             $packageList = $xml->Models;
-            self::identifyPackageSimple($packageList);
-            self::identifyClassSimple($packageList);
+            self::identifyPackageSimple($packageList, "");
+            self::identifyClassSimple($packageList, "");
             self::$conn->close();
         }
-        private static function identifyPackageSimple($packageList){
+        private static function identifyPackageSimple($packageList, $packagePath){
             foreach($packageList->Package as $package){
-                self::identifyPackageSimple($package->ModelChildren);
-                self::identifyClassSimple($package->ModelChildren);
+                $packagePath = $packagePath."/".$package['Name'];
+                self::identifyPackageSimple($package->ModelChildren,$packagePath);
+                self::identifyClassSimple($package->ModelChildren,$packagePath);
+                $packagePath = "";
             }
         }
-        private static function identifyClassSimple($classList){
+        private static function identifyClassSimple($classList, $packagePath){
             foreach($classList->Class as $class){
                 $className = $class['Name'];
-                ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className);
+                ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className,$packagePath);
                 self::identifyMethodSimple($class->ModelChildren, $className);
             }
         }
@@ -53,7 +55,9 @@
                 $methodName = $method['Name'];
                 $returnType = self::getReturnType($method->ReturnType);
                 $typeModifier = $method['TypeModifier'];
-                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, $methodName, $returnType, $typeModifier);
+                $isStatic = self::getIsStaticValueSimple($method['Static']);
+                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, 
+                $methodName, $returnType, $typeModifier, $isStatic);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
         }
@@ -63,7 +67,8 @@
                 $parameterName = $parameter['Name'];
                 $parameterType = self::getParameterType($parameter->Type);
                 $typeModifier = $parameter['TypeModifier'];
-                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID, $parameterID, $parameterName, $parameterType, $typeModifier);
+                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID, $parameterID, 
+                $parameterName, $parameterType, $typeModifier);
             }
         }
         private static function getReturnType($returnType){
@@ -83,11 +88,17 @@
                 return $type->Class['Name'];
             }
         }
+        private static function getIsStaticValueSimple($isStatic){
+            if($isStatic = "false"){
+                return 0;
+            }
+            return 1;
+        }
         private static function processTraditionalCD($xml){
            $modelList = $xml->Models;
            self::$dataTypeRef = array();
            self::collectDataTypeRef($modelList);
-           self::identifyPackageTraditional($modelList);
+           self::identifyPackageTraditional($modelList, "");
            self::$conn->close();
         }
         private static function collectDataTypeRef($modelList){
@@ -101,18 +112,20 @@
                 }
             }
         }
-        private static function identifyPackageTraditional ($modelList){
+        private static function identifyPackageTraditional ($modelList, $packagePath){
             foreach($modelList->Model as $model){
                 if($model['modelType']=="Class"){
-                    self::identifyClassTraditional($model);
+                    self::identifyClassTraditional($model,$packagePath);
                 }else if($model['modelType']=="Package"){
-                    self::identifyPackageTraditional($model->ChildModels);
+                    $packagePath = $packagePath."/".$model['name'];
+                    self::identifyPackageTraditional($model->ChildModels,$packagePath);
+                    $packagePath = "";
                 }
             }
         }
-        private static function identifyClassTraditional($class){
+        private static function identifyClassTraditional($class, $packagePath){
             $className = $class['name'];
-            ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className);
+            ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className, $packagePath);
             self::identifyMethodTraditional($class->ChildModels, $className);
 
         }
@@ -123,7 +136,9 @@
                     $methodName = $method['name'];
                     $returnType = self::identifyType($method->ModelProperties->TextModelProperty);
                     $typeModifier = self::getTypeModifier($method->ModelProperties);
-                    ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID,$className, $methodID, $methodName, $returnType,$typeModifier);
+                    $isStatic = self::getIsStaticValueTraditional($method->ModelProperties);
+                    ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID,$className, 
+                    $methodID, $methodName, $returnType,$typeModifier, $isStatic);
                     self::identifyParameterTraditional($method->ChildModels, $methodID);
                 }
             }
@@ -134,7 +149,8 @@
                $parameterName = $parameter['name'];
                $parameterType = self::identifyType($parameter->ModelProperties->TextModelProperty);
                $typeModifier = self::getTypeModifier($parameter->ModelProperties);
-               ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID,$parameterID, $parameterName, $parameterType, $typeModifier);
+               ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, 
+               $methodID,$parameterID, $parameterName, $parameterType, $typeModifier);
             }
         }     
         private static function getTypeModifier($modelProperties){
@@ -150,6 +166,13 @@
                 return self::$dataTypeRef[$typeID];
             }else{
                 return "void";
+            }
+        }
+        private static function getIsStaticValueTraditional($modelProperties){
+            foreach($modelProperties->BooleanProperty as $boolProp){
+                if($boolProp['name']=="static"){
+                    return $boolProp['value'];
+                }
             }
         }
     }
