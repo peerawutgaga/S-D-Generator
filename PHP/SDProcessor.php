@@ -36,7 +36,6 @@
             self::$conn->close();
         }
         private static function identifyNodeSimple($nodeList){
-            $nodeID; $nodeName;
             foreach($nodeList->children() as $node){
                 if($node->getName() == 'InteractionLifeLine'){
                     $nodeName = $node['BaseClassifier'];
@@ -50,7 +49,6 @@
             }
         }
         private static function identifyMessageSimple($messageList,$connectorList){
-            $messageID; $messageName; $sentNodeID; $receivedNodeID;
             foreach($messageList->children() as $message){
                 if($message->ActionType->ActionTypeReturn == null){
                     $messageID = $message->MasterView->Message['Idref'];
@@ -76,7 +74,6 @@
             self::$conn->close();
         }
         private static function identifyNodeTraditional($nodeList){
-            $nodeID; $nodeName;
             foreach($nodeList->children() as $node){
                 $nodeID = $node['id'];
                 if($node['modelType'] == "InteractionActor"){
@@ -88,7 +85,6 @@
             }
         }
         private static function identifyMessageTraditional($messageList){
-            $messageID; $messageName; $sentNodeID; $receivedNodeID;
             foreach($messageList->children() as $message){
                 if(self::isReturn($message)==false){
                     $messageID = $message['id'];
