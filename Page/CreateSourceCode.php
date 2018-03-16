@@ -3,13 +3,13 @@
     require_once "$root/PHP/SourceCodeService.php";
     require_once "$root/PHP/CallGraphService.php";
     require_once "$root/PHP/ClassDiagramService.php";
-    $graphID = $_POST['graphID'];
-    $diagramID = $_POST['diagramID'];
-    $classID = $_POST['CUT'];
-    $filename = $_POST['filename'];
-    $sourceType = $_POST['sourceType'];
-    $sourceLang = $_POST['sourceLang'];
-    SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
+    // $graphID = $_POST['graphID'];
+    // $diagramID = $_POST['diagramID'];
+    // $classID = $_POST['CUT'];
+    // $filename = $_POST['filename'];
+    // $sourceType = $_POST['sourceType'];
+    // $sourceLang = $_POST['sourceLang'];
+    // SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -20,6 +20,7 @@
         private static $sourceLang;
         private static $root;
         private static $filePath;
+        private static $importClassList;
         public static function createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
            self::$graphID = $graphID;
            self::$diagramID = $diagramID;
@@ -78,12 +79,15 @@
         }
         private static function getMethodListFromMessageList($messageList){
             $methodList = array();
+            self::$importClassList  = array();
             foreach($messageList as $message){
                 $node = CallGraphService::selectNodeByNodeID(self::$graphID,$message['receivedNodeID']);
                 $class = ClassDiagramService::selectClassFromNodeName(self::$diagramID,$node['nodeName']);
                 $method = ClassDiagramService::selectMethodFromMessageName(self::$diagramID,$class['className'],$message['messageName']);
                 array_push($methodList,$method);
+                array_push(self::$importClassList, $class);
             }
+            self::$importClassList = array_unique(self::$importClassList,SORT_REGULAR);
             return $methodList;
         }
         private static function writeStubFile($methodList){
@@ -93,6 +97,7 @@
             $txt = "class ".self::$filename."{\n";
             fwrite(self::$file, $txt);
             if(self::$sourceLang === "Java"){
+                
                 foreach($methodList as $method){
                     self::writeJavaMethod($method);
                 } 
@@ -109,6 +114,7 @@
                 fwrite(self::$file, $txt);
                 $txt = "import org.junit.jupiter.api.Test;\n";
                 fwrite(self::$file, $txt);
+                self::writeJavaImport();
                 $txt = "class ".self::$filename."{\n";
                 fwrite(self::$file, $txt);
                 foreach($methodList as $method){
@@ -118,6 +124,7 @@
                 fwrite(self::$file, "<?php\n");
                 $txt = "use PHPUnit\Framework\TestCase;\n";
                 fwrite(self::$file, $txt);
+                self::writePHPInclude();
                 $txt = "class ".self::$filename." extends TestCase{\n";
                 fwrite(self::$file, $txt);
                 foreach($methodList as $method){
@@ -125,6 +132,23 @@
                 }
             }
             self::closeFile();
+        }
+        private static function writeJavaImport(){
+            foreach(self::$importClassList as $importClass){
+                $path = substr($importClass['packagePath'],1);
+                $path = str_replace("/",".",$path);
+                $txt = "import ".$path.".".$importClass['className'].";\n";
+                fwrite(self::$file, $txt);
+            }
+        }
+        private static function writePHPInclude(){
+            $txt = "\$root = realpath(\$_SERVER[\"DOCUMENT_ROOT\"]);\n";
+            fwrite(self::$file, $txt);
+            foreach(self::$importClassList as $importClass){
+                $path = $importClass['packagePath'];
+                $txt = "include_once \"\$root".$path."/".$importClass['className'].".php\";\n";
+                fwrite(self::$file, $txt);
+            }
         }
         private static function writeJavaMethod($method){
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
