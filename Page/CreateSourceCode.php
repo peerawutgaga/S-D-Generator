@@ -152,22 +152,9 @@
         }
         private static function writeJavaMethod($method){
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
-            $ait = new ArrayIterator($parameterList);
-            $cit = new CachingIterator($ait);
             $txt = "\tpublic ".$method['returnType']." ".$method['methodName']."(";
             fwrite(self::$file, $txt);
-            foreach($cit as $parameter){
-                $paramType = $parameter['parameterType'];
-                if($paramType === 'string'){
-                    $paramType = "String";
-                }
-                $txt = $paramType.$parameter['typeModifier']." ".$parameter['parameterName'];
-                fwrite(self::$file, $txt);
-                if($cit->hasNext()){
-                    fwrite(self::$file, ", ");
-                }
-            }
-            fwrite(self::$file,"){\n");
+            self::writeJavaParameter($method,$parameterList);
             foreach($parameterList as $parameter){
                 $txt = "\t\tSystem.out.println(".$parameter['parameterName'].");\n";
                 fwrite(self::$file,$txt);
@@ -185,7 +172,51 @@
             fwrite(self::$file, "\t@test\n");
             $txt = "\tvoid test".$method['methodName']."(){\n";
             fwrite(self::$file, $txt);
+            if($method['isStatic']){
+                $txt = "\t\t".$method['className'].".".$method['methodName']."(";
+                fwrite(self::$file, $txt);
+                $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
+                self::setDefaultValueToParameter($parameterList);
+            }else{
+                self::declareJavaConstructor($method);
+            }
             fwrite(self::$file, "\t}\n");
+        }
+        private static function declareJavaConstructor($method){
+            $classInstance = strtolower($method['className']);
+            $constructor = ClassDiagramService::selectMethodFromMessageName(self::$diagramID,$method['className'],$method['className']);
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$constructor['methodID']);
+            $txt = "\t\t".$method['className']." ".$classInstance." = new".$method['className']."(";
+            fwrite(self::$file, $txt);
+            self::setDefaultValueToParameter($parameterList);
+        }
+        private static function setDefaultValueToParameter($parameterList){
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);     
+            foreach($cit as $parameter){
+                $txt = self::getDefaultValue($parameter['parameterType']);
+                fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+            fwrite(self::$file, ");\n");
+        }
+        private static function writeJavaParameter($method,$parameterList){
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);     
+            foreach($cit as $parameter){
+                $paramType = $parameter['parameterType'];
+                if($paramType === 'string'){
+                    $paramType = "String";
+                }
+                $txt = $paramType.$parameter['typeModifier']." ".$parameter['parameterName'];
+                fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+            fwrite(self::$file,"){\n");
         }
         private static function writePHPMethod($method){
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);

@@ -55,7 +55,7 @@
                 $methodName = $method['Name'];
                 $returnType = self::getReturnType($method->ReturnType);
                 $typeModifier = $method['TypeModifier'];
-                $isStatic = self::getIsStaticValueSimple($method['Static']);
+                $isStatic = self::getIsStaticValueSimple($method['Scope']);
                 ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, 
                 $methodName, $returnType, $typeModifier, $isStatic);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
@@ -89,7 +89,7 @@
             }
         }
         private static function getIsStaticValueSimple($isStatic){
-            if($isStatic = "false"){
+            if($isStatic == "instance"){
                 return 0;
             }
             return 1;
@@ -169,9 +169,12 @@
             }
         }
         private static function getIsStaticValueTraditional($modelProperties){
-            foreach($modelProperties->BooleanProperty as $boolProp){
-                if($boolProp['name']=="static"){
-                    return $boolProp['value'];
+            foreach($modelProperties->StringProperty as $strProp){
+                if($strProp['name']=="scope"){
+                    if($strProp['value'] == "instance"){
+                        return 0;
+                    }
+                    return 1;
                 }
             }
         }
