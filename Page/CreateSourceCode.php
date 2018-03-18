@@ -92,7 +92,7 @@
         }
         private static function writeStubFile($methodList){
             if(self::$sourceLang === "PHP"){
-                fwrite(self::$file,"<?php\n");
+                fwrite(self::$file,"<?php\n\t");
             }
             $txt = "class ".self::$filename."{\n";
             fwrite(self::$file, $txt);
@@ -122,10 +122,10 @@
                 }
             }else{
                 fwrite(self::$file, "<?php\n");
-                $txt = "use PHPUnit\Framework\TestCase;\n";
+                $txt = "\tuse PHPUnit\Framework\TestCase;\n";
                 fwrite(self::$file, $txt);
                 self::writePHPInclude();
-                $txt = "class ".self::$filename." extends TestCase{\n";
+                $txt = "\tclass ".self::$filename." extends TestCase{\n";
                 fwrite(self::$file, $txt);
                 foreach($methodList as $method){
                     self::writePHPUnit($method);
@@ -142,11 +142,11 @@
             }
         }
         private static function writePHPInclude(){
-            $txt = "\$root = realpath(\$_SERVER[\"DOCUMENT_ROOT\"]);\n";
+            $txt = "\t\$root = realpath(\$_SERVER[\"DOCUMENT_ROOT\"]);\n";
             fwrite(self::$file, $txt);
             foreach(self::$importClassList as $importClass){
                 $path = $importClass['packagePath'];
-                $txt = "include_once \"\$root".$path."/".$importClass['className'].".php\";\n";
+                $txt = "\tinclude_once \"\$root".$path."/".$importClass['className'].".php\";\n";
                 fwrite(self::$file, $txt);
             }
         }
@@ -174,11 +174,19 @@
             fwrite(self::$file, $txt);
             if($method['isStatic']){
                 $txt = "\t\t".$method['className'].".".$method['methodName']."(";
-                fwrite(self::$file, $txt);
-                $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
-                self::setDefaultValueToParameter($parameterList);
             }else{
-                self::declareJavaConstructor($method);
+                $classInstance = self::declareJavaConstructor($method);
+                if($method['returnType'] == "void"){
+                    $txt = "\t\t".$classInstance.".".$method['methodName']."(";
+                }else{
+                    $txt = "\t\tObject returnValue = ".$classInstance.".".$method['methodName']."(";
+                }
+            }
+            fwrite(self::$file, $txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
+            self::setDefaultValueToParameter($parameterList);
+            if($method['returnType'] != "void"){
+                fwrite(self::$file, "\t\tassertEquals(expected, returnValue);\n");
             }
             fwrite(self::$file, "\t}\n");
         }
@@ -186,9 +194,10 @@
             $classInstance = strtolower($method['className']);
             $constructor = ClassDiagramService::selectMethodFromMessageName(self::$diagramID,$method['className'],$method['className']);
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$constructor['methodID']);
-            $txt = "\t\t".$method['className']." ".$classInstance." = new".$method['className']."(";
+            $txt = "\t\t".$method['className']." ".$classInstance." = new ".$method['className']."(";
             fwrite(self::$file, $txt);
             self::setDefaultValueToParameter($parameterList);
+            return $classInstance;
         }
         private static function setDefaultValueToParameter($parameterList){
             $ait = new ArrayIterator($parameterList);
@@ -222,7 +231,7 @@
             $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
             $ait = new ArrayIterator($parameterList);
             $cit = new CachingIterator($ait);
-            $txt = "\tpublic function ".$method['methodName']."(";
+            $txt = "\t\tpublic function ".$method['methodName']."(";
             fwrite(self::$file, $txt);
             foreach($cit as $parameter){
                 $txt = "$".$parameter['parameterName'];
@@ -233,7 +242,7 @@
             }
             fwrite(self::$file,"){\n");
             foreach($parameterList as $parameter){
-                $txt = "\t\tprint_r($".$parameter['parameterName'].");\n";
+                $txt = "\t\t\tprint_r($".$parameter['parameterName'].");\n";
                 fwrite(self::$file,$txt);
             }
             if($method['typeModifier'] === ""){
@@ -241,14 +250,44 @@
             }else{
                 $returnType = "null";
             }
-            $txt = "\t\treturn ".$returnType.";\n";
+            $txt = "\t\t\treturn ".$returnType.";\n";
             fwrite(self::$file,$txt);
-            fwrite(self::$file,"\t}\n");
+            fwrite(self::$file,"\t\t}\n");
         }
         private static function writePHPUnit($method){
-            $txt = "\tfunction test".$method['methodName']."(){\n";
+            $txt = "\t\tfunction test".$method['methodName']."(){\n";
             fwrite(self::$file, $txt);
-            fwrite(self::$file, "\t}\n");
+            if($method['isStatic']){
+                $txt = "\t\t\t".$method['className']."::".$method['methodName']."(";
+            }else{
+                $classInstance = self::declarePHPConstructor($method);
+                if($method['returnType'] != "void"){
+                    $txt = "\t\t\t\$returnValue = \$".$classInstance."->".$method['methodName']."(";
+                }else{
+                    $txt = "\t\t\t\$".$classInstance."->".$method['methodName']."(";
+                }
+            }
+            fwrite(self::$file, $txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$method['methodID']);
+            self::setDefaultValueToParameter($parameterList);
+            if($method['returnType'] != "void"){
+                fwrite(self::$file, "\t\t\t\$this->assertEquals(expected, \$returnValue);\n");
+            }
+            fwrite(self::$file, "\t\t}\n");
+        }
+        private static function declarePHPConstructor($method){
+            $classInstance = strtolower($method['className']);
+            $constructor = ClassDiagramService::selectMethodFromMessageName(self::$diagramID,$method['className'],"__construct");
+            if($constructor == null){
+                $txt = "\t\t\t\$".$classInstance." = new ".$method['className'].";\n";
+                fwrite(self::$file, $txt);
+                return $classInstance;
+            }
+            $parameterList = ClassDiagramService::selectParameterByMethodID(self::$diagramID,$constructor['methodID']);
+            $txt = "\t\t\t\$".$classInstance." = new".$method['className']."(";
+            fwrite(self::$file, $txt);
+            self::setDefaultValueToParameter($parameterList);
+            return $classInstance;
         }
         private static function getDefaultValue($returnType){
             switch($returnType){
@@ -265,10 +304,10 @@
             }
         }
         private static function closeFile(){
-            $txt = "}";
-            fwrite(self::$file, $txt);
             if(self::$sourceLang === "PHP"){
-                fwrite(self::$file,"\n?>\n");
+                fwrite(self::$file,"\t}\n?>\n");
+            }else{
+                fwrite(self::$file,"}");
             }
             fclose(self::$file);
             echo self::$filePath;
