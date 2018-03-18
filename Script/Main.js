@@ -95,9 +95,13 @@ function createCode(){
 		 }else if(returnedData == "driver error"){
 			alert("Cannot create driver for this class because this class does not be called by other classes");
 		 }else{
-			 console.log(returnedData);
+			navigateToCreatCodePage(returnedData);
 		 }
 	});
+}
+function navigateToCreatCodePage(sourceCodePath){
+	var queryString = "?sourcecode="+sourceCodePath;
+	window.location.href='../Create Code.php'+queryString;
 }
 function isFormValid(filename){
 	if(SDSelect.options[SDSelect.selectedIndex].value==0){

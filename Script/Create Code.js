@@ -1,5 +1,9 @@
 var isShiftDown = false;
 var codeEditor = document.getElementById("codeEditor");
+window.onload = function(){
+    var filename = decodeURIComponent(window.location.search);
+    filename = filename.substring(12);
+};
 codeEditor.onkeydown = function(e) {
     if (e.keyCode === 9) {
         var val = this.value,

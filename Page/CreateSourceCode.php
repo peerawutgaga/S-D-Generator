@@ -3,13 +3,13 @@
     require_once "$root/PHP/SourceCodeService.php";
     require_once "$root/PHP/CallGraphService.php";
     require_once "$root/PHP/ClassDiagramService.php";
-    // $graphID = $_POST['graphID'];
-    // $diagramID = $_POST['diagramID'];
-    // $classID = $_POST['CUT'];
-    // $filename = $_POST['filename'];
-    // $sourceType = $_POST['sourceType'];
-    // $sourceLang = $_POST['sourceLang'];
-    // SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
+    $graphID = $_POST['graphID'];
+    $diagramID = $_POST['diagramID'];
+    $classID = $_POST['CUT'];
+    $filename = $_POST['filename'];
+    $sourceType = $_POST['sourceType'];
+    $sourceLang = $_POST['sourceLang'];
+    SourceCodeGenerator::createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -19,7 +19,6 @@
         private static $sourceType;
         private static $sourceLang;
         private static $root;
-        private static $filePath;
         private static $importClassList;
         public static function createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
            self::$graphID = $graphID;
@@ -53,11 +52,11 @@
         private static function createFile(){
             if(self::$sourceLang == 'Java'){
                 $filePath = self::$root."/Source Code Files/".self::$filename.".java";
-                self::$filePath = "/Source Code Files/".self::$filename.".java";
+                self::$filename = self::$filename.".java";
                 self::$file = fopen($filePath,'w');
             }else{
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
-                self::$filePath = "/Source Code Files/".self::$filename.".php";
+                self::$filename = self::$filename.".php";
                 self::$file = fopen($filePath,'w');
             }
             SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
@@ -310,7 +309,7 @@
                 fwrite(self::$file,"}");
             }
             fclose(self::$file);
-            echo self::$filePath;
+            echo self::$filename;
         }
     }
 ?>
