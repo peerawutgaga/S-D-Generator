@@ -41,6 +41,7 @@ button:hover {background-color: #e7e7e7;}
 #codeEditor{
 	width: 95%;
 	height: 400px;
+	font-size: medium;
 }
 #filename{
 	width: 30%;
@@ -49,7 +50,7 @@ button:hover {background-color: #e7e7e7;}
 	box-sizing: border-box;
 	border: 2px solid gray;
 	border-radius: 4px;
-	font-size: 14px;
+	font-size: medium;
 }
 img{
 	padding-right: 8px;

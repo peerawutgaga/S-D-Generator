@@ -20,6 +20,7 @@
         private static $sourceLang;
         private static $root;
         private static $importClassList;
+        private static $filenameWithExtension;
         public static function createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
            self::$graphID = $graphID;
            self::$diagramID = $diagramID;
@@ -52,11 +53,11 @@
         private static function createFile(){
             if(self::$sourceLang == 'Java'){
                 $filePath = self::$root."/Source Code Files/".self::$filename.".java";
-                self::$filename = self::$filename.".java";
+                self::$filenameWithExtension = self::$filename.".java";
                 self::$file = fopen($filePath,'w');
             }else{
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
-                self::$filename = self::$filename.".php";
+                self::$filenameWithExtension = self::$filename.".php";
                 self::$file = fopen($filePath,'w');
             }
             SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
@@ -309,7 +310,7 @@
                 fwrite(self::$file,"}");
             }
             fclose(self::$file);
-            echo self::$filename;
+            echo self::$filenameWithExtension;
         }
     }
 ?>
