@@ -5,25 +5,32 @@ window.onload = function(){
     var filename = decodeURIComponent(window.location.search);
     filename = filename.substring(12);
     recordFileInfo(filename);
-    openFile(filename);
+    //openFile();
 };
 function recordFileInfo(filename){
-    var idx = filename.lastIndexOf(".");
+    var idx = filename.lastIndexOf("-");
     fileExtension = filename.substring(idx+1);
     oldFilename = filename.substring(0,idx);
 }
-function openFile(filename){
+function openFile(){
+    var filename = oldFilename+"."+fileExtension;
     filepath = "../Source Code Files/"+filename;
+    // $.post('Page/CodeEditorService.php', { 
+    //     'method': "getSourceCode",
+    //     'filepath':filepath
+	// }, function(returnedData){
+    //      console.log(returnedData);
+	// });
     var client = new XMLHttpRequest();
     client.open('GET', filepath);
     client.onreadystatechange = function() {
         if(client.readyState === 4)
         {
-            if(client.status === 200 || rawFile.status == 0)
+            if(client.status === 200 || client.status == 0)
             {
                 var allText = client.responseText;
                 filenameArea.value = filename;
-                codeEditor.value = allText;
+                document.getElementById("codeEditor").value = allText;
             }
         }
     }

@@ -4,6 +4,8 @@
     $method = $_POST['method'];
     if($method =="rename"){
         CodeEditorService::rename($_POST['oldFilename'],$_POST['newFilename']);
+    }else if($method == "getSourceCode"){
+        CodeEditorService::getSourceCode($_POST['filepath']);
     }
     class CodeEditorService{
         public static function rename($oldName, $newName){
@@ -17,6 +19,10 @@
                 return;
             }
             echo "failed";
+        }
+        public static function getSourceCode($filePath){
+            $content = show_source($filePath,TRUE);
+            echo $content;
         }
     }
 ?>

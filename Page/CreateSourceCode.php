@@ -313,7 +313,8 @@
                 fwrite(self::$file,"}");
             }
             fclose(self::$file);
-            echo self::$filenameWithExtension;
+            $idx = strrpos(self::$filenameWithExtension,".",-1);
+            echo substr_replace(self::$filenameWithExtension,"-",$idx,1);
         }
     }
 ?>
