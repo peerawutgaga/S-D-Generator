@@ -36,5 +36,15 @@
             $conn->close();
             return true;
         }
+        public static function renameFile($oldName,$newName){
+            $conn = Database::connectToDBUsingPDO('sourcecode');
+            $sql = $conn->prepare("UPDATE fileTable SET name = :newName WHERE name = :oldName");
+            $sql->bindParam(":newName",$newName);
+            $sql->bindParam(":oldName",$oldName);
+            if($sql->execute()==FALSE){
+                return false;
+            }
+            return true;
+        }
     }
 ?>

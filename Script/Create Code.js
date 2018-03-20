@@ -1,5 +1,3 @@
-var isShiftDown = false;
-var codeEditor = document.getElementById("codeEditor");
 var filenameArea = document.getElementById("filename");
 var fileExtension;
 var oldFilename;
@@ -31,62 +29,32 @@ function openFile(filename){
     }
     client.send();
 }
-codeEditor.onkeydown = function(e) {
-    if (e.keyCode === 9) {
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '\t' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
+function rename(){
+    var currentFilename = filenameArea.value;
+    var idx = currentFilename.lastIndexOf(".");
+    var newFilename = currentFilename.substring(0,idx);
+    var currentExtension = currentFilename.substring(idx+1);
+    if(currentExtension != fileExtension){
+        alert("Cannot change file extension");
+        return;
     }
-    else if(e.keyCode === 16){
-        isShiftDown = true;
-        return false;
+    if(newFilename == oldFilename){
+        alert("Nothing changed");
+        return;
     }
-    else if(e.keyCode === 57 && isShiftDown){
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '()' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
+    if(newFilename == ""){
+        alert("Filename cannot be empty");
+        return;
     }
-    else if(e.keyCode === 219 && isShiftDown){
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '{}' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
-    }
-    else if(e.keyCode === 219 && !isShiftDown){
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '[]' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
-    }
-    else if(e.keyCode === 222 && isShiftDown){
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '\"\"' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
-    }
-    else if(e.keyCode === 222 && !isShiftDown){
-        var val = this.value,
-        start = this.selectionStart,
-        end = this.selectionEnd;
-        this.value = val.substring(0, start) + '\'\'' + val.substring(end);
-        this.selectionStart = this.selectionEnd = start + 1;
-        return false;
-    }
-};
-codeEditor.onkeyup = function(e){
-    if(e.keyCode === 16){
-        isShiftDown = false;
-    } 
-};
+    $.post('Page/CodeEditorService.php', { 
+		'method': "rename",
+        'oldFilename' : oldFilename+"."+fileExtension, 
+        'newFilename' : currentFilename,
+	}, function(returnedData){
+         if(returnedData == "success"){
+             alert("Rename Succeeded");
+         }else{
+             alert("Rename failed");
+         }
+	});
+}

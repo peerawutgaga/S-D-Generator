@@ -12,7 +12,7 @@
 <article>
 	<div id = "fileInfo">
 		Filename: <input type = "text" name = "filename" id = "filename" >
-		<button id = "renameBtn"><img src = "Image/rename.png">Rename</button>
+		<button id = "renameBtn" onclick = "rename()"><img src = "Image/rename.png">Rename</button>
 		<button id = "exportBtn"><img src = "Image/export.png">Export</button>
 		<button id = "saveBtn"><img src = "Image/save.png">Save</button>
 	</div>
@@ -28,6 +28,8 @@
 </article>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src = "Script/Create Code.js"></script>
+<script src = "Script/Code Editor.js"></script>
 </body>
 </html>

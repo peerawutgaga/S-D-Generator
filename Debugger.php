@@ -14,8 +14,8 @@
     // CDProcessor::readClassDiagram('Register Traditional','./Example XML/Register Traditional.xml');
     // CDProcessor::readClassDiagram('test1','./Example XML/CourseVille Simple.xml');
     // CDProcessor::readClassDiagram('test2','./Example XML/CourseVille Traditional.xml');
-    $id = SourceCodeService::insertFile("test3","driver","PHP","aaa");
-    print_r($id);
+    SourceCodeService::renameFile("aaab.java","hhh.java");
+   
 
 
 ?>
