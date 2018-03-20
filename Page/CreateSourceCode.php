@@ -20,7 +20,7 @@
         private static $sourceLang;
         private static $root;
         private static $importClassList;
-        private static $fileID;
+        private static $filenameWithExtension;
         public static function createSourceCode($graphID, $diagramID, $classID, $filename, $sourceType, $sourceLang){
            self::$graphID = $graphID;
            self::$diagramID = $diagramID;
@@ -53,13 +53,17 @@
         private static function createFile(){
             if(self::$sourceLang == 'Java'){
                 $filePath = self::$root."/Source Code Files/".self::$filename.".java";
-                self::$file = fopen($filePath,'w');
+                self::$filenameWithExtension = self::$filename.".java";
             }else{
                 $filePath = self::$root."/Source Code Files/".self::$filename.".php";
-                self::$file = fopen($filePath,'w');
+                self::$filenameWithExtension = self::$filename.".php";
             }
-            SourceCodeService::insertFile(self::$filename, self::$sourceType, self::$sourceLang, $filePath);
-
+            $success = SourceCodeService::insertFile(self::$filenameWithExtension, self::$sourceType, self::$sourceLang, $filePath);
+            if(!$success){
+                echo "file exist";
+                return;
+            }
+            self::$file = fopen($filePath,'w');
             if(self::$sourceType == 'stub'){
                 self::identifyStub();
             }else{

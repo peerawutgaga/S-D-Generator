@@ -4,8 +4,7 @@
     {
         private static function createSourceCodeTable($conn){
             $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
-                fileID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                name VARCHAR(30) NOT NULL,
+                name VARCHAR(30) PRIMARY KEY,
                 fileType VARCHAR(6) NOT NULL,
                 language VARCHAR(6) NOT NULL,
                 location VARCHAR(100) NOT NULL,
@@ -29,20 +28,13 @@
             VALUES(?,?,?,?)");
             $sql->bind_param("ssss",$name, $fileType, $language, $location);
             if($sql->execute()===FALSE){
-                echo "Error at inserting to source code table: ".$sql->error."<br>";
+                $sql->close();
+                $conn->close();
+                return false;
             }
             $sql->close();
             $conn->close();
-            echo "a";
-            return self::getFileID($name);
-        }
-        private static function getFileID($name){
-            $conn = Database::connectToDBUsingPDO('SourceCode');
-            $sql = $conn->prepare("SELECT fileID FROM fileTable WHERE name = :name LIMIT 1");
-            $sql->bindParam(":name",$name);
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result[0];
+            return true;
         }
     }
 ?>
