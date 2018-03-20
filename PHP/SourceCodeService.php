@@ -25,7 +25,7 @@
         public static function insertFile($name, $fileType, $language, $location){
             $conn = Database::connectToDB();
             Database::selectDB($conn,'SourceCode');
-            $sql = $conn->prepare("INSERT INTO fileTable(name,fileType, language, location) 
+            $sql = $conn->prepare("INSERT INTO fileTable(name, fileType, language, location) 
             VALUES(?,?,?,?)");
             $sql->bind_param("ssss",$name, $fileType, $language, $location);
             if($sql->execute()===FALSE){
@@ -33,6 +33,16 @@
             }
             $sql->close();
             $conn->close();
+            echo "a";
+            return self::getFileID($name);
+        }
+        private static function getFileID($name){
+            $conn = Database::connectToDBUsingPDO('SourceCode');
+            $sql = $conn->prepare("SELECT fileID FROM fileTable WHERE name = :name LIMIT 1");
+            $sql->bindParam(":name",$name);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result[0];
         }
     }
 ?>
