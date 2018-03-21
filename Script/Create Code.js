@@ -62,6 +62,7 @@ function rename(){
              alert("Rename failed");
         }else{
             alert("Rename Succeeded");
+            console.log(returnedData);
             refreshCreatCodePage(returnedData);
          }
 	});

@@ -23,14 +23,18 @@
             $root = $root."/Source Code Files/";
             $idx = strrpos($filename,".",-1);
             $zipname = substr($filename,0,$idx);
-            $shortZipname = "Source Code Files/".$zipname.".zip";
-            $zipname = $root.$zipname.".zip";
+            $extension = substr($filename,$idx+1);
+            $shortZipname = "Source Code Files/".$zipname."-".$extension.".zip";
+            $zipname = $root.$zipname."-".$extension.".zip";
+            if(file_exists($zipname)){
+                self::delete($zipname);
+            }
             $zip = new ZipArchive();
             if ($zip->open($zipname, ZipArchive::CREATE)==FALSE) {
                 return null;
             }
             $fullfilename = $root.$filename;
-            $zip->addFile($fullfilename,"/".$filename);
+            $zip->addFile($fullfilename,$filename);
             $zip->close();
             return $shortZipname;
         }
