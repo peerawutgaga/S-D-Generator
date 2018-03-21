@@ -1,4 +1,5 @@
 var filenameArea = document.getElementById("filename");
+var downloadDiv = document.getElementById("downloadDiv");
 var fileExtension;
 var oldFilename;
 window.onload = function(){
@@ -6,12 +7,12 @@ window.onload = function(){
     filename = filename.substring(12);
     recordFileInfo(filename);
     openFile();
+    exportFile();
 };
 function recordFileInfo(filename){
     var idx = filename.lastIndexOf("-");
     fileExtension = filename.substring(idx+1);
     oldFilename = filename.substring(0,idx);
-    console.log(oldFilename);
 }
 function openFile(){
     var filename = oldFilename+"."+fileExtension;
@@ -33,6 +34,10 @@ function openFile(){
 }
 function rename(){
     var currentFilename = filenameArea.value;
+    var confirmMsg = "Rename from "+oldFilename+"."+fileExtension+" to "+currentFilename;
+    if(!confirm(confirmMsg)){
+        return;
+    }
     var idx = currentFilename.lastIndexOf(".");
     var newFilename = currentFilename.substring(0,idx);
     var currentExtension = currentFilename.substring(idx+1);
@@ -62,7 +67,7 @@ function rename(){
 	});
 }
 function refreshCreatCodePage(sourceCodePath){
-	var queryString = "?sourcecode="+sourceCodePath;
+	var queryString = "?sourcecode="+sourceCodePath; 
 	window.location.href='../Create Code.php'+queryString;
 }
 function saveChange(){
@@ -76,6 +81,16 @@ function saveChange(){
         'filepath' : filepath, 
         'content' : content,
 	}, function(returnedData){
-         alert("Saved");
+        alert("Saved");
+        prepareExportFile();
+	});
+}
+function exportFile(){
+    var filepath = oldFilename+"."+fileExtension;
+    $.post('Page/CodeEditorService.php', {
+        'method': "exportFile", 
+        'filepath' : filepath, 
+	}, function(returnedData){
+        downloadDiv.innerHTML = returnedData;
 	});
 }

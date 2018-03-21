@@ -13,7 +13,9 @@
 	<div id = "fileInfo">
 		Filename: <input type = "text" name = "filename" id = "filename" >
 		<button id = "renameBtn" onclick = "rename()"><img src = "Image/rename.png">Rename</button>
-		<button id = "exportBtn"><img src = "Image/export.png">Export</button>
+		<a id = "downloadDiv">
+			<button id = "exportBtn" onclick = "exportFile()"><img src = "Image/export.png">Export</button>
+		</a>
 		<button id = "saveBtn" onclick = "saveChange()"><img src = "Image/save.png">Save</button>
 	</div>
 	<div id = "editor">
