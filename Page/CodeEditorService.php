@@ -14,15 +14,13 @@
             $fullNewName = $root."/Source Code Files/".$newName;
             $success = SourceCodeService::renameFile($oldName, $newName);
             if($success){
-                rename($fullOldName,$fullNewName);
-                echo "success";
-                return;
+                if(rename($fullOldName.".txt",$fullNewName."txt")){
+                    $idx = strrpos($newName,".",-1);
+                    echo substr_replace($newName,"-",$idx,1);
+                    return;
+                }
             }
             echo "failed";
-        }
-        public static function getSourceCode($filePath){
-            $content = show_source($filePath,TRUE);
-            echo $content;
         }
     }
 ?>

@@ -52,10 +52,10 @@
         }
         private static function createFile(){
             if(self::$sourceLang == 'Java'){
-                $filePath = self::$root."/Source Code Files/".self::$filename.".java";
+                $filePath = self::$root."/Source Code Files/".self::$filename.".java.txt";
                 self::$filenameWithExtension = self::$filename.".java";
             }else{
-                $filePath = self::$root."/Source Code Files/".self::$filename.".php";
+                $filePath = self::$root."/Source Code Files/".self::$filename.".php.txt";
                 self::$filenameWithExtension = self::$filename.".php";
             }
             $success = SourceCodeService::insertFile(self::$filenameWithExtension, self::$sourceType, self::$sourceLang, $filePath);

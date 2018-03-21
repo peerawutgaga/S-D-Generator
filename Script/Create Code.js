@@ -5,22 +5,17 @@ window.onload = function(){
     var filename = decodeURIComponent(window.location.search);
     filename = filename.substring(12);
     recordFileInfo(filename);
-    //openFile();
+    openFile();
 };
 function recordFileInfo(filename){
     var idx = filename.lastIndexOf("-");
     fileExtension = filename.substring(idx+1);
     oldFilename = filename.substring(0,idx);
+    console.log(oldFilename);
 }
 function openFile(){
     var filename = oldFilename+"."+fileExtension;
-    filepath = "../Source Code Files/"+filename;
-    // $.post('Page/CodeEditorService.php', { 
-    //     'method': "getSourceCode",
-    //     'filepath':filepath
-	// }, function(returnedData){
-    //      console.log(returnedData);
-	// });
+    filepath = "../Source Code Files/"+filename+".txt";
     var client = new XMLHttpRequest();
     client.open('GET', filepath);
     client.onreadystatechange = function() {
@@ -58,10 +53,15 @@ function rename(){
         'oldFilename' : oldFilename+"."+fileExtension, 
         'newFilename' : currentFilename,
 	}, function(returnedData){
-         if(returnedData == "success"){
-             alert("Rename Succeeded");
-         }else{
+         if(returnedData == "failed"){
              alert("Rename failed");
+        }else{
+            alert("Rename Succeeded");
+            refreshCreatCodePage(returnedData);
          }
 	});
+}
+function refreshCreatCodePage(sourceCodePath){
+	var queryString = "?sourcecode="+sourceCodePath;
+	window.location.href='../Create Code.php'+queryString;
 }
