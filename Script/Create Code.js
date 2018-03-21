@@ -65,3 +65,17 @@ function refreshCreatCodePage(sourceCodePath){
 	var queryString = "?sourcecode="+sourceCodePath;
 	window.location.href='../Create Code.php'+queryString;
 }
+function saveChange(){
+    if(!confirm("Save Change ?")){
+        return;
+    }
+    var filepath = "/Source Code Files/"+oldFilename+"."+fileExtension+".txt";
+    var content = document.getElementById("codeEditor").value;
+    $.post('Page/CodeEditorService.php', { 
+		'method': "saveFile",
+        'filepath' : filepath, 
+        'content' : content,
+	}, function(returnedData){
+         alert("Saved");
+	});
+}
