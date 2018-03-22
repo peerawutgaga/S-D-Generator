@@ -37,21 +37,5 @@
             fwrite($file,$content);
             fclose($file);
         }
-        public static function exportFile($filepath){
-            $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $root = $root."/Source Code Files/";
-            if(!LocalFileManager::copy($root.$filepath.".txt",$root.$filepath)){
-                echo "export failed";
-                return;
-            }
-            $file = LocalFileManager::zip($filepath);
-            LocalFileManager::delete($root.$filepath);
-            if($file != null){
-                echo "<a id = \"downloadDiv\" href =\"".$file."\" download>";
-                echo "<button id = \"exportBtn\" onclick = \"exportFile()\"><img src = \"Image/export.png\">Export</button>";
-                echo "</a>";
-            }
-
-        }
     }
 ?>

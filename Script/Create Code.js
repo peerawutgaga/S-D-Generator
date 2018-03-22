@@ -7,7 +7,6 @@ window.onload = function(){
     filename = filename.substring(12);
     recordFileInfo(filename);
     openFile();
-    exportFile();
 };
 function recordFileInfo(filename){
     var idx = filename.lastIndexOf("-");
@@ -87,11 +86,7 @@ function saveChange(){
 	});
 }
 function exportFile(){
-    var filepath = oldFilename+"."+fileExtension;
-    $.post('Page/CodeEditorService.php', {
-        'method': "exportFile", 
-        'filepath' : filepath, 
-	}, function(returnedData){
-        downloadDiv.innerHTML = returnedData;
-	});
+    var filepath = oldFilename+"-"+fileExtension;
+    var queryString = "?sourcecode="+filepath; 
+	window.location.href='../PHP/Download.php'+queryString;
 }

@@ -1,6 +1,7 @@
 var isShiftDown = false;
 var codeEditor = document.getElementById("codeEditor");
-codeEditor.onkeydown = function(e) {
+var lines;
+codeEditor.onkeydown = function(e) { 
     if (e.keyCode === 9) {
         var val = this.value,
         start = this.selectionStart,
@@ -59,3 +60,10 @@ codeEditor.onkeyup = function(e){
         isShiftDown = false;
     } 
 };
+codeEditor.onchange = function(e){
+    var text = codeEditor.value;
+    lines = text.split("\n");   
+}
+function getCursorPosition(){
+
+}

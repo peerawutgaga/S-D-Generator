@@ -6,17 +6,12 @@
         public static function copy($source,$dest){
             return copy($source,$dest);
         }
-        public static function download($file){
-            if (file_exists($file)) {
-                header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="'.basename($file).'"');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize($file));
-                readfile($file);
-            }
+        public static function prepareDownload($file){
+            $root = realpath($_SERVER["DOCUMENT_ROOT"])."/Source Code Files/";
+            $idx = strrpos($file,"-",-1);
+            $file = substr_replace($file,".",$idx,1);
+            self::copy($root.$file.".txt",$root.$file);
+            return $root.$file;
         }
         public static function zip($filename){
             $root = realpath($_SERVER["DOCUMENT_ROOT"]);
