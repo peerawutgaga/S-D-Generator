@@ -20,16 +20,17 @@
 		<textarea id = "codeEditor"></textarea>
 	</div>
 	<div id = "insert">
-		<button id = "defaultBtn">Default Value</button>
-		<button id = "maxBtn">Max Value</button>
-		<button id = "minBtn">Min Value</button>
-		<button id = "randomBtn">Random Value</button>
+		<button id = "defaultBtn" onclick = "setDefaultValue()">Default Value</button>
+		<button id = "maxBtn" onclick = "setMaxValue()">Max Value</button>
+		<button id = "minBtn" onclick = "setMinValue()">Min Value</button>
+		<button id = "randomBtn" onclick = "setRandomValue()">Random Value</button>
 	</div>
 </article>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src = "Script/Create Code.js"></script>
 <script src = "Script/Code Editor.js"></script>
+<script src = "Script/Create Code.js"></script>
+<script src = "Script/Random.js"></script>
 </body>
 </html>

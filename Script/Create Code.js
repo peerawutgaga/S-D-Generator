@@ -26,6 +26,7 @@ function openFile(){
                 var allText = client.responseText;
                 filenameArea.value = filename;
                 document.getElementById("codeEditor").value = allText;
+                updateLine();
             }
         }
     }
@@ -89,4 +90,16 @@ function exportFile(){
     var filepath = oldFilename+"-"+fileExtension;
     var queryString = "?sourcecode="+filepath; 
 	window.location.href='../PHP/Download.php'+queryString;
+}
+function setDefaultValue(){
+    
+}
+function setMaxValue(){
+
+}
+function setMinValue(){
+
+}
+function setRandomValue(){
+
 }
