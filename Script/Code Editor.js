@@ -77,3 +77,52 @@ insertMin.onclick = function(){
     var minValue = getMin(selectedValue);
     insert(minValue);
 }
+insertRandom.onclick = function(){
+    var selectedValue = randomDataTypeSelect.options[randomDataTypeSelect.selectedIndex].value;
+    if(selectedValue==0){
+        alert("Please select data type");
+        return;
+    }
+    if(selectedValue == "byte" || selectedValue == "short" || selectedValue == "int"||selectedValue == "long"){
+        var form = document.getElementById("rangeForm");
+        var rndFrom = parseInt(form.elements.namedItem("minimumBox").value);
+        var rndTo = parseInt(form.elements.namedItem("maximumBox").value);
+        if(isNaN(rndFrom)){
+            rndFrom = parseInt(getMin(selectedValue));
+        }
+        if(isNaN(rndTo)){
+            rndTo = parseInt(getMax(selectedValue));
+        }
+        var rndVal = randomInt(rndFrom,rndTo);
+        insert(rndVal);
+    }else if(selectedValue == "float" || selectedValue == "double"){
+        var form = document.getElementById("bothForm");
+        var rndFrom = parseFloat(form.elements.namedItem("minimumBox").value);
+        var rndTo = parseFloat(form.elements.namedItem("maximumBox").value);
+        var fixLength = parseInt(form.elements.namedItem("lengthBox").value)
+        if(isNaN(rndFrom)){
+            rndFrom = parseFloat(getMin(selectedValue));
+        }
+        if(isNaN(rndTo)){
+            rndTo = parseFloat(getMax(selectedValue));
+        }
+        var rndVal = randomFloat(rndFrom,rndTo);
+        if(!isNaN(fixLength)){
+            rndVal = rndVal.toFixed(fixLength);
+        }
+        insert(rndVal);
+    }else if(selectedValue == "boolean"){
+        insert(randomBoolean());
+    }else if(selectedValue == "string"){
+        var form = document.getElementById("lengthForm");
+        var fixLength = parseInt(form.elements.namedItem("lengthBox").value);
+        if(isNaN(fixLength)){
+            fixLength = randomInt(1,100);
+        }
+        var rndVal = randomString(fixLength);
+        insert(rndVal);
+        
+    }else if(selectedValue == "char"){
+        insert(randomChar());
+    }
+}

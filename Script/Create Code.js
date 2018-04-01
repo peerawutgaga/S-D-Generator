@@ -16,6 +16,20 @@ window.onload = function(){
     recordFileInfo(filename);
     openFile();
 };
+window.onclick = function (event) {
+	if (event.target == defaultModal) {
+		defaultModal.style.display = "none";
+    }
+    if (event.target == minModal) {
+		minModal.style.display = "none";
+    }
+    if (event.target == maxModal) {
+		maxModal.style.display = "none";
+    }
+    if (event.target == randomModal) {
+		randomModal.style.display = "none";
+	}
+};
 function recordFileInfo(filename){
     var idx = filename.lastIndexOf("-");
     fileExtension = filename.substring(idx+1);
@@ -122,33 +136,14 @@ closeRandomBtn.onclick = function(){
     randomModal.style.display = "none";
 }
 function showOption(value){
-    switch(value){
-        case 'byte':
-            showRangeOption();
-            break;
-        case 'short':
-            showRangeOption();
-            break;
-        case 'int':
-            showRangeOption();
-            break;
-        case 'long':
-            showRangeOption();
-            break;
-        case 'float':
-            showRangeOption();
-            break;
-        case 'double':
-            showRangeOption();
-            break;
-        case 'char':
-            showLengthOption();
-            break;
-        case 'string':
-            showLengthOption();
-            break;
-        default:
-            clearOption();
+    if(value == "byte" || value == "short" || value == "int"||value == "long"){
+        showRangeOption();
+    }else if(value == "float"||value == "double"){
+        showBothOption();
+    }else if(value == "string"){
+        showLengthOption();
+    }else{
+        clearOption();
     }
 }
 function showLengthOption(){
@@ -161,6 +156,13 @@ function showLengthOption(){
 function showRangeOption(){
     $.post('Page/InsertValueModal.php', { 
 		'option': "range",
+	}, function(returnedData){
+        document.getElementById('randomOption').innerHTML = returnedData;
+	});
+}
+function showBothOption(){
+    $.post('Page/InsertValueModal.php', { 
+		'option': "both",
 	}, function(returnedData){
         document.getElementById('randomOption').innerHTML = returnedData;
 	});

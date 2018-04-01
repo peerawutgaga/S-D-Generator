@@ -7,6 +7,9 @@
             case 'length':
                 addLengthOption();
                 break;
+            case 'both':
+                addBothOption();
+                break;
             case 'clear':
                 initialRandomOptionDiv();
                 break;
@@ -31,10 +34,15 @@
     function initialRandomDataTypeSelect(){
         echo "<select id = 'randomDataTypeSelect' onchange = showOption(this.value)>\n";
         initialOptions();
+        echo "</select>\n";
     }
     function initialDataTypeSelect($name){
         echo "<select id = '".$name."DataTypeSelect'>\n";
-        initialOptions();   
+        initialOptions();
+        if($name == 'default'){
+            echo "<option value = 'object'>object</option>\n";
+        }   
+        echo "</select>\n";
     }
     function initialOptions(){
         echo "<option value = '0' selected disabled hidden>Please Select Data Type</option>\n";
@@ -47,8 +55,6 @@
         echo "<option value = 'boolean'>boolean</option>\n";
         echo "<option value = 'char'>char</option>\n";
         echo "<option value = 'string'>string</option>\n";
-        echo "<option value = 'object'>object</option>\n";
-        echo "</select>\n";
     }
     function initialRandomOptionDiv(){
         echo "<div id = 'randomOption'>\n";
@@ -63,16 +69,32 @@
     }
     function addRangeOption(){
         echo "<div id = 'randomOption' text-align = 'left'>\n";
+        echo "<form id = 'rangeForm'>\n";
         echo "From: ";
-        echo "<input type = \"text\" name = \"minimum\" id = \"minimum\" >";
+        echo "<input type = \"text\" name = \"minimumBox\" id = \"minimumBox\" >";
         echo "To: ";
-        echo "<input type = \"text\" name = \"maximum\" id = \"maximum\" >";
+        echo "<input type = \"text\" name = \"maximumBox\" id = \"maximumBox\" >";
+        echo "</form>\n";
         echo "</div>\n";
     }
     function addLengthOption(){
         echo "<div id = 'randomOption' text-align = 'left'>\n";
+        echo "<form id = 'lengthForm'>\n";
         echo "Length: ";
-        echo "<input type = \"text\" name = \"length\" id = \"length\" >";
+        echo "<input type = \"text\" name = \"lengthBox\" id = \"lengthBox\" >";
+        echo "</form>\n";
+        echo "</div>\n";
+    }
+    function addBothOption(){
+        echo "<div id = 'randomOption' text-align = 'left'>\n";
+        echo "<form id = 'bothForm'>\n";
+        echo "From: ";
+        echo "<input type = \"text\" name = \"minimumBox\" id = \"minimumBox\" >";
+        echo "To: ";
+        echo "<input type = \"text\" name = \"maximumBox\" id = \"maximumBox\" >";
+        echo "Float length: ";
+        echo "<input type = \"text\" name = \"lengthBox\" id = \"lengthBox\" >";
+        echo "</form>\n";
         echo "</div>\n";
     }
 ?>

@@ -33,7 +33,6 @@ createCodeClose.onclick =function(){
 };
 
 window.onclick = function (event) {
-	console.log(event.target);
 	if (event.target == uploadModal) {
 		uploadModal.style.display = "none";
 	}
