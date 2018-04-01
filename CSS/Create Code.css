@@ -17,7 +17,7 @@ article{
 	padding: 1em;
 	margin: 0px 20px;
 }
-button{
+.UIButton{
 	background-color: white;
 	border: 2px solid gray;
 	border-radius: 4px;
@@ -29,6 +29,19 @@ button{
 	margin-left: 10px;
     font-size: 14px;
 	cursor: pointer;
+}
+.modalButton{
+	background-color: white;
+	border: 2px solid gray;
+	border-radius: 4px;
+	width: 50;
+	padding: 8px 10px;
+	margin: 1em;
+    text-align: center;
+	text-decoration: none;
+    font-size: 14px;
+	cursor: pointer;
+	vertical-align: bottom;
 }
 #exportBtn, #saveBtn{
 	float: right;
@@ -52,6 +65,15 @@ button:hover {background-color: #e7e7e7;}
 	border-radius: 4px;
 	font-size: medium;
 }
+#minimum, #maximum,#length{
+	width: 30%;
+	padding: 4px 4px;
+    margin: 8px 8px 0px;
+	box-sizing: border-box;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: small;
+}
 img{
 	padding-right: 8px;
 	vertical-align: middle;
@@ -61,4 +83,50 @@ img{
 #insert{
 	padding: 1em;
 	margin: 0px 20px;
+}
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 200px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	text-align: center;
+}
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* Upload Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 4px;
+    width: 20%;
+    height: 30%;
+    overflow: auto;
+}
+select{
+	width: 100%;
+    padding: 4px 10px;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: 14px;
 }
