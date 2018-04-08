@@ -65,7 +65,11 @@ insertMax.onclick = function(){
         alert("Please select data type");
         return;
     }
-    var maxValue = getMax(selectedValue);
+    if(fileExtension == "java"){
+        var maxValue = getJavaMax(selectedValue);
+    }else{
+
+    }
     insert(maxValue);
 }
 insertMin.onclick = function(){
@@ -74,7 +78,11 @@ insertMin.onclick = function(){
         alert("Please select data type");
         return;
     }
-    var minValue = getMin(selectedValue);
+    if(fileExtension == "java"){
+        var minValue = getJavaMin(selectedValue);
+    }else{
+
+    }
     insert(minValue);
 }
 insertRandom.onclick = function(){
