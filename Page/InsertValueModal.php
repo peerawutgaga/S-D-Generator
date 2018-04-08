@@ -17,38 +17,44 @@
                 initialRandomOptionDiv();
         }
     }
-    function initialModal($name){
+    if(isset($_POST['language'])&&isset($_POST['modal'])){
+        if($_POST['language'] == 'java'){
+            initialDataTypeSelect($_POST['modal']);
+            initialOptionsJava($_POST['modal']);
+            echo "</select>"; 
+        }else{
+            initialDataTypeSelect($_POST['modal']);
+            initialOptionsPHP($_POST['modal']);
+            echo "</select>"; 
+        }
+    }
+    function initialModal($language,$name){
         echo "<div id=\"".$name."ValueModal\" class=\"modal\">\n";
         echo"<div class=\"modal-content\"> <span class=\"close\">&times;</span>\n";
         echo "<h3 align = 'left'>Insert ".$name." value</h3>\n";
         echo "<h4 align = \"center\">Select Datatype</h4>\n";
-        if($name == 'random'){
-            initialRandomDataTypeSelect();
-            initialRandomOptionDiv();
+        initialDataTypeSelect($name);
+        if($language == 'java'){
+            initialOptionsJava($name);
         }else{
-            initialDataTypeSelect($name);     
+            initialOptionsPHP($name);
+        }
+        echo "</select>"; 
+        if($name == "random"){
+            initialRandomOptionDiv();
         }
         initialButton($name);
-        closeModalDiv();
+        closeModalDiv();       
     }
-    function initialRandomDataTypeSelect(){
-        echo "<select id = 'randomDataTypeSelect' onchange = showOption(this.value)>\n";
-        initialOptions();
-        echo "<option value = 'string'>string</option>\n";
-        echo "<option value = 'boolean'>boolean</option>\n";
-        echo "</select>\n";
-    }
+    
     function initialDataTypeSelect($name){
-        echo "<select id = '".$name."DataTypeSelect'>\n";
-        initialOptions();
-        if($name == 'default'){
-            echo "<option value = 'string'>string</option>\n";
-            echo "<option value = 'boolean'>boolean</option>\n";
-            echo "<option value = 'object'>object</option>\n";
-        }   
-        echo "</select>\n";
+        if($name == "random"){
+            echo "<select id = 'randomDataTypeSelect' onchange = showOption(this.value)>\n";
+        }else{
+            echo "<select id = '".$name."DataTypeSelect'>\n";
+        }
     }
-    function initialOptions(){
+    function initialOptionsJava($name){
         echo "<option value = '0' selected disabled hidden>Please Select Data Type</option>\n";
         echo "<option value = 'byte'>byte</option>\n";
         echo "<option value = 'short'>short</option>\n";
@@ -57,6 +63,27 @@
         echo "<option value = 'float'>float</option>\n";
         echo "<option value = 'double'>double</option>\n";
         echo "<option value = 'char'>char</option>\n";
+        if($name == "random"){
+            echo "<option value = 'string'>string</option>\n";
+        }
+        else if($name == "default"){
+            echo "<option value = 'string'>string</option>\n";
+            echo "<option value = 'boolean'>boolean</option>\n";
+            echo "<option value = 'object'>object</option>\n";
+        }
+    }
+    function initialOptionsPHP($name){
+        echo "<option value = '0' selected disabled hidden>Please Select Data Type</option>\n";
+        echo "<option value = 'int'>int</option>\n";
+        echo "<option value = 'float'>float</option>\n";
+        if($name == "random"){
+            echo "<option value = 'string'>string</option>\n";
+        }
+        else if($name == "default"){
+            echo "<option value = 'string'>string</option>\n";
+            echo "<option value = 'boolean'>boolean</option>\n";
+            echo "<option value = 'object'>object</option>\n";
+        }
     }
     function initialRandomOptionDiv(){
         echo "<div id = 'randomOption'>\n";

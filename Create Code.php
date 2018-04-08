@@ -28,10 +28,10 @@
 </article>
 <?php
 	require_once "Page/InsertValueModal.php";
-	initialModal("default");
-	initialModal("max");
-	initialModal("min");
-	initialModal("random");
+	initialModal("java","default");
+	initialModal("java","max");
+	initialModal("java","min");
+	initialModal("java","random");
 ?>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>

@@ -58,6 +58,7 @@ insertDefault.onclick = function(){
     }
     var defaultValue = getDefault(selectedValue);
     insert(defaultValue);
+    defaultModal.style.display = "none";
 }
 insertMax.onclick = function(){
     var selectedValue = maxDataTypeSelect.options[maxDataTypeSelect.selectedIndex].value;
@@ -68,9 +69,10 @@ insertMax.onclick = function(){
     if(fileExtension == "java"){
         var maxValue = getJavaMax(selectedValue);
     }else{
-
+        var maxValue = getPHPMax(selectedValue);
     }
     insert(maxValue);
+    maxModal.style.display = "none";
 }
 insertMin.onclick = function(){
     var selectedValue = minDataTypeSelect.options[minDataTypeSelect.selectedIndex].value;
@@ -81,9 +83,10 @@ insertMin.onclick = function(){
     if(fileExtension == "java"){
         var minValue = getJavaMin(selectedValue);
     }else{
-
+        var minValue = getPHPMin(selectedValue);
     }
     insert(minValue);
+    minModal.style.display = "none";
 }
 insertRandom.onclick = function(){
     var selectedValue = randomDataTypeSelect.options[randomDataTypeSelect.selectedIndex].value;
@@ -133,4 +136,5 @@ insertRandom.onclick = function(){
     }else if(selectedValue == "char"){
         insert(randomChar());
     }
+    randomModal.style.display = "none";
 }
