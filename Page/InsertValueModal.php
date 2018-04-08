@@ -34,12 +34,16 @@
     function initialRandomDataTypeSelect(){
         echo "<select id = 'randomDataTypeSelect' onchange = showOption(this.value)>\n";
         initialOptions();
+        echo "<option value = 'string'>string</option>\n";
+        echo "<option value = 'boolean'>boolean</option>\n";
         echo "</select>\n";
     }
     function initialDataTypeSelect($name){
         echo "<select id = '".$name."DataTypeSelect'>\n";
         initialOptions();
         if($name == 'default'){
+            echo "<option value = 'string'>string</option>\n";
+            echo "<option value = 'boolean'>boolean</option>\n";
             echo "<option value = 'object'>object</option>\n";
         }   
         echo "</select>\n";
@@ -52,9 +56,7 @@
         echo "<option value = 'long'>long</option>\n";
         echo "<option value = 'float'>float</option>\n";
         echo "<option value = 'double'>double</option>\n";
-        echo "<option value = 'boolean'>boolean</option>\n";
         echo "<option value = 'char'>char</option>\n";
-        echo "<option value = 'string'>string</option>\n";
     }
     function initialRandomOptionDiv(){
         echo "<div id = 'randomOption'>\n";

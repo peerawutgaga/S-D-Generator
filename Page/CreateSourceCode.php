@@ -297,8 +297,7 @@
                 case "float" : return "0.0";
                 case "int" : return "0";
                 case "double" : return "0.0";
-                case "char" : return "''";
-                case "string" : return "\"\"";
+                case "char" : return "'\\u0000'";
                 case "boolean" : return "false";
                 case "long" : return "0";
                 case "short" : return "0";
