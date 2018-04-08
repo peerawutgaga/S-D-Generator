@@ -8,12 +8,12 @@
 
 <body>
 <header>
-  <h1>Stub and Driver Generator Online Tool</h1>
+  <h1>Stubs and Drivers Generator Tool</h1>
 </header>
 <article>
   <!-- Information Side Bar -->
   <div class = "description">
-    <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating an stub or driver for Object-Oriented program testing for sequence diagram and class diagram</p>
+    <p id="tool-info"><b>Stubs and Drivers Generator Tool</b> is a tool for creating an stub or driver for Object-Oriented program testing for sequence diagram and class diagram</p>
     <h3>Instruction</h3>
     <ol>
       <li>Upload diagram XML file</li>
@@ -99,6 +99,14 @@
 <!-- File List-->
 <div id = "fileListModal" class = "modal">
   <div class = "fileListModal-content"><span class="close">&times;</span>
+  <h4>Source Code List</h4>
+  <table id = "Files Table">
+    <thead>
+      <tr>
+        <th>Generated Files</th>
+      </tr>
+    </thead>
+  </table>
   </div>
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>

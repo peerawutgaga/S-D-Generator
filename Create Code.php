@@ -7,7 +7,7 @@
 </head>
 <body>
 	<header>
-		<h1>Stub and Driver Generator Online Tool</h1>
+		<h1>Stubs and Drivers Generator Tool</h1>
 	</header>
 <article>
 	<div id = "fileInfo">
