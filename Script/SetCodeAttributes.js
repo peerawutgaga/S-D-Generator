@@ -1,7 +1,4 @@
 function createCode(){
-	fileListModal.style.display = "block";
-	createCodeModal.style.display = "none";
-	return;
 	var form = document.getElementById('codeProperties');
 	var filename = form.elements.namedItem('filename');
 	var sourceType;
@@ -34,7 +31,7 @@ function createCode(){
 		 }else if(returnedData == "file exist"){
 			alert("This filename is already exist");
 		 }else{
-			//navigateToCreatCodePage(returnedData);
+			navigateToCreatCodePage(returnedData);
 		 }
 	});
 }
