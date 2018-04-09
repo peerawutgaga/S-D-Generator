@@ -1,4 +1,5 @@
 function createCode(){
+	return;
 	var form = document.getElementById('codeProperties');
 	var sourceType;
 	var sourceLang;
@@ -24,7 +25,7 @@ function createCode(){
 		 }else if(returnedData == "driver error"){
 			alert("Cannot create driver for this class because this class does not be called by other classes");
 		 }else{
-			navigateToCreatCodePage(returnedData);
+			//navigateToCreatCodePage(returnedData);
 		 }
 	});
 }
