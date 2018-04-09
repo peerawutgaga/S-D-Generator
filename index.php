@@ -13,15 +13,15 @@
 <article>
   <!-- Information Side Bar -->
   <div class = "description">
-    <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating an stub or driver for Object-Oriented program testing for sequence diagram and class diagram</p>
+    <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating stubs or drivers for Object-Oriented program testing from sequence and class diagrams</p>
     <h3>Instruction</h3>
     <ol>
-      <li>Upload diagram XML file</li>
-      <li>Select class under test</li>
-      <li>Choose source code type (Stub or Driver)</li>
-      <li>Choose language</li>
-      <li>Edit the source code</li>
-      <li>Export</li>
+      <li>Upload UML diagram as XML files.</li>
+      <li>Select class under test.</li>
+      <li>Choose source code type (Stub or Driver).</li>
+      <li>Choose languag.e</li>
+      <li>Edit the source codes.</li>
+      <li>Export.</li>
     </ol>
   </div>
   <!-- Button Table -->
