@@ -70,7 +70,7 @@
 </div>
 <!-- Create Code Modal -->
 <div id="createCodeModal" class="modal">
-  <div class = "createCodeModal-header"><span class="close">&times;</span>
+  <div class = "createCodeModal-content"><span class="close">&times;</span>
     <h3>Set Code Property</h3>
     <div id = "SelectDiagram">
           <?php
@@ -83,8 +83,6 @@
       </div>
       <div id = "SetProperties">
         <form id = "codeProperties">
-          <h4>Filename</h4>
-          <input type = "text" name = "filename" id = "filename">
           <h4>Select Source Code Type</h4>
           <input type = "radio" name = "sourceCodeType" id = "stub" value = "stub" checked = "checked"> Stub</br>
           <input type = "radio" name = "sourceCodeType" id = "driver" value = "driver"> Driver</br>

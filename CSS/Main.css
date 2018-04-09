@@ -81,17 +81,17 @@ a{
     border: 1px solid #888;
     border-radius: 4px;
     width: 30%;
-    height: 40%;
+    height: 35%;
     overflow: auto;
 }
-.createCodeModal-header {
+.createCodeModal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
     border-radius: 4px;
     width: 40%;
-    height: 55%;
+    height: 45%;
     overflow: auto;
 }
 .fileListModal-content{
