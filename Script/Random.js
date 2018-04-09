@@ -2,7 +2,7 @@ function randomInt(from,to){
     return Math.floor(Math.random() * (to - from + 1) ) + from;
 }
 function randomFloat(from,to){
-    return Math.random() * (to - from + 1) + from;
+    return Math.random() * (to - from) + from;
 }
 function randomChar(){
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

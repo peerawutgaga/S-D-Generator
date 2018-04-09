@@ -7,7 +7,7 @@
 </head>
 <body>
 	<header>
-		<h1>Stub and Driver Generator Online Tool</h1>
+		<h1>Stubs and Drivers Generation Tool</h1>
 	</header>
 <article>
 	<div id = "fileInfo">
@@ -28,10 +28,10 @@
 </article>
 <?php
 	require_once "Page/InsertValueModal.php";
-	initialModal("default");
-	initialModal("max");
-	initialModal("min");
-	initialModal("random");
+	initialModal("java","default");
+	initialModal("java","max");
+	initialModal("java","min");
+	initialModal("java","random");
 ?>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>

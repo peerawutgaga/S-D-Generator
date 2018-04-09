@@ -14,6 +14,10 @@ window.onload = function(){
     var filename = decodeURIComponent(window.location.search);
     filename = filename.substring(12);
     recordFileInfo(filename);
+    initialDefaultModal();
+    initialMinModal();
+    initialMaxModal();
+    initialRandomModal();
     openFile();
 };
 window.onclick = function (event) {
@@ -34,6 +38,74 @@ function recordFileInfo(filename){
     var idx = filename.lastIndexOf("-");
     fileExtension = filename.substring(idx+1);
     oldFilename = filename.substring(0,idx);
+}
+function initialDefaultModal(){
+    if(fileExtension == "php"){
+        $.post('Page/InsertValueModal.php', { 
+            'language': "php",
+            'modal': "default",
+        }, function(returnedData){
+           document.getElementById("defaultDataTypeSelect").innerHTML = returnedData;
+        });
+    }else{
+        $.post('Page/InsertValueModal.php', { 
+            'language': "java",
+            'modal': "default",
+        }, function(returnedData){
+            document.getElementById("defaultDataTypeSelect").innerHTML = returnedData;
+        });
+    }
+}
+function initialMaxModal(){
+    if(fileExtension == "php"){
+        $.post('Page/InsertValueModal.php', { 
+            'language': "php",
+            'modal': "max",
+        }, function(returnedData){
+           document.getElementById("maxDataTypeSelect").innerHTML = returnedData;
+        });
+    }else{
+        $.post('Page/InsertValueModal.php', { 
+            'language': "java",
+            'modal': "max",
+        }, function(returnedData){
+            document.getElementById("maxDataTypeSelect").innerHTML = returnedData;
+        });
+    }
+}
+function initialMinModal(){
+    if(fileExtension == "php"){
+        $.post('Page/InsertValueModal.php', { 
+            'language': "php",
+            'modal': "min",
+        }, function(returnedData){
+           document.getElementById("minDataTypeSelect").innerHTML = returnedData;
+        });
+    }else{
+        $.post('Page/InsertValueModal.php', { 
+            'language': "java",
+            'modal': "min",
+        }, function(returnedData){
+            document.getElementById("minDataTypeSelect").innerHTML = returnedData;
+        });
+    }
+}
+function initialRandomModal(){
+    if(fileExtension == "php"){
+        $.post('Page/InsertValueModal.php', { 
+            'language': "php",
+            'modal': "random",
+        }, function(returnedData){
+           document.getElementById("randomDataTypeSelect").innerHTML = returnedData;
+        });
+    }else{
+        $.post('Page/InsertValueModal.php', { 
+            'language': "java",
+            'modal': "random",
+        }, function(returnedData){
+            document.getElementById("randomDataTypeSelect").innerHTML = returnedData;
+        });
+    }
 }
 function openFile(){
     var filename = oldFilename+"."+fileExtension;

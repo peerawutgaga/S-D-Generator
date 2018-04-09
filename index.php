@@ -8,7 +8,7 @@
 
 <body>
 <header>
-  <h1>Stub and Driver Generator Online Tool</h1>
+  <h1>Stubs and Drivers Generation Tool</h1>
 </header>
 <article>
   <!-- Information Side Bar -->
@@ -45,7 +45,7 @@
   </div>
 </article>
 <!-- Upload Modal -->
-<div id="uploadModal" class="uploadModal">
+<div id="uploadModal" class="modal">
   <div class="uploadModal-content"> <span class="close">&times;</span>
     <h3>Upload XML File</h3>
     <form id = "uploadForm" action = "./PHP/Uploader.php" method = "post" enctype="multipart/form-data">
@@ -69,7 +69,7 @@
   </div>
 </div>
 <!-- Create Code Modal -->
-<div id="createCodeModal" class="createCodeModal">
+<div id="createCodeModal" class="modal">
   <div class = "createCodeModal-header"><span class="close">&times;</span>
     <h3>Set Code Property</h3>
     <div id = "SelectDiagram">
@@ -96,9 +96,15 @@
       </div> 
   </div>
 </div>
+<!-- File List-->
+<div id = "fileListModal" class = "modal">
+  <div class = "fileListModal-content"><span class="close">&times;</span>
+  </div>
+</div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="Script/Main.js"></script>
+<script src="Script/SetCodeAttributes.js"></script>
 </body>
 </html>
