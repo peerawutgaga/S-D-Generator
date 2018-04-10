@@ -58,6 +58,11 @@
                 }
             }else{
                 $driver = self::identifyDriver();
+                if(self::$sourceLang == "Java"){
+                    JavaGenerator::createDriver($driver);
+                }else{
+                    PHPGenerator::createDriver($driver);
+                }
             }
         }
         private static function identifyStub(){

@@ -19,5 +19,8 @@ class PHPGenerator{
     public static function createStub($stub){
         
     }
+    public static function createDriver($driver){
+        
+    }
 }
 ?>

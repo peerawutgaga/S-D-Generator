@@ -33,8 +33,22 @@
             }
             self::closeFile();
         }
+        public static function createDriver($driver){
+            self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+            $success = self::createFile($driver['className'],"driver");
+            if(!$success){
+                return;
+            }
+            self::initialDriverHeader($driver);
+            self::closeFile();
+
+        }
         private static function createFile($className,$sourceCodeType){
-            $filename = $className."Stub.java";
+            if($sourceCodeType == "stub"){
+                $filename = $className."Stub.java";
+            }else{
+                $filename = $className."Driver.java";
+            }
             $filepath = self::$root."/Source Code Files/".$filename.".txt";
             $success = SourceCodeService::insertFile($filename, $sourceCodeType, "Java", $filepath);
             if(!$success){
@@ -47,12 +61,55 @@
             $txt = "class ".$className."Stub {\n";
             fwrite(self::$file,$txt);
         }
+        private static function initialDriverHeader($driver){
+            $txt = "import static org.junit.jupiter.api.Assertions.*;\n";
+            fwrite(self::$file, $txt);
+            $txt = "import org.junit.jupiter.api.Test;\n";
+            fwrite(self::$file, $txt);
+            if(isset($driver['packagePath'])){
+                echo $driver['packagePath']."<br>";
+            }
+        }
         private static function writeMethod($method){
-        
+            if($method['visibility']!='public'){
+                return;
+            }
+            $txt = "\t".$method['visibility']." ".$method['returnType']." ".$method['methodName']."(";
+            fwrite(self::$file, $txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
+            self::writeParameter($parameterList);
+            fwrite(self::$file,"){\n");
+            self::writeSysOut($parameterList);
+            if(isset($method['returnType'])){
+                if($method['returnType'] != "void"){
+                    $defaultValue = self::getDefaultValue($method['returnType']);
+                    $txt = "\t\treturn ".$defaultValue.";\n";
+                    fwrite(self::$file, $txt);
+                }
+            }
+            fwrite(self::$file,"\t}\n");
         }
         
-        private static function writeParameter(){
-
+        private static function writeParameter($parameterList){
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);     
+            foreach($cit as $parameter){
+                $paramType = $parameter['parameterType'];
+                if($paramType === 'string'){
+                    $paramType = "String";
+                }
+                $txt = $paramType.$parameter['typeModifier']." ".$parameter['parameterName'];
+                fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+        }
+        private static function writeSysOut($parameterList){
+            foreach($parameterList as $parameter){
+                $txt = "\t\tSystem.out.println(".$parameter['parameterName'].");\n";
+                fwrite(self::$file,$txt);
+            }
         }
         private static function closeFile(){
             fwrite(self::$file,"}\n");
