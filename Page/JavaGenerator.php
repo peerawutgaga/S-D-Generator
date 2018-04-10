@@ -40,6 +40,10 @@
                 return;
             }
             self::initialDriverHeader($driver);
+            $methodList = ClassDiagramService::selectAllMethodFromClassName($driver['diagramID'],$driver['className']);
+            foreach($methodList as $method){
+                self::writeUnitTest($method);
+            }
             self::closeFile();
 
         }
@@ -67,8 +71,13 @@
             $txt = "import org.junit.jupiter.api.Test;\n";
             fwrite(self::$file, $txt);
             if(isset($driver['packagePath'])){
-                echo $driver['packagePath']."<br>";
+                $path = substr($driver['packagePath'],1);
+                $path = str_replace("/",".",$path);
+                $txt = "import ".$path.".".$driver['className'].";\n";
+                fwrite(self::$file, $txt);
             }
+            $txt = "class ".$driver['className']."{\n";
+            fwrite(self::$file, $txt);
         }
         private static function writeMethod($method){
             if($method['visibility']!='public'){
@@ -89,7 +98,31 @@
             }
             fwrite(self::$file,"\t}\n");
         }
-        
+        private static function writeUnitTest($method){
+            if($method['visibility']!='public'){
+                return;
+            }
+            if(!isset($method['returnType'])){
+                return;
+            }
+            fwrite(self::$file, "\t@test\n");
+            $txt = "\tvoid test".$method['methodName']."(){\n";
+            fwrite(self::$file, $txt);
+            if($method['isStatic'] == 1){
+                self::callStaticMethod($method);
+            }
+            fwrite(self::$file, "\t}\n");
+        }
+        private static function callStaticMethod($method){
+            if($method['returnType'] == 'void'){
+                $txt = "\t\t".$method['className'].".".$method['methodName']."(";
+            }else{
+                $returnType = $method['returnType'];
+            }
+        }
+        private static function declareClassInstance($method){
+
+        }
         private static function writeParameter($parameterList){
             $ait = new ArrayIterator($parameterList);
             $cit = new CachingIterator($ait);     
