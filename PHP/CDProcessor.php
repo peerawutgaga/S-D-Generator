@@ -79,7 +79,6 @@
             else if(isset($returnType->Class)){
                 return $returnType->Class['Name'];
             }
-            return "void";
         }
         private static function getParameterType($type){
             if(isset($type->DataType)){
@@ -166,8 +165,6 @@
             if(isset($textModelProperties->ModelRef)){
                 $typeID = (string)$textModelProperties->ModelRef['id'];
                 return self::$dataTypeRef[$typeID];
-            }else{
-                return "void";
             }
         }
         private static function getIsStaticValueTraditional($modelProperties){
