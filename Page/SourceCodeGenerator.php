@@ -2,14 +2,13 @@
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/Page/PHPGenerator.php";
     require_once "$root/Page/JavaGenerator.php";
-    require_once "$root/PHP/Script.php";
     $graphID = $_POST['graphID'];
     $diagramID = $_POST['diagramID'];
     $classID = $_POST['CUT'];
     $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    //CreateSourceCode::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
-    class CreateSourceCode{
+    //SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
+    class SourceCodeGenerator{
         private static $file;
         private static $graphID;
         private static $diagramID;
@@ -26,7 +25,7 @@
            self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
            SourceCodeService::initialSourceCodeDatabase();
            if(!self::checkIfMessagesAreEmpty()){
-               self::createFile();
+               self::createSourceCode();
             }
         }
         private static function checkIfMessagesAreEmpty(){
@@ -45,9 +44,18 @@
             }
             return false;
         }
-        private static function createFile(){
+        private static function createSourceCode(){
             if(self::$sourceType == "stub"){
                 $stubList = self::identifyStub();
+                if(self::$sourceLang=="Java"){
+                    foreach($stubList as $stub){
+                        JavaGenerator::createStub($stub);
+                    }
+                }else{
+                    foreach($stubList as $stub){
+                        PHPGenerator::createStub($stub);
+                    }
+                }
             }else{
                 $driver = self::identifyDriver();
             }

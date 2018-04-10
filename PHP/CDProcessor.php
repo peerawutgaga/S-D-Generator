@@ -54,10 +54,11 @@
                 $methodID = $method['Id'];
                 $methodName = $method['Name'];
                 $returnType = self::getReturnType($method->ReturnType);
+                $visibility = $method['Visibility'];
                 $typeModifier = $method['TypeModifier'];
                 $isStatic = self::getIsStaticValueSimple($method['Scope']);
                 ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, 
-                $methodName, $returnType, $typeModifier, $isStatic);
+                $methodName, $returnType, $visibility,$typeModifier, $isStatic);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
         }
@@ -135,10 +136,11 @@
                     $methodID = $method['id'];
                     $methodName = $method['name'];
                     $returnType = self::identifyType($method->ModelProperties->TextModelProperty);
+                    $visibility = self::getVisibility($method->ModelProperties);
                     $typeModifier = self::getTypeModifier($method->ModelProperties);
                     $isStatic = self::getIsStaticValueTraditional($method->ModelProperties);
                     ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID,$className, 
-                    $methodID, $methodName, $returnType,$typeModifier, $isStatic);
+                    $methodID, $methodName, $returnType,$visibility,$typeModifier, $isStatic);
                     self::identifyParameterTraditional($method->ChildModels, $methodID);
                 }
             }
@@ -175,6 +177,13 @@
                         return 0;
                     }
                     return 1;
+                }
+            }
+        }
+        private static function getVisibility($modelProperties){
+            foreach($modelProperties->StringProperty as $strProp){
+                if($strProp['name']=="visibility"){
+                    return $strProp['value'];
                 }
             }
         }

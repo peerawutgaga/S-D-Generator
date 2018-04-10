@@ -16,6 +16,8 @@ class PHPGenerator{
             default : return "null";
         }
     }
-    
+    public static function createStub($stub){
+        
+    }
 }
 ?>

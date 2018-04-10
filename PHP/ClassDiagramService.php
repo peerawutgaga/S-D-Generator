@@ -30,7 +30,8 @@
                 className VARCHAR(30) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
-                returnType VARCHAR(30) NOT NULL,
+                returnType VARCHAR(30),
+                visibility VARCHAR(8)NOT NULL,
                 typeModifier VARCHAR(3),
                 isStatic INT(1) NOT NULL
             )";
@@ -77,12 +78,12 @@
             $sql->close();
         }
         public static function insertToMethodTable($conn, $diagramID,$className, 
-        $methodID, $methodName, $returnType,$typeModifier,$isStatic){
+        $methodID, $methodName, $returnType,$visibility,$typeModifier,$isStatic){
             $sql = $conn->prepare("INSERT INTO method(diagramID,className,methodID, 
-            methodName, returnType,typeModifier,isStatic) 
-            VALUES(?,?,?,?,?,?,?)");
-            $sql->bind_param("isssssi",$diagramID,$className,$methodID, $methodName,
-             $returnType, $typeModifier,$isStatic);
+            methodName, returnType, visibility, typeModifier,isStatic) 
+            VALUES(?,?,?,?,?,?,?,?)");
+            $sql->bind_param("issssssi",$diagramID,$className,$methodID, $methodName,
+             $returnType, $visibility,$typeModifier,$isStatic);
             if($sql->execute()===FALSE){
                     echo "Error at inserting to method table: ".$sql->error."<br>";
             }
@@ -109,22 +110,6 @@
             $result = $sql->fetch();
             return $result[$value];
         }
-        public static function insertToDataRefTable($conn, $id, $name){
-            $sql = $conn->prepare("INSERT INTO dataTypeRef(id, name) VALUES(?,?)");
-            $sql->bind_param("ss",$id,$name);
-            if($sql->execute()===FALSE){
-                echo "Error at inserting to dataTypeRef table: ".$sql->error."<br>";
-            }
-            $sql->close();
-        }
-        public static function selectDataType($id){
-            $conn = Database::connectToDBUsingPDO('classdiagram');
-            $sql = $conn->prepare("SELECT * FROM dataTypeRef WHERE id = :id LIMIT 1");
-            $sql->bindParam(':id',$id);
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result['name'];
-        }
         public static function selectAllFromDiagram(){
             $conn = Database::connectToDBUsingPDO('classdiagram');
             $sql = $conn->prepare("SELECT * FROM diagram");
@@ -141,25 +126,22 @@
             $result = $sql->fetch();
             return $result;
         }
-        public static function selectMethodFromMessageName($diagramID,$className,$messageName){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
-            $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND 
-             className = :className AND
-             methodName = :messageName
-             LIMIT 1");
-            $sql->bindParam(':diagramID',$diagramID);
-            $sql->bindParam(':className',$className);
-            $sql->bindParam(':messageName',$messageName);
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result;
-        }
         public static function selectParameterByMethodID($diagramID, $methodID){
             $conn = Database::connectToDBUsingPDO('classDiagram');
             $sql = $conn->prepare("SELECT * FROM parameter WHERE diagramID = :diagramID AND
             methodID = :methodID");
             $sql->bindParam(':diagramID',$diagramID);
             $sql->bindParam(':methodID', $methodID);
+            $sql->execute();
+            $result = $sql->fetchAll();
+            return $result;
+        }
+        public static function selectAllMethodFromClassName($diagramID,$className){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND
+            className = :className");
+            $sql->bindParam(':diagramID',$diagramID);
+            $sql->bindParam(':className', $className);
             $sql->execute();
             $result = $sql->fetchAll();
             return $result;
