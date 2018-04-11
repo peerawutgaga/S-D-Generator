@@ -194,7 +194,7 @@
             }
             $txt = "\t\t\t\$expectedValue;\n";
             fwrite(self::$file, $txt);
-            $txt = "\t\t\t\$this->assertEquals('\$expectedValue', \$returnValue);\n";
+            $txt = "\t\t\t\$this->assertEquals(\$expectedValue, \$returnValue);\n";
             fwrite(self::$file, $txt);
         }
         private static function closeFile(){
