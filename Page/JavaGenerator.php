@@ -106,11 +106,16 @@
                 return;
             }
             fwrite(self::$file, "\t@test\n");
-            $txt = "\tvoid test".$method['methodName']."(){\n";
+            $methodName = ucfirst($method['methodName']);
+            $txt = "\tvoid test".$methodName."(){\n";
             fwrite(self::$file, $txt);
             if($method['isStatic'] == 1){
                 self::callStaticMethod($method);
+            }else{
+                self::declareClassInstance($method);
+                self::callMethodFromInstance($method);
             }
+            self::writeAssert($method);
             fwrite(self::$file, "\t}\n");
         }
         private static function callStaticMethod($method){
@@ -118,10 +123,43 @@
                 $txt = "\t\t".$method['className'].".".$method['methodName']."(";
             }else{
                 $returnType = $method['returnType'];
+                $txt = "\t\t".$returnType." returnValue = ".$method['className'].".".$method['methodName']."(";
             }
+            fwrite(self::$file,$txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
+            self::writeInput($parameterList);
+            fwrite(self::$file,");\n");
+        }
+        private static function callMethodFromInstance($method){
+            $instance = lcfirst($method['className']);
+            if($method['returnType'] == 'void'){
+                $txt = "\t\t".$instance.".".$method['methodName']."(";
+            }else{
+                $returnType = $method['returnType'];
+                $txt = "\t\t".$returnType." returnValue = ".$instance.".".$method['methodName']."(";
+            }
+            fwrite(self::$file,$txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
+            self::writeInput($parameterList);
+            fwrite(self::$file,");\n");
         }
         private static function declareClassInstance($method){
-
+            $instance = lcfirst($method['className']);
+            $constructor = ClassDiagramService::selectMethodByMethodName($method['diagramID'],$method['className'],$method['className']);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$constructor['methodID']);
+            $txt = "\t\t".$method['className']." ".$instance." = new ".$method['className']."(";
+            fwrite(self::$file, $txt);
+            self::writeInput($parameterList);
+            fwrite(self::$file, ");\n");
+        }
+        private static function writeAssert($method){
+            if($method['returnType']== "void"){
+                return;
+            }
+            $txt = "\t\t".$method['returnType']." expectedValue;\n";
+            fwrite(self::$file, $txt);
+            $txt = "\t\tassertEquals(expectedValue,returnValue);\n";
+            fwrite(self::$file, $txt);
         }
         private static function writeParameter($parameterList){
             $ait = new ArrayIterator($parameterList);
@@ -133,6 +171,17 @@
                 }
                 $txt = $paramType.$parameter['typeModifier']." ".$parameter['parameterName'];
                 fwrite(self::$file, $txt);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+        }
+        private static function writeInput($parameterList){
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);     
+            foreach($cit as $parameter){
+                $value = self::getDefaultValue($parameter['parameterType']);
+                fwrite(self::$file, $value);
                 if($cit->hasNext()){
                     fwrite(self::$file, ", ");
                 }

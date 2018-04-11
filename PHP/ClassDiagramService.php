@@ -126,6 +126,18 @@
             $result = $sql->fetch();
             return $result;
         }
+        public static function selectMethodByMethodName($diagramID, $className, $methodName){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND 
+            className = :className AND 
+            methodName = :methodName LIMIT 1");
+            $sql->bindParam(':diagramID',$diagramID);
+            $sql->bindParam(':className',$className);
+            $sql->bindParam(':methodName',$methodName);
+            $sql->execute();
+            $result = $sql->fetch();
+            return $result;
+        }
         public static function selectParameterByMethodID($diagramID, $methodID){
             $conn = Database::connectToDBUsingPDO('classDiagram');
             $sql = $conn->prepare("SELECT * FROM parameter WHERE diagramID = :diagramID AND
