@@ -1,11 +1,8 @@
 function createCode(){
+	return;
 	var form = document.getElementById('codeProperties');
-	var filename = form.elements.namedItem('filename');
 	var sourceType;
 	var sourceLang;
-	if(!isFormValid(filename)){
-		return;
-	}
 	if(form.elements.namedItem('sourceCodeType')[0].checked){
 		sourceType = 'stub';
 	}else{
@@ -16,11 +13,10 @@ function createCode(){
 	}else{
 		sourceLang = 'PHP';
 	}
-	$.post('Page/CreateSourceCode.php', { 
+	$.post('Page/SourceCodeGenerator.php', { 
 		'graphID': SDSelect.options[SDSelect.selectedIndex].value,
 		'diagramID' : CDSelect.options[CDSelect.selectedIndex].value, 
 		'CUT' : ClassSelect.options[ClassSelect.selectedIndex].value,
-		'filename' : filename.value,
 		'sourceType' : sourceType,
 		'sourceLang' : sourceLang
 	}, function(returnedData){
@@ -28,33 +24,12 @@ function createCode(){
 			alert("Cannot create stub for this class because this class does not call any methods in other classes");
 		 }else if(returnedData == "driver error"){
 			alert("Cannot create driver for this class because this class does not be called by other classes");
-		 }else if(returnedData == "file exist"){
-			alert("This filename is already exist");
 		 }else{
-			navigateToCreatCodePage(returnedData);
+			//navigateToCreatCodePage(returnedData);
 		 }
 	});
 }
 function navigateToCreatCodePage(sourceCodePath){
 	var queryString = "?sourcecode="+sourceCodePath;
 	window.location.href='../Create Code.php'+queryString;
-}
-function isFormValid(filename){
-	if(SDSelect.options[SDSelect.selectedIndex].value==0){
-		alert("Please Select Call Graph");
-		return false;
-	}
-	if(CDSelect.options[CDSelect.selectedIndex].value==0){
-		alert("Please Select Class Diagram");
-		return false;
-	}
-	if(ClassSelect.options[ClassSelect.selectedIndex].value==0){
-		alert("Please Select Class Under Test");
-		return false;
-	}
-	if(filename.value === ""){
-		alert("Filename cannot be blanked");
-		return false;
-	}
-	return true;
 }
