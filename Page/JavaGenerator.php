@@ -3,7 +3,6 @@
     require_once "$root/PHP/SourceCodeService.php";
     require_once "$root/PHP/CallGraphService.php";
     require_once "$root/PHP/ClassDiagramService.php";
-    require_once "$root/PHP/Script.php";
     class JavaGenerator{
         private static $root;
         private static $file;
@@ -83,7 +82,11 @@
             if($method['visibility']!='public'){
                 return;
             }
-            $txt = "\t".$method['visibility']." ".$method['returnType']." ".$method['methodName']."(";
+            if($method['isStatic']){
+                $txt = "\t".$method['visibility']." static ".$method['returnType']." ".$method['methodName']."(";
+            }else{
+                $txt = "\t".$method['visibility']." ".$method['returnType']." ".$method['methodName']."(";
+            }
             fwrite(self::$file, $txt);
             $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
             self::writeParameter($parameterList);
