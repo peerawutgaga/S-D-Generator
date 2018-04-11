@@ -32,17 +32,17 @@
             self::closeFile();
             }
         public static function createDriver($driver){
-            // self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            // $success = self::createFile($driver['className'],"driver");
-            // if(!$success){
-            //     return;
-            // }
-            // self::initialDriverHeader($driver);
-            // $methodList = ClassDiagramService::selectAllMethodFromClassName($driver['diagramID'],$driver['className']);
-            // foreach($methodList as $method){
-            //     self::writeUnitTest($method);
-            // }
-            // self::closeFile();
+            self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+            $success = self::createFile($driver['className'],"driver");
+            if(!$success){
+                return;
+            }
+            self::initialDriverHeader($driver);
+            $methodList = ClassDiagramService::selectAllMethodFromClassName($driver['diagramID'],$driver['className']);
+            foreach($methodList as $method){
+                self::writeUnitTest($method);
+            }
+            self::closeFile();
         }
         private static function createFile($className,$sourceCodeType){
             if($sourceCodeType == "stub"){
@@ -62,6 +62,20 @@
             fwrite(self::$file,"<?php\n");
             $txt = "\tclass ".$className."Stub{\n";
             fwrite(self::$file,$txt);
+        }
+        private static function initialDriverHeader($driver){
+            fwrite(self::$file,"<?php\n");
+            $txt = "\tuse PHPUnit\Framework\TestCase;\n";
+            fwrite(self::$file, $txt);
+            $txt = "\t\$root = realpath(\$_SERVER[\"DOCUMENT_ROOT\"]);\n";
+            fwrite(self::$file, $txt);
+            if(isset($driver['packagePath'])){
+                $path = $driver['packagePath'];
+                $txt = "\tinclude \"\$root".$path."/".$driver['className'].".php\";\n";
+                fwrite(self::$file, $txt);
+            }
+            $txt = "\tclass ".$driver['className']."Driver extends TestCase{\n";
+            fwrite(self::$file,$txt);  
         }
         private static function writeMethod($method){
             if($method['visibility']!='public'){
@@ -86,6 +100,25 @@
             }
             fwrite(self::$file,"\t\t}\n");
         }
+        private static function writeUnitTest($method){
+            if($method['visibility']!='public'){
+                return;
+            }
+            if(!isset($method['returnType'])){
+                return;
+            }
+            $methodName = ucfirst($method['methodName']);
+            $txt = "\t\tfunction test".$methodName."(){\n";
+            fwrite(self::$file, $txt);
+            if($method['isStatic'] == 1){
+                self::callStaticMethod($method);
+            }else{
+                self::declareClassInstance($method);
+                self::callMethodFromInstance($method);
+            }
+            self::writeAssert($method);
+            fwrite(self::$file,"\t\t}\n");
+        }
         private static function writePrint($parameterList){
             foreach($parameterList as $parameter){
                 $txt = "\t\t\tprint(\$".$parameter['parameterName'].");\n";
@@ -102,6 +135,67 @@
                     fwrite(self::$file, ", ");
                 }
             }
+        }
+        private static function writeInput($parameterList){
+            $ait = new ArrayIterator($parameterList);
+            $cit = new CachingIterator($ait);     
+            foreach($cit as $parameter){
+                $value = self::getDefaultValue($parameter['parameterType']);
+                fwrite(self::$file, $value);
+                if($cit->hasNext()){
+                    fwrite(self::$file, ", ");
+                }
+            }
+        }
+        private static function callStaticMethod($method){
+            if($method['returnType'] == 'void'){
+                $txt = "\t\t\t".$method['className']."::".$method['methodName']."(";
+            }else{
+                $returnType = $method['returnType'];
+                $txt = "\t\t\t\$returnValue = ".$method['className']."::".$method['methodName']."(";
+            }
+            fwrite(self::$file,$txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
+            self::writeInput($parameterList);
+            fwrite(self::$file,");\n");
+        }
+        private static function callMethodFromInstance($method){
+            $instance = lcfirst($method['className']);
+            if($method['returnType'] == 'void'){
+                $txt = "\t\t\t".$instance.".".$method['methodName']."(";
+            }else{
+                $returnType = $method['returnType'];
+                $txt = "\t\t\t\$returnValue = ".$instance.".".$method['methodName']."(";
+            }
+            fwrite(self::$file,$txt);
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
+            self::writeInput($parameterList);
+            fwrite(self::$file,");\n");
+        }
+        private static function declareClassInstance($method){
+            $instance = lcfirst($method['className']);
+            $constructor = ClassDiagramService::selectMethodByMethodName($method['diagramID'],$method['className'],$method['className']);
+            if($constructor == null){
+                $constructor = ClassDiagramService::selectMethodFromMethodName(self::$diagramID,$method['className'],"__construct");
+                if($constructor ==null){
+                    $txt = "\t\t\t\$".$instance." = new ".$method['className'].";\n";
+                    fwrite(self::$file, $txt);
+                }
+            }
+            $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$constructor['methodID']);
+            $txt = "\t\t\t\$".$instance." = new ".$method['className']."(";
+            fwrite(self::$file, $txt);
+            self::writeInput($parameterList);
+            fwrite(self::$file, ");\n");
+        }
+        private static function writeAssert($method){
+            if($method['returnType']== "void"){
+                return;
+            }
+            $txt = "\t\t\t\$expectedValue;\n";
+            fwrite(self::$file, $txt);
+            $txt = "\t\t\t\$this->assertEquals('\$expectedValue', \$returnValue);\n";
+            fwrite(self::$file, $txt);
         }
         private static function closeFile(){
             fwrite(self::$file,"\t}\n");

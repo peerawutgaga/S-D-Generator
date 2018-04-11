@@ -149,6 +149,11 @@
         private static function declareClassInstance($method){
             $instance = lcfirst($method['className']);
             $constructor = ClassDiagramService::selectMethodByMethodName($method['diagramID'],$method['className'],$method['className']);
+            if($constructor == null){
+                $txt = "\t\t".$method['className']." ".$instance." = new ".$method['className']."();";
+                fwrite(self::$file, $txt);
+                return;
+            }
             $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$constructor['methodID']);
             $txt = "\t\t".$method['className']." ".$instance." = new ".$method['className']."(";
             fwrite(self::$file, $txt);
