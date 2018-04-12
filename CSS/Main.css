@@ -100,7 +100,7 @@ a{
     padding: 20px;
     border: 1px solid #888;
     border-radius: 4px;
-    width: 30%;
+    width: 20%;
     height: 40%;
     overflow: auto;
 }
@@ -150,4 +150,7 @@ a{
 }
 #uploadSD, #uploadCD{
     cursor: pointer;
+}
+#fileListTable{
+    border: 1px solid grey;
 }

@@ -97,12 +97,19 @@
 <!-- File List-->
 <div id = "fileListModal" class = "modal">
   <div class = "fileListModal-content"><span class="close">&times;</span>
+    <table id = "fileListTable">
+      <theader>
+        <tr>
+          <th>Generated Files</th>
+        </tr>
+      </theader>
+    </table>
   </div>
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="Script/Main.js"></script>
-<script src="Script/SetCodeAttributes.js"></script>
+<script src="Script/File Generator.js"></script>
 </body>
 </html>

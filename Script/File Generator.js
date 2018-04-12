@@ -1,5 +1,4 @@
 function createCode(){
-	return;
 	var form = document.getElementById('codeProperties');
 	var sourceType;
 	var sourceLang;
@@ -25,9 +24,17 @@ function createCode(){
 		 }else if(returnedData == "driver error"){
 			alert("Cannot create driver for this class because this class does not be called by other classes");
 		 }else{
-			//navigateToCreatCodePage(returnedData);
+			createCodeModal.style.display = "none";
+			addFileList(returnedData);
 		 }
 	});
+}
+function addFileList(returnedData){
+	var fileList = returnedData.split(",");
+	for(var i =0;i<fileList.length;i++){
+
+	}
+	fileListModal.style.display = "block";
 }
 function navigateToCreatCodePage(sourceCodePath){
 	var queryString = "?sourcecode="+sourceCodePath;

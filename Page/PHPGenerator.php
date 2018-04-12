@@ -20,9 +20,10 @@
         }
         public static function createStub($stub){
             self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $success = self::createFile($stub['className'],"stub");
+            $filename = $stub['className']."Stub.php";
+            $success = self::createFile($filename,"stub");
             if(!$success){
-                return;
+                return $filename;
             }
             self::initialStubHeader($stub['className']);
             $methodList = ClassDiagramService::selectAllMethodFromClassName($stub['diagramID'],$stub['className']);
@@ -30,12 +31,14 @@
                     self::writeMethod($method);
                 }
             self::closeFile();
-            }
+            return $filename;
+        }
         public static function createDriver($driver){
             self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $success = self::createFile($driver['className'],"driver");
+            $filename = $stub['className']."Driver.php";
+            $success = self::createFile($filename,"driver");
             if(!$success){
-                return;
+                return $filename;
             }
             self::initialDriverHeader($driver);
             $methodList = ClassDiagramService::selectAllMethodFromClassName($driver['diagramID'],$driver['className']);
@@ -43,13 +46,9 @@
                 self::writeUnitTest($method);
             }
             self::closeFile();
+            return $filename;
         }
-        private static function createFile($className,$sourceCodeType){
-            if($sourceCodeType == "stub"){
-                $filename = $className."Stub.php";
-            }else{
-                $filename = $className."Driver.php";
-            }
+        private static function createFile($filename,$sourceCodeType){
             $filepath = self::$root."/Source Code Files/".$filename.".txt";
             $success = SourceCodeService::insertFile($filename, $sourceCodeType, "PHP", $filepath);
             if(!$success){

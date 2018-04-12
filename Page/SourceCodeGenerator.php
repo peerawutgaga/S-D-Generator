@@ -7,7 +7,7 @@
     $classID = $_POST['CUT'];
     $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    //SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
+    SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -47,22 +47,33 @@
         private static function createSourceCode(){
             if(self::$sourceType == "stub"){
                 $stubList = self::identifyStub();
+                $ait = new ArrayIterator($stubList);
+                $cit = new CachingIterator($ait); 
+                $fileList = "";    
                 if(self::$sourceLang=="Java"){
-                    foreach($stubList as $stub){
-                        JavaGenerator::createStub($stub);
+                    foreach($cit as $stub){
+                        $fileList = $fileList.JavaGenerator::createStub($stub);
+                        if($cit->hasNext()){
+                            $fileList = $fileList.",";
+                        }
                     }
                 }else{
-                    foreach($stubList as $stub){
-                        PHPGenerator::createStub($stub);
+                    foreach($cit as $stub){
+                        $fileList = $fileList.PHPGenerator::createStub($stub);
+                        if($cit->hasNext()){
+                            $fileList = $fileList.",";
+                        }
                     }
                 }
+                echo $fileList;
             }else{
                 $driver = self::identifyDriver();
                 if(self::$sourceLang == "Java"){
-                    JavaGenerator::createDriver($driver);
+                    $filename = JavaGenerator::createDriver($driver);
                 }else{
-                    PHPGenerator::createDriver($driver);
+                    $filename = PHPGenerator::createDriver($driver);
                 }
+                echo $filename;
             }
         }
         private static function identifyStub(){
