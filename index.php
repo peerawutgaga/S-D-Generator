@@ -102,8 +102,8 @@
     <table id = "fileListTable" border =1>
     </table>
   </div>
-  <button id = "exportBtn" class = "fileListButton">Export</button>
-  <button id = "exportAllBtn" class = "fileListButton">Export All</button>
+  <button id = "exportBtn" class = "fileListButton" onclick = "exportSelected()">Export</button>
+  <button id = "exportAllBtn" class = "fileListButton" onclick = "exportAll()">Export All</button>
   <button id = "EditBtn" class = "fileListButton" onclick = "editCode()">Edit</button>
   </div>
 </div>

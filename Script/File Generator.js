@@ -1,6 +1,5 @@
 var table = document.getElementById("fileListTable");
-var selected = table.getElementsByClassName('selected');3
-var selectedValue;
+var selected = table.getElementsByClassName('selected');
 table.onclick = highlight;
 function createCode(){
 	var form = document.getElementById('codeProperties');
@@ -50,9 +49,26 @@ function navigateToCreatCodePage(sourceCodePath){
 function highlight(e) {
 	if (selected[0]) selected[0].className = '';
 	e.target.parentNode.className = 'selected';  
-	selectedValue = $("tr.selected td:first" ).html();
 }
 function editCode(){
+	var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
 	selectedValue = selectedValue.replace(".","-");
 	navigateToCreatCodePage(selectedValue);
+}
+function exportSelected(){
+	var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+	selectedValue = selectedValue.replace(".","-");
+	var queryString = "?sourcecode="+selectedValue; 
+	window.location.href='../PHP/Download.php'+queryString;
+}
+function exportAll(){
+	
 }
