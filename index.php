@@ -29,15 +29,15 @@
     <table>
       <tbody>
         <tr>
-          <td><div id = "uploadBtn"><img src="Image/Upload.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><div id = "uploadBtn"><img src="Image/Upload.png" width="170" height="170" alt=""/></br>
               Upload XML</div></td>
-          <td><div id = "createCodeBtn"><img src="Image/Create Code.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><div id = "createCodeBtn"><img src="Image/Create Code.png" width="170" height="170" alt=""/></br>
             Create Source Code</div></td>
         </tr>
         <tr>
-          <td><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/></br>
             Diagram Manager</a></td>
-          <td><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/></br>
             Source Code Manager</a></td>
         </tr>
       </tbody>
@@ -97,13 +97,14 @@
 <!-- File List-->
 <div id = "fileListModal" class = "modal">
   <div class = "fileListModal-content"><span class="close">&times;</span>
-    <table id = "fileListTable">
-      <theader>
-        <tr>
-          <th>Generated Files</th>
-        </tr>
-      </theader>
+  <h4>Generated Files</h4>
+  <div id = "tableDiv">
+    <table id = "fileListTable" border =1>
     </table>
+  </div>
+  <button id = "exportBtn" class = "fileListButton">Export</button>
+  <button id = "exportAllBtn" class = "fileListButton">Export All</button>
+  <button id = "EditBtn" class = "fileListButton" onclick = "editCode()">Edit</button>
   </div>
 </div>
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
