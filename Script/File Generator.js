@@ -1,5 +1,6 @@
 var table = document.getElementById("fileListTable");
 var selected = table.getElementsByClassName('selected');
+var fileList;
 table.onclick = highlight;
 function createCode(){
 	var form = document.getElementById('codeProperties');
@@ -28,17 +29,18 @@ function createCode(){
 			alert("Cannot create driver for this class because this class does not be called by other classes");
 		 }else{
 			createCodeModal.style.display = "none";
-			addFileList(returnedData);
+			fileList = returnedData
+			addFileList(fileList);
 		 }
 	});
 }
-function addFileList(returnedData){
-	var fileList = returnedData.split(",");
+function addFileList(fileList){
+	var files = fileList.split(",");
 	table.innerHTML = "";
-	for(var i =0;i<fileList.length;i++){
+	for(var i =0;i<files.length;i++){
 		var row = table.insertRow(i);
 		var cell = row.insertCell(0);
-		cell.innerHTML = fileList[i];
+		cell.innerHTML = files[i];
 	}
 	fileListModal.style.display = "block";
 }
@@ -70,5 +72,18 @@ function exportSelected(){
 	window.location.href='../PHP/Download.php'+queryString;
 }
 function exportAll(){
-	
+	var files = fileList.split(",");
+	if(files.length == 1){
+		var file = files[0].replace(".","-");
+		var queryString = "?sourcecode="+file; 
+		window.location.href='../PHP/Download.php'+queryString;
+		return;
+	}
+	$.post('Page/CodeEditorService.php', { 
+		'method': "exportAll",
+        'filepath' : fileList, 
+	}, function(returnedData){
+        var queryString = "?sourcecode=Source_Code_Files-zip"; 
+		window.location.href='../PHP/Download.php'+queryString;
+	});
 }

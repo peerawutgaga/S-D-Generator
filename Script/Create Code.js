@@ -170,7 +170,6 @@ function saveChange(){
     }
     var filepath = "/Source Code Files/"+oldFilename+"."+fileExtension+".txt";
     var content = document.getElementById("codeEditor").value;
-    console.log(content);
     $.post('Page/CodeEditorService.php', { 
 		'method': "saveFile",
         'filepath' : filepath, 

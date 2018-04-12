@@ -7,6 +7,8 @@
         CodeEditorService::rename($_POST['oldFilename'],$_POST['newFilename']);
     }else if($method == "saveFile"){
         CodeEditorService::saveFile($_POST['filepath'],$_POST['content']);
+    }else if($method == "exportAll"){
+        CodeEditorService::exportAll($_POST['filepath'],$_POST['fileList']);
     }
     class CodeEditorService{
         public static function rename($oldName, $newName){
@@ -34,6 +36,9 @@
             $file = fopen($filepath,"w");
             fwrite($file,$content);
             fclose($file);
+        }
+        public static function exportAll($fileList){
+            LocalFileManager::zip($fileList);
         }
     }
 ?>
