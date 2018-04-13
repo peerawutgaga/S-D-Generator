@@ -3,6 +3,7 @@
     class SDProcessor{
         private static $conn;
         private static $graphID;
+        private static $classRef;
         public static function readSequenceDiagram($fileName, $targetFile){
             $xml = simplexml_load_file($targetFile);
             if ($xml === false) {
@@ -38,8 +39,13 @@
         private static function identifyNodeSimple($nodeList){
             foreach($nodeList->children() as $node){
                 if($node->getName() == 'InteractionLifeLine'){
-                    $nodeName = $node['BaseClassifier'];
-                    $nodeID = $node->MasterView->InteractionLifeLine['Idref'];
+                    if(isset($node['BaseClassifier'])){
+                        $nodeName = $node['BaseClassifier'];
+                        $nodeID = $node->MasterView->InteractionLifeLine['Idref'];
+                    }else{
+                        $nodeName = $node->BaseClassifier->Class['Name'];
+                        $nodeID = $node->BaseClassifier->Class['Idref'];
+                    }
                     CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
                 }else if($node->getName() == 'InteractionActor'){
                     $nodeName = $node['Name'];
@@ -67,8 +73,21 @@
             }
         }
         private static function processTraditionalSD($xml){
-            $nodeList = $xml->Models->Model[11]->ChildModels;
-            $messageList = $xml->Models->Model[10]->ChildModels->Model->ChildModels;
+            $idx = 0;
+            self::$classRef = array();
+            foreach($xml->Models->Model as $model){
+                if($model['displayModelType'] == "ModelRelationshipContainer"){
+                    $messageList = $xml->Models->Model[$idx]->ChildModels->Model->ChildModels;
+                }
+                if($model['displayModelType'] == "Class"){
+                    $class = $xml->Models->Model[$idx];
+                    self::$classRef[(string) $class['id']] = (string) $class['name'];
+                }
+                if($model['displayModelType'] == "Frame"){
+                    $nodeList = $xml->Models->Model[$idx]->ChildModels;
+                }
+                $idx = $idx + 1;
+            }
             self::identifyNodeTraditional($nodeList);
             self::identifyMessageTraditional($messageList);
             self::$conn->close();
@@ -80,6 +99,10 @@
                     $nodeName = $node['name'];
                 }else{
                     $nodeName = $node->ModelProperties->TextModelProperty->StringValue['value'];
+                    if(!isset($nodeName)){
+                        $id = $node->ModelProperties->TextModelProperty->ModelRef['id'];
+                        $nodeName = self::$classRef[(string) $id];
+                    }
                 }
                 CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
             }

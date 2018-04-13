@@ -4,8 +4,8 @@
         private static function createGraphTable($conn){
             $sql =  "CREATE TABLE IF NOT EXISTS graph(
                 graphID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-                graphName VARCHAR(30) NOT NULL,
-                fileTarget VARCHAR(100) NOT NULL,
+                graphName VARCHAR(100) NOT NULL,
+                fileTarget VARCHAR(255) NOT NULL,
                 createDate TIMESTAMP
             )";
             if ($conn->query($sql) === FALSE) {
@@ -17,7 +17,7 @@
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 graphID INT(6) NOT NULL,
                 nodeID VARCHAR(16) NOT NULL, 
-                nodeName VARCHAR(30) NOT NULL
+                nodeName VARCHAR(50) NOT NULL
             )";
              if ($conn->query($sql) === FALSE) {
                 echo "Error at creating node table: ".$conn->error."<br>";
@@ -28,7 +28,7 @@
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 graphID INT(6)NOT NULL,
                 messageID VARCHAR(16)NOT NULL, 
-                messageName VARCHAR(30) NOT NULL,
+                messageName VARCHAR(50) NOT NULL,
                 sentNodeID VARCHAR(16) NOT NULL,
                 receivedNodeID VARCHAR(16) NOT NULL
             )";
