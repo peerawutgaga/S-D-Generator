@@ -36,6 +36,7 @@
     </article>
     <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
         Faculty of Engineering, Chulalongkorn University</footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="Script/Source code Manager.js"></script>
 </body>
 </html>
