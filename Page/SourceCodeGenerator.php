@@ -7,7 +7,7 @@
     $classID = $_POST['CUT'];
     $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
+    //SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
@@ -17,15 +17,15 @@
         private static $sourceLang;
         private static $root;
         public static function initial($graphID, $diagramID, $classID, $sourceType, $sourceLang){
-           self::$graphID = $graphID;
-           self::$diagramID = $diagramID;
-           self::$classID = $classID;
-           self::$sourceType = $sourceType;
-           self::$sourceLang = $sourceLang;
-           self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-           SourceCodeService::initialSourceCodeDatabase();
-           if(!self::checkIfMessagesAreEmpty()){
-               self::createSourceCode();
+            self::$graphID = $graphID;
+            self::$diagramID = $diagramID;
+            self::$classID = $classID;
+            self::$sourceType = $sourceType;
+            self::$sourceLang = $sourceLang;
+            self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+            SourceCodeService::initialSourceCodeDatabase();
+            if(!self::checkIfMessagesAreEmpty()){
+                self::createSourceCode();
             }
         }
         private static function checkIfMessagesAreEmpty(){

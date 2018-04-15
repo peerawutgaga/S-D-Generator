@@ -36,7 +36,7 @@
         }
         public static function createDriver($driver){
             self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $filename = $stub['className']."Driver.java";
+            $filename = $driver['className']."Driver.java";
             $success = self::createFile($filename,"driver");
             if(!$success){
                 return $filename;
@@ -73,17 +73,25 @@
                 $txt = "import ".$path.".".$driver['className'].";\n";
                 fwrite(self::$file, $txt);
             }
-            $txt = "class ".$driver['className']."{\n";
+            $txt = "class ".$driver['className']."Driver{\n";
             fwrite(self::$file, $txt);
         }
         private static function writeMethod($method){
             if($method['visibility']!='public'){
                 return;
             }
-            if($method['isStatic']){
-                $txt = "\t".$method['visibility']." static ".$method['returnType']." ".$method['methodName']."(";
+            $returnType = $method['returnType'];
+            if($returnType == "string"){
+                $returnType = "String";
+            }
+            if($method['methodName']==$method['className']){
+                $txt = "\t".$method['visibility']." ".$method['methodName']."Stub(";
             }else{
-                $txt = "\t".$method['visibility']." ".$method['returnType']." ".$method['methodName']."(";
+                if($method['isStatic']){
+                    $txt = "\t".$method['visibility']." static ". $returnType." ".$method['methodName']."(";
+                }else{
+                    $txt = "\t".$method['visibility']." ". $returnType." ".$method['methodName']."(";
+                }
             }
             fwrite(self::$file, $txt);
             $parameterList = ClassDiagramService::selectParameterByMethodID($method['diagramID'],$method['methodID']);
@@ -106,7 +114,7 @@
             if(!isset($method['returnType'])){
                 return;
             }
-            fwrite(self::$file, "\t@test\n");
+            fwrite(self::$file, "\t@Test\n");
             $methodName = ucfirst($method['methodName']);
             $txt = "\tvoid test".$methodName."(){\n";
             fwrite(self::$file, $txt);
@@ -162,7 +170,12 @@
             if($method['returnType']== "void"){
                 return;
             }
-            $txt = "\t\t".$method['returnType']." expectedValue;\n";
+            $defaultValue = self::getDefaultValue($method['returnType']);
+            $returnType = $method['returnType'];
+            if($returnType == "string"){
+                $returnType = "String";
+            }
+            $txt = "\t\t".$returnType." expectedValue = ".$defaultValue.";\n";
             fwrite(self::$file, $txt);
             $txt = "\t\tassertEquals(expectedValue,returnValue);\n";
             fwrite(self::$file, $txt);
