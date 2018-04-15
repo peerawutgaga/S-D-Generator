@@ -7,7 +7,7 @@
     $classID = $_POST['CUT'];
     $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    //SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
+    SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
     class SourceCodeGenerator{
         private static $file;
         private static $graphID;
