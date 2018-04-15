@@ -175,6 +175,9 @@ a{
     height: 65%;
     overflow: auto;
 }
+#tableDiv td{
+    padding: 1em;
+}
 .selected {
     background-color: hotpink;
     color: #000;

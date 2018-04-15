@@ -44,10 +44,6 @@ function addFileList(fileList){
 	}
 	fileListModal.style.display = "block";
 }
-function navigateToCreatCodePage(sourceCodePath){
-	var queryString = "?sourcecode="+sourceCodePath;
-	window.location.href='../Create Code.php'+queryString;
-}
 function highlight(e) {
 	if (selected[0]) selected[0].className = '';
 	e.target.parentNode.className = 'selected';  
@@ -59,7 +55,15 @@ function editCode(){
 		return;
 	}
 	selectedValue = selectedValue.replace(".","-");
-	navigateToCreatCodePage(selectedValue);
+	var queryString = "?sourcecode="+selectedValue;
+	var win = window.open('../Create Code.php'+queryString);
+	if (win) {
+		//Browser has allowed it to be opened
+		win.focus();
+	} else {
+		//Browser has blocked it
+		alert('Please allow popups for this website');
+	}
 }
 function exportSelected(){
 	var selectedValue = $("tr.selected td:first" ).html();
