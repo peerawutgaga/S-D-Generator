@@ -73,7 +73,7 @@
                 $txt = "import ".$path.".".$driver['className'].";\n";
                 fwrite(self::$file, $txt);
             }
-            $txt = "class ".$driver['className']."Driver{\n";
+            $txt = "public class ".$driver['className']."Driver{\n";
             fwrite(self::$file, $txt);
         }
         private static function writeMethod($method){
@@ -121,7 +121,7 @@
             }
             fwrite(self::$file, "\t@Test\n");
             $methodName = ucfirst($method['methodName']);
-            $txt = "\tvoid test".$methodName."(){\n";
+            $txt = "\tpublic void test".$methodName."(){\n";
             fwrite(self::$file, $txt);
             if($method['isStatic'] == 1){
                 self::callStaticMethod($method);
