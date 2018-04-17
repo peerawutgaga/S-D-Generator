@@ -59,7 +59,7 @@
             return true;
         }
         private static function initialStubHeader($className){
-            $txt = "class ".$className."Stub {\n";
+            $txt = "public class ".$className."Stub {\n";
             fwrite(self::$file,$txt);
         }
         private static function initialDriverHeader($driver){
@@ -88,9 +88,14 @@
                 $txt = "\t".$method['visibility']." ".$method['methodName']."Stub(";
             }else{
                 if($method['isStatic']){
-                    $txt = "\t".$method['visibility']." static ". $returnType." ".$method['methodName']."(";
+                    $txt = "\t".$method['visibility']." static ";
                 }else{
-                    $txt = "\t".$method['visibility']." ". $returnType." ".$method['methodName']."(";
+                    $txt = "\t".$method['visibility']." ";
+                }
+                if(isset($method['typeModifier'])){
+                    $txt = $txt.$returnType.$method['typeModifier']." ".$method['methodName']."(";
+                }else{
+                    $txt = $txt.$returnType." ".$method['methodName']."(";
                 }
             }
             fwrite(self::$file, $txt);
