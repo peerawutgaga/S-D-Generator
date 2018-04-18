@@ -19,7 +19,7 @@
       <li>Upload UML diagram as XML files.</li>
       <li>Select class under test.</li>
       <li>Choose source code type (Stub or Driver).</li>
-      <li>Choose languag.e</li>
+      <li>Choose language.</li>
       <li>Edit the source codes.</li>
       <li>Export.</li>
     </ol>
