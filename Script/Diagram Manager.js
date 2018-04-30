@@ -17,7 +17,7 @@ function openTable(evt, tableName) {
 
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
-function getSequenceDiagramList(){
+function getCallGraphList(){
 
 }
 function getClassDiagramList(){
