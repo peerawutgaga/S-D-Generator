@@ -38,7 +38,7 @@
     function initialClassSelect(){
         echo "<h4>Select Class Under Test</h4>";
         echo "<select id = 'ClassSelect'>";
-        echo "<option value = '0'selected disabled hidden>Please Select Call Graph</option>";
+        echo "<option value = '0'selected disabled hidden>Please Select Class Under Test</option>";
         echo "</select>";
     }
     function refreshClassSelect($cut){
