@@ -37,9 +37,6 @@
         </div>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-            <button class = "commandBtn" id = "cutBtn"><img src = "Image/cut.png">Cut</button>
-		    <button class = "commandBtn" id = "copyBtn"><img src = "Image/copy.png">Copy</button>
-		    <button class = "commandBtn" id = "pasteBtn"><img src = "Image/paste.png">Paste</button>
             <button class = "commandBtn" id = "deleteBtn"><img src = "Image/delete.png">Delete</button>
         </div>
     </article>

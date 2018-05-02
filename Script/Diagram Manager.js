@@ -18,7 +18,11 @@ function openTable(evt, tableName) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("defaultOpen").click();
 function getCallGraphList(){
-
+    $.post('Page/DiagramMgrService.php',{
+        'getList': "Sequence",
+    },function (returnedData){
+        
+    });
 }
 function getClassDiagramList(){
 
