@@ -12,6 +12,7 @@ header, footer {
 }
 article{
 	width: 100%;
+	height: 100%;
 }
 /* Style the tab */
 .tab {
@@ -46,10 +47,12 @@ article{
 /* Style the tab content */
 .tabcontent {
 	display: none;
-	width: 100;
+	width: 100%;
+	height:100%;
 	padding: 1em;
     border: 1px solid #ccc;
 	border-top: none;
+	overflow: auto;
 	-webkit-animation: fadeEffect 1s;
     animation: fadeEffect 1s;
 }
@@ -66,13 +69,21 @@ article{
 table{
 	border: 1px solid gray;
 	width: 100%;
-
+	height: 100%;
 }
 th{
 	border: 1px solid gray;
+	text-align: center;
+	padding: 0.5em;
 }
 td{
 	border: 1px solid gray;
+	text-align: center;
+	padding: 1em;
+}
+table tr:hover{
+    background-color: #ddd;
+    cursor: pointer;
 }
 #fileMgr{
 	width: 100%;
@@ -97,4 +108,8 @@ img{
 	vertical-align: middle;
 	width: 20px;
 	height:20px;
+}
+.selected {
+    background-color: hotpink;
+    color: #000;
 }

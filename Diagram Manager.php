@@ -17,7 +17,7 @@
             <button class="tablinks" onclick="openTable(event, 'ClassDiagram')">Class Diagram</button>
         </div>
         <div id="CallGraph" class="tabcontent">
-            <table>
+            <table id = "CallGraphTable">
                 <thead>
                     <tr>
                         <th>File Name</th>
@@ -27,16 +27,16 @@
             </table>
         </div>
         <div id="ClassDiagram" class="tabcontent">
-            <table>
+            <table id = "ClassDiagramTable">
                 <tr>
                     <th>File Name</th>
-                    <th>File Size</th>
                     <th>Created Time</th>
                 </tr>
             </table>
         </div>
         <!-- File Management Panel -->
         <div id = "fileMgr">
+            <button class = "commandBtn" id = "renameBtn"><img src = "Image/rename.png">Rename</button>
             <button class = "commandBtn" id = "deleteBtn"><img src = "Image/delete.png">Delete</button>
         </div>
     </article>
