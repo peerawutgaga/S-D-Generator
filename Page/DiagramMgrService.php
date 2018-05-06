@@ -18,5 +18,17 @@
             $classDiagramList = ClassDiagramService::selectAllFromDiagram();
             return json_encode($classDiagramList);
         }
+        public static function renameCallGraph($oldName, $newName){
+
+        }
+        public static function deleteCallGraph($fileName){
+
+        }
+        public static function renameClassDiagram($oldName, $newName){
+
+        }
+        public static function deleteClassDiagram($fileName){
+
+        }
     }
 ?>

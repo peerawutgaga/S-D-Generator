@@ -151,11 +151,13 @@ function rename(){
         'oldFilename' : oldFilename+"."+fileExtension, 
         'newFilename' : currentFilename,
 	}, function(returnedData){
-         if(returnedData == "failed"){
+        console.log(returnedData);
+        if(returnedData == "failed"){
              alert("Rename failed");
+        }else if(returnedData =="Exist"){
+            alert("Filename: "+currentFilename+" is exists.");
         }else{
             alert("Rename Succeeded");
-            console.log(returnedData);
             refreshCreatCodePage(returnedData);
          }
 	});

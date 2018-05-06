@@ -15,13 +15,15 @@
             $root = realpath($_SERVER["DOCUMENT_ROOT"]);
             $fullOldName = $root."/Source Code Files/".$oldName;
             $fullNewName = $root."/Source Code Files/".$newName;
+            if(SourceCodeService::selectFromFileTable($newName)!=null){
+                echo "Exist";
+                return;
+            }
             $success = SourceCodeService::renameFile($oldName, $newName);
             if($success){
                 if(rename($fullOldName.".txt",$fullNewName.".txt")){
                     $idx = strripos($fullOldName,".",-1);
                     $fullOldName = substr_replace($fullOldName,"-",$idx,1);
-                    $fullOldName = $fullOldName.".zip";
-                    LocalFileManager::delete($fullOldName);
                     $idx = strrpos($newName,".",-1);
                     echo substr_replace($newName,"-",$idx,1);
                     return;

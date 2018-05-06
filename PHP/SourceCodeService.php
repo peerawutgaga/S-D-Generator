@@ -52,5 +52,12 @@
             $sql->execute();
             return $sql->fetchAll();
         }
+        public static function selectFromFileTable($fileName){
+            $conn = Database::connectToDBUsingPDO('sourcecode');
+            $sql = $conn->prepare("SELECT * FROM fileTable WHERE name = :fileName LIMIT 1");
+            $sql->bindParam(":fileName",$fileName);
+            $sql->execute();
+            return $sql->fetch();
+        }
     }
 ?>
