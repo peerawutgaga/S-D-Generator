@@ -46,5 +46,11 @@
             }
             return true;
         }
+        public static function selectAllFromFileTable(){
+            $conn = Database::connectToDBUsingPDO('sourcecode');
+            $sql = $conn->prepare("SELECT * FROM fileTable");
+            $sql->execute();
+            return $sql->fetchAll();
+        }
     }
 ?>

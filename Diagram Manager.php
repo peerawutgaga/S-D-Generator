@@ -20,6 +20,7 @@
             <table id = "CallGraphTable">
                 <thead>
                     <tr>
+                        <th>Item</th>
                         <th>File Name</th>
                         <th>Created Time</th>
                     </tr>

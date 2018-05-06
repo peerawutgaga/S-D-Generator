@@ -68,7 +68,7 @@ article{
 }
 table{
 	border: 1px solid gray;
-	width: 100%;
+	width: 99%;
 	height: 100%;
 }
 th{
@@ -78,7 +78,6 @@ th{
 }
 td{
 	border: 1px solid gray;
-	text-align: center;
 	padding: 1em;
 }
 table tr:hover{

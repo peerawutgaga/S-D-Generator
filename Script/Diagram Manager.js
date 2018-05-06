@@ -45,7 +45,7 @@ function getClassDiagramList(){
 function addItemToTable(tableID, itemList){
     var table = document.getElementById(tableID);
     table.innerHTML = "";
-    var itemList = JSON.parse(itemList);
+    itemList = JSON.parse(itemList);
     for(var i =0;i<itemList.length;i++){
         var row = table.insertRow(i);
         var cell = row.insertCell(0);

@@ -12,21 +12,19 @@
     </header>
     <article>
          <!-- File List -->
-        <table>
+        <table id = "fileTable">
             <thead>
                 <tr>
+                    <th>Item</th>
                     <th>File Name</th>
                     <th>File Type</th>
-                    <th>File Size</th>
-                    <th>Created Time</th>
+                    <th>Created Date</th>
                 </tr>
             </thead>
         </table>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-                <button id = "cutBtn"><img src = "Image/cut.png">Cut</button>
-                <button id = "copyBtn"><img src = "Image/copy.png">Copy</button>
-                <button id = "pasteBtn"><img src = "Image/paste.png">Paste</button>
+                <button id = "copyBtn"><img src = "Image/copy.png">Duplicate</button>
                 <button id = "deleteBtn"><img src = "Image/delete.png">Delete</button>
                 <button id = "renameBtn"><img src = "Image/rename.png">Rename</button>
                 <button id = "editBtn"><img src = "Image/edit.png">Edit</button>
