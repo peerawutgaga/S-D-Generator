@@ -26,7 +26,7 @@
     function initialCDSelect(){
         echo "<h4>Select Class Diagram</h4>";
         echo "<select id = 'CDSelect'>";
-        echo "<option value = '0'selected disabled hidden>Please Select Class Diagram</option>";
+        echo "<option value = '0' selected disabled hidden>Please Select Class Diagram</option>";
         $diagramList = ClassDiagramService::selectAllFromDiagram();
         foreach ($diagramList as $diagram) {
             $diagramID = $diagram['diagramID'];
@@ -38,7 +38,7 @@
     function initialClassSelect(){
         echo "<h4>Select Class Under Test</h4>";
         echo "<select id = 'ClassSelect'>";
-        echo "<option value = '0'selected disabled hidden>Please Select Class Under Test</option>";
+        echo "<option value = '0' selected disabled hidden>Please Select Class Under Test</option>";
         echo "</select>";
     }
     function refreshClassSelect($cut){

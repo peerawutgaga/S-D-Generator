@@ -18,17 +18,18 @@
                     <th>Item</th>
                     <th>File Name</th>
                     <th>File Type</th>
+                    <th>Language</th>
                     <th>Created Date</th>
                 </tr>
             </thead>
         </table>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-                <button id = "copyBtn"><img src = "Image/copy.png">Duplicate</button>
-                <button id = "deleteBtn"><img src = "Image/delete.png">Delete</button>
-                <button id = "renameBtn"><img src = "Image/rename.png">Rename</button>
-                <button id = "editBtn"><img src = "Image/edit.png">Edit</button>
-		        <button id = "exportBtn"><img src = "Image/export.png">Export</button>
+                <button id = "copyBtn" onclick = "duplicateFile()"><img src = "Image/copy.png">Duplicate</button>
+                <button id = "deleteBtn" onclick = "deleteFile()"><img src = "Image/delete.png">Delete</button>
+                <button id = "renameBtn" onclick = "renameFile()"><img src = "Image/rename.png">Rename</button>
+                <button id = "editBtn" onclick = "editFile()"><img src = "Image/edit.png">Edit</button>
+		        <button id = "exportBtn" onclick = "exportFile()"><img src = "Image/export.png">Export</button>
 		       
             </div>
     </article>

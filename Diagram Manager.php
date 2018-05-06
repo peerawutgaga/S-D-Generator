@@ -37,8 +37,8 @@
         </div>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-            <button class = "commandBtn" id = "renameBtn"><img src = "Image/rename.png">Rename</button>
-            <button class = "commandBtn" id = "deleteBtn"><img src = "Image/delete.png">Delete</button>
+            <button class = "commandBtn" id = "renameBtn" onclick = "renameDiagram()"><img src = "Image/rename.png">Rename</button>
+            <button class = "commandBtn" id = "deleteBtn" onclick = "deleteDiagram()"><img src = "Image/delete.png">Delete</button>
         </div>
     </article>
     <footer>2018 Copyright &copy; Department of Computer Engineering

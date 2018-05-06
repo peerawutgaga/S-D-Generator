@@ -29,15 +29,15 @@
     <table>
       <tbody>
         <tr>
-          <td class = "UI-td"><div id = "uploadBtn"><img src="Image/Upload.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><div id = "uploadBtn"><img src="Image/Upload.png" width="170" height="170" alt=""/><br>
               Upload XML</div></td>
-          <td class = "UI-td"><div id = "createCodeBtn"><img src="Image/Create Code.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><div id = "createCodeBtn"><img src="Image/Create Code.png" width="170" height="170" alt=""/><br>
             Create Source Code</div></td>
         </tr>
         <tr>
-          <td class = "UI-td"><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/><br>
             Diagram Manager</a></td>
-          <td class = "UI-td"><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/></br>
+          <td class = "UI-td"><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/><br>
             Source Code Manager</a></td>
         </tr>
       </tbody>
@@ -58,9 +58,9 @@
       <tbody>
         <tr>
           <td id = "uploadSD" class = "uploadButton" width="50%">
-			    <img src="Image/Sequence Diagram Upload.png" width="100" height="100" alt=""/></br>
+			    <img src="Image/Sequence Diagram Upload.png" width="100" height="100" alt=""/><br>
             Sequence Diagram</td>
-          <td id = "uploadCD" class = "uploadButton"><img src="Image/Class Diagram Upload.png" width="100" height="100" alt=""/></br>
+          <td id = "uploadCD" class = "uploadButton"><img src="Image/Class Diagram Upload.png" width="100" height="100" alt=""/><br>
             Class Diagram</td>
         </tr>
       </tbody>
@@ -84,11 +84,11 @@
       <div id = "SetProperties">
         <form id = "codeProperties">
           <h4>Select Source Code Type</h4>
-          <input type = "radio" name = "sourceCodeType" id = "stub" value = "stub" checked = "checked"> Stub</br>
-          <input type = "radio" name = "sourceCodeType" id = "driver" value = "driver"> Driver</br>
+          <input type = "radio" name = "sourceCodeType" id = "stub" value = "stub" checked = "checked"> Stub<br>
+          <input type = "radio" name = "sourceCodeType" id = "driver" value = "driver"> Driver<br>
           <h4>Select Source Code Language</h4>
-          <input type = "radio" name = "sourceCodeLang" id = "Java" value = "Java" checked = "checked"> Java</br>
-          <input type = "radio" name = "sourceCodeLang" id = "PHP" value = "PHP"> PHP</br></br>
+          <input type = "radio" name = "sourceCodeLang" id = "Java" value = "Java" checked = "checked"> Java<br>
+          <input type = "radio" name = "sourceCodeLang" id = "PHP" value = "PHP"> PHP<br> <br>
         </form>
         <button id = "createBtn" onclick="createCode()">Create Code</button>
       </div> 

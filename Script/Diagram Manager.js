@@ -72,3 +72,17 @@ function highlightClassDiagram(e) {
 	if (classDiagramSelected[0]) classDiagramSelected[0].className = '';
 	e.target.parentNode.className = 'selected';  
 }
+function deleteDiagram(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}
+function renameDiagram(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}

@@ -21,9 +21,11 @@ function addListToTable(fileList){
         cell = row.insertCell(2);
         cell.innerHTML = fileList[i][1];
         cell = row.insertCell(3);
+        cell.innerHTML = fileList[i][2];
+        cell = row.insertCell(4);
         cell.innerHTML = fileList[i][4];
     }
-    table.innerHTML += "<thead><tr><th>Item</th><th>File Name</th><th>File Type</th><th>Create Date</th></tr></thead>";
+    table.innerHTML += "<thead><tr><th>Item</th><th>File Name</th><th>File Type</th><th>Language</th><th>Create Date</th></tr></thead>";
 }
 function highlight(e){
     if(e.target.parentNode.parentNode.tagName == "THEAD"){
@@ -31,4 +33,39 @@ function highlight(e){
     }
     if (fileSelect[0]) fileSelect[0].className = '';
 	e.target.parentNode.className = 'selected';  
+}
+function duplicateFile(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}
+function deleteFile(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}
+function editFile(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}
+function exportFile(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
+}
+function renameFile(){
+    var selectedValue = $("tr.selected td:first" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+	}
 }
