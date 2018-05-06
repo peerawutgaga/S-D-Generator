@@ -15,7 +15,8 @@
         private static function createNodeTable($conn){
             $sql =  "CREATE TABLE IF NOT EXISTS node(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                graphID INT(6) NOT NULL,
+                graphID INT(6) UNSIGNED NOT NULL,
+                FOREIGN KEY (graphID) REFERENCES graph(graphID) ON DELETE CASCADE,
                 nodeID VARCHAR(16) NOT NULL, 
                 nodeName VARCHAR(50) NOT NULL
             )";
@@ -26,7 +27,8 @@
         private static function createMessageTable($conn){
             $sql =  "CREATE TABLE IF NOT EXISTS message(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                graphID INT(6)NOT NULL,
+                graphID INT(6) UNSIGNED NOT NULL,
+                FOREIGN KEY (graphID) REFERENCES graph(graphID) ON DELETE CASCADE,
                 messageID VARCHAR(16)NOT NULL, 
                 messageName VARCHAR(50) NOT NULL,
                 sentNodeID VARCHAR(16) NOT NULL,

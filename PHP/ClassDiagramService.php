@@ -15,42 +15,45 @@
         private static function createClassTable($conn){
             $sql = "CREATE TABLE IF NOT EXISTS class(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-                diagramID INT(6) NOT NULL,
+                diagramID INT(6) UNSIGNED NOT NULL,
                 className VARCHAR(30) NOT NULL,
-                packagePath VARCHAR(255)
+                packagePath VARCHAR(255),
+                FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
             if ($conn->query($sql) === FALSE) {
-                echo "Error at creating graph table: ".$conn->error."<br>";
+                echo "Error at creating class table: ".$conn->error."<br>";
             } 
         }
         private static function createMethodTable($conn){
             $sql = "CREATE TABLE IF NOT EXISTS method(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                diagramID INT(6) NOT NULL,
+                diagramID INT(6) UNSIGNED NOT NULL,
                 className VARCHAR(30) NOT NULL,
                 methodID VARCHAR(16) NOT NULL, 
                 methodName VARCHAR(50) NOT NULL,
                 returnType VARCHAR(30),
                 visibility VARCHAR(8)NOT NULL,
                 typeModifier VARCHAR(3),
-                isStatic INT(1) NOT NULL
+                isStatic INT(1) NOT NULL,
+                FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
             if ($conn->query($sql) === FALSE) {
-                echo "Error at creating graph table: ".$conn->error."<br>";
+                echo "Error at creating method table: ".$conn->error."<br>";
             } 
         }
         private static function createParameterTable($conn){
             $sql = "CREATE TABLE IF NOT EXISTS parameter(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                diagramID INT(6) NOT NULL,
+                diagramID INT(6) UNSIGNED NOT NULL,
                 methodID VARCHAR(16) NOT NULL,
                 parameterID VARCHAR(16) NOT NULL, 
                 parameterName VARCHAR(30) NOT NULL,
                 parameterType VARCHAR(30) NOT NULL,
-                typeModifier VARCHAR(3)
+                typeModifier VARCHAR(3),
+                FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
             if ($conn->query($sql) === FALSE) {
-                echo "Error at creating graph table: ".$conn->error."<br>";
+                echo "Error at creating parameter table: ".$conn->error."<br>";
             } 
         }
         public static function initialClassDiagramDatabase($conn){
