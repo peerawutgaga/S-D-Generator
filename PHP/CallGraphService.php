@@ -131,6 +131,15 @@
             $result = $sql->fetch();
             return $result;
         }
+        public static function deleteFromGraph($graphName){
+            $conn = Database::connectToDBUsingPDO("callgraph");
+            $sql = $conn->prepare("DELETE FROM graph WHERE graphName = :graphName");
+            $sql->bindParam(":graphName",$graphName);
+            if($sql->execute() === FALSE){
+                return false;
+            }
+            return true;
+        }
     }
 
 ?>

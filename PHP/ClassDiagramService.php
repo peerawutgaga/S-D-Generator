@@ -161,5 +161,14 @@
             $result = $sql->fetchAll();
             return $result;
         }
+        public static function deleteFromDiagram($diagramName){
+            $conn = Database::connectToDBUsingPDO("classdiagram");
+            $sql = $conn->prepare("DELETE FROM diagram WHERE diagramName = :diagramName");
+            $sql->bindParam(":diagramName",$diagramName);
+            if($sql->execute() === FALSE){
+                return false;
+            }
+            return true;
+        }
     }
 ?>

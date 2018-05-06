@@ -13,8 +13,8 @@
     <article>
         <!-- Tab links -->
         <div class="tab">
-            <button class="tablinks" onclick="openTable(event, 'CallGraph')" id="defaultOpen">Call Graph</button>
-            <button class="tablinks" onclick="openTable(event, 'ClassDiagram')">Class Diagram</button>
+            <button class="tablinks" onclick="openTable(event, 'CallGraph')" id="SDContent">Call Graph</button>
+            <button class="tablinks" onclick="openTable(event, 'ClassDiagram')" id="CDContent">Class Diagram</button>
         </div>
         <div id="CallGraph" class="tabcontent">
             <table id = "CallGraphTable">
@@ -37,7 +37,7 @@
         </div>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-            <button class = "commandBtn" id = "renameBtn" onclick = "renameDiagram()"><img src = "Image/rename.png">Rename</button>
+            <button class = "commandBtn" id = "renameBtn" onclick = "showRenameDialog()"><img src = "Image/rename.png">Rename</button>
             <button class = "commandBtn" id = "deleteBtn" onclick = "deleteDiagram()"><img src = "Image/delete.png">Delete</button>
         </div>
     </article>

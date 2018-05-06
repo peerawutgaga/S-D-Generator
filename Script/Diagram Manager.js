@@ -2,10 +2,12 @@ var callGraphTable = document.getElementById("CallGraphTable");
 var classDiagramTable = document.getElementById("ClassDiagramTable");
 var callGraphSelected = callGraphTable.getElementsByClassName('selected');
 var classDiagramSelected = classDiagramTable.getElementsByClassName('selected');
+var currentTable;
 callGraphTable.onclick = highlightCallGraph;
 classDiagramTable.onclick = highlightClassDiagram;
 function openTable(evt, tableName) {
     var i, tabcontent, tablinks;
+    currentTable = tableName;
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
@@ -27,7 +29,7 @@ function openTable(evt, tableName) {
 }
 
 // Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
+document.getElementById("SDContent").click();
 function getCallGraphList(){
     $.post('Page/DiagramMgrService.php',{
         'getList': "Sequence",
@@ -73,16 +75,38 @@ function highlightClassDiagram(e) {
 	e.target.parentNode.className = 'selected';  
 }
 function deleteDiagram(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
-		alert("Please select a file");
+        alert("Please select a file");
 		return;
-	}
+    }
+    var confirmMsg = "Delete this diagram, "+selectedValue+"?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
+    $.post('Page/DiagramMgrService.php',{
+        'delete': selectedValue,
+        'table':currentTable,
+    },function (returnedData){
+        if(returnedData == "fail"){
+            alert("Delete failed");
+        }else{
+            alert("Deleted");
+            refreshPage();
+        }
+    });
 }
-function renameDiagram(){
-    var selectedValue = $("tr.selected td:first" ).html();
+function showRenameDialog(){
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
-	}
+    }
+}
+function refreshPage(){
+    if(currentTable == "ClassDiagramTable"){
+        document.getElementById("CDContent").click();
+    }else{
+        document.getElementById("SDContent").click();
+    }
 }
