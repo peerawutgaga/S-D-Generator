@@ -36,7 +36,7 @@
         </tr>
         <tr>
           <td class = "UI-td"><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/><br>
-            Diagram Manager</a></td>
+            XML Manager</a></td>
           <td class = "UI-td"><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/><br>
             Source Code Manager</a></td>
         </tr>
