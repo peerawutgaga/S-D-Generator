@@ -2,6 +2,8 @@ var callGraphTable = document.getElementById("CallGraphTable");
 var classDiagramTable = document.getElementById("ClassDiagramTable");
 var callGraphSelected = callGraphTable.getElementsByClassName('selected');
 var classDiagramSelected = classDiagramTable.getElementsByClassName('selected');
+var renameModal = document.getElementById("renameModal");
+var modalClose = document.getElementsByClassName("close")[0];
 var currentTable;
 callGraphTable.onclick = highlightCallGraph;
 classDiagramTable.onclick = highlightClassDiagram;
@@ -102,6 +104,7 @@ function showRenameDialog(){
 		alert("Please select a file");
 		return;
     }
+    renameModal.style.display = "block";
 }
 function refreshPage(){
     if(currentTable == "ClassDiagramTable"){
@@ -109,4 +112,12 @@ function refreshPage(){
     }else{
         document.getElementById("SDContent").click();
     }
+}
+window.onclick = function (event) {
+	if (event.target == uploadModal) {
+		renameModal.style.display = "none";
+    }
+};
+modalClose.onclick = function(){
+    renameModal.style.display = "none";
 }

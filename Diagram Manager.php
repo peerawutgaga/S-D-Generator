@@ -41,6 +41,12 @@
             <button class = "commandBtn" id = "deleteBtn" onclick = "deleteDiagram()"><img src = "Image/delete.png">Delete</button>
         </div>
     </article>
+<div id = "renameModal" class = "modal">
+  <div class = "modal-content"><span class="close">&times;</span>
+    <h4>Rename</h4>
+    <button id = "renameConfirm" onclick = "rename()">Edit</button>
+  </div>
+</div>
     <footer>2018 Copyright &copy; Department of Computer Engineering
         <br/> Faculty of Engineering, Chulalongkorn University</footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
