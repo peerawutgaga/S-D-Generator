@@ -8,6 +8,8 @@
     }
     else if($method == "delete"){
         echo SourceCodeMgrService::deleteFile($_POST['file']);
+    }else if($method == "rename"){
+        echo SourceCodeMgrService::renameFile($_POST['oldname'],$_POST['newname']);
     }
      class SourceCodeMgrService{
          public static function getSourceCodeList(){
@@ -24,5 +26,23 @@
             }
             return "fail";
          }
+         public static function renameFile($oldName, $newName){
+            $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+            $fullOldName = $root."/Source Code Files/".$oldName;
+            $fullNewName = $root."/Source Code Files/".$newName;
+            $newPath = "../Source Code Files/".$newName.".txt";
+            if(SourceCodeService::selectFromFileTable($newName)!=null){
+                echo "Exist";
+                return;
+            }
+            $success = SourceCodeService::renameFile($oldName, $newName,$newPath);
+            if($success){
+                if(rename($fullOldName.".txt",$fullNewName.".txt")){
+                    echo "success";
+                    return;
+                }
+            }
+            echo "failed";
+        }
      }
 ?>

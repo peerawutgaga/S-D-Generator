@@ -90,6 +90,31 @@ function renameFile(){
 		alert("Please select a file");
 		return;
     }
+    var newFilename = document.getElementById("filename").value;
+    if(newFilename == ""){
+        alert("New filename cannot be blanked.");
+    }
+    var idx = selectedValue.lastIndexOf(".");
+    var extension = selectedValue.substring(idx+1);
+    var confirmMsg = "Rename from "+selectedValue+" to "+newFilename+"."+extension;
+    if(!confirm(confirmMsg)){
+        return;
+    }
+    $.post('Page/SourceCodeMgrService.php',{
+        'method': "rename",
+        'oldname': selectedValue,
+        'newname':newFilename+"."+extension,
+    },function (returnedData){
+        if(returnedData == "Exist"){
+            alert("Filename "+newFilename+" is already existed.");
+        }else if(returnedData == "success"){
+            renameModal.style.display = "none";
+            alert("Renamed");
+            location.reload(true);
+        }else{
+            alert("Rename fail");
+        }
+    });
 }
 function showRenameDialog(){
     var selectedValue = $("tr.selected td:eq(1)" ).html();
