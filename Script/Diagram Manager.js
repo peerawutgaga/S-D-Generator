@@ -114,10 +114,37 @@ function refreshPage(){
     }
 }
 window.onclick = function (event) {
-	if (event.target == uploadModal) {
+	if (event.target == renameModal) {
 		renameModal.style.display = "none";
     }
 };
 modalClose.onclick = function(){
     renameModal.style.display = "none";
+}
+function rename(){
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
+    var newFilename = document.getElementById("filename").value;
+    if(newFilename == ""){
+        alert("New filename cannot be blanked.");
+    }
+    var confirmMsg = "Rename from "+selectedValue+" to "+newFilename+".xml";
+    if(!confirm(confirmMsg)){
+        return;
+    }
+    $.post('Page/DiagramMgrService.php',{
+        'rename': selectedValue,
+        'table':currentTable,
+        'newName':newFilename + ".xml",
+    },function (returnedData){
+        if(returnedData == "Exist"){
+            alert("Filename "+newFilename+" is already existed.");
+        }else if(returnedData == "success"){
+            renameModal.style.display = "none";
+            alert("Renamed");
+            refreshPage();
+        }else{
+            alert("Rename fail");
+        }
+    });
+
 }

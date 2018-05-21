@@ -17,6 +17,13 @@
             echo DiagramMgrService::deleteClassDiagram($_POST['delete']);
         }
     }
+    if(isset($_POST['rename'])&&isset($_POST['table'])){
+        if($_POST['table'] == "CallGraph"){
+            echo DiagramMgrService::renameCallGraph($_POST['rename'],$_POST['newName']);
+        }else if($_POST['table'] == "ClassDiagram"){
+            echo DiagramMgrService::renameClassDiagram($_POST['rename'],$_POST['newName']);
+        }
+    }
     class DiagramMgrService{
         public static function getCallGraphList(){
             $callGraphList = CallGraphService::selectAllFromGraph();
@@ -27,7 +34,20 @@
             return json_encode($classDiagramList);
         }
         public static function renameCallGraph($oldName, $newName){
-
+            $fullOldName = "../Sequence Diagrams/".$oldName;
+            $fullNewName = "../Sequence Diagrams/".$newName;
+            if(CallGraphService::selectFromGraphTable("graphName","graphName",$newName) != null){
+                echo "Exist";
+                return;
+            }
+            $success = CallGraphService::renameGraph($oldName, $newName, $fullNewName);
+            if($success){
+                if(rename($fullOldName,$fullNewName)){
+                    echo "success";
+                    return;
+                }
+            }
+            echo "failed";
         }
         public static function deleteCallGraph($fileName){
             $root = realpath($_SERVER["DOCUMENT_ROOT"]);
@@ -40,7 +60,20 @@
             return "fail";
         }
         public static function renameClassDiagram($oldName, $newName){
-
+            $fullOldName = "../Class Diagrams/".$oldName;
+            $fullNewName = "../Class Diagrams/".$newName;
+            if(ClassDiagramService::selectFromDiagramTable("diagramName","diagramName",$newName) != null){
+                echo "Exist";
+                return;
+            }
+            $success = ClassDiagramService::renameDiagram($oldName, $newName, $fullNewName);
+            if($success){
+                if(rename($fullOldName,$fullNewName)){
+                    echo "success";
+                    return;
+                }
+            }
+            echo "failed";
         }
         public static function deleteClassDiagram($fileName){
             $root = realpath($_SERVER["DOCUMENT_ROOT"]);

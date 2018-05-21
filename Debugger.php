@@ -7,4 +7,6 @@
     //  CallGraphService::initialCallGraphDatabase($conn);
     //  ClassDiagramService::initialClassDiagramDatabase($conn);
     //  $conn->close();
+    require_once "Page/DiagramMgrService.php";
+    DiagramMgrService::renameCallGraph("getGPAX Simple.xml","getGPAX.xml");
 ?>

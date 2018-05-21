@@ -140,6 +140,17 @@
             }
             return true;
         }
+        public static function renameGraph($oldName,$newName, $path){
+            $conn = Database::connectToDBUsingPDO('callgraph');
+            $sql = $conn->prepare("UPDATE graph SET graphName = :newName, fileTarget = :path WHERE graphName = :oldName");
+            $sql->bindParam(":newName",$newName);
+            $sql->bindParam(":oldName",$oldName);
+            $sql->bindParam(":path",$path);
+            if($sql->execute()==FALSE){
+                return false;
+            }
+            return true;
+        }
     }
 
 ?>

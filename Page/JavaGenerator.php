@@ -50,7 +50,7 @@
             return $filename;
         }
         private static function createFile($filename,$sourceCodeType){
-            $filepath = self::$root."/Source Code Files/".$filename.".txt";
+            $filepath = "../Source Code Files/".$filename.".txt";
             $success = SourceCodeService::insertFile($filename, $sourceCodeType, "Java", $filepath);
             if(!$success){
                 return false;

@@ -170,5 +170,16 @@
             }
             return true;
         }
+        public static function renameDiagram($oldName,$newName, $path){
+            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $sql = $conn->prepare("UPDATE diagram SET diagramName = :newName, fileTarget = :path WHERE diagramName = :oldName");
+            $sql->bindParam(":newName",$newName);
+            $sql->bindParam(":oldName",$oldName);
+            $sql->bindParam(":path",$path);
+            if($sql->execute()==FALSE){
+                return false;
+            }
+            return true;
+        }
     }
 ?>

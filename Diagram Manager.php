@@ -44,7 +44,10 @@
 <div id = "renameModal" class = "modal">
   <div class = "modal-content"><span class="close">&times;</span>
     <h4>Rename</h4>
-    <button id = "renameConfirm" onclick = "rename()">Edit</button>
+    <div align ="center">
+        New filename (Exclude .xml)<input type = "text" name = "filename" id = "filename" >
+        <button id = "renameConfirm" onclick = "rename()">Rename</button>
+    </div>
   </div>
 </div>
     <footer>2018 Copyright &copy; Department of Computer Engineering
