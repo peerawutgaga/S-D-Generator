@@ -23,7 +23,7 @@
             $success = SourceCodeService::renameFile($oldName, $newName,$newPath);
             if($success){
                 if(rename($fullOldName.".txt",$fullNewName.".txt")){
-                    $idx = strripos($fullOldName,".",-1);
+                    $idx = strrpos($fullOldName,".",-1);
                     $fullOldName = substr_replace($fullOldName,"-",$idx,1);
                     $idx = strrpos($newName,".",-1);
                     echo substr_replace($newName,"-",$idx,1);

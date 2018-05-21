@@ -4,7 +4,7 @@
     {
         private static function createSourceCodeTable($conn){
             $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
-                name VARCHAR(30) PRIMARY KEY,
+                name VARCHAR(100) PRIMARY KEY,
                 fileType VARCHAR(6) NOT NULL,
                 language VARCHAR(6) NOT NULL,
                 location VARCHAR(255) NOT NULL,

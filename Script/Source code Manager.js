@@ -42,7 +42,17 @@ function duplicateFile(){
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
-	}
+    }
+    $.post('Page/SourceCodeMgrService.php',{
+        'method': "duplicate",
+        'file':selectedValue,
+    },function (returnedData){
+        if(returnedData == "success"){
+            location.reload(true);
+        }else{
+            alert("Duplicate fail");
+        }
+    });
 }
 function deleteFile(){
     var selectedValue = $("tr.selected td:eq(1)" ).html();
@@ -58,11 +68,11 @@ function deleteFile(){
         'method': "delete",
         'file':selectedValue,
     },function (returnedData){
-        if(returnedData == "fail"){
-            alert("Delete failed");
-        }else{
+        if(returnedData == "success"){
             location.reload(true);
             alert("Deleted");
+        }else{
+            alert("Delete failed");
         }
     });
 }

@@ -90,11 +90,11 @@ function deleteDiagram(){
         'delete': selectedValue,
         'table':currentTable,
     },function (returnedData){
-        if(returnedData == "fail"){
-            alert("Delete failed");
-        }else{
+        if(returnedData == "success"){
             alert("Deleted");
             refreshPage();
+        }else{
+            alert("Delete failed");
         }
     });
 }

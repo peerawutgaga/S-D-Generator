@@ -10,8 +10,8 @@
         echo SourceCodeMgrService::deleteFile($_POST['file']);
     }else if($method == "rename"){
         echo SourceCodeMgrService::renameFile($_POST['oldname'],$_POST['newname']);
-    }else if($method == "export"){
-        echo SourceCodeMgrService::exportFile($_POST['file']);
+    }else if($method == "duplicate"){
+        echo SourceCodeMgrService::duplicateFile($_POST['file']);
     }
      class SourceCodeMgrService{
          public static function getSourceCodeList(){
@@ -46,8 +46,27 @@
             }
             echo "failed";
         }
-        public static function exportFile($filename){
-            
+        public static function duplicateFile($filename){
+            $originFile = SourceCodeService::selectFromFileTable($filename);
+            $idx = strrpos($filename,".",-1);
+            $newFilename = substr($filename,0,$idx);
+            $extension = substr($filename,$idx,strlen($filename)-1);
+            $fileNumber = 1;
+            while(SourceCodeService::selectFromFileTable($newFilename." - ".$fileNumber.$extension) != null){
+                $fileNumber = $fileNumber + 1;
+            }
+            $newFilename = $newFilename." - ".$fileNumber.$extension;
+            $newLocation = "../Source Code Files/".$newFilename.".txt";
+            if(SourceCodeService::insertFile($newFilename,$originFile['fileType'],$originFile['language'],$newLocation)){
+                $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+                $fullSource = $root."/Source Code Files/".$filename.".txt";
+                $fullDest = $root."/Source Code Files/".$newFilename.".txt";
+                if(LocalFileManager::copy($fullSource,$fullDest)){
+                    echo "success";
+                    return;
+                }
+            }
+            echo "fail";
         }
      }
 ?>
