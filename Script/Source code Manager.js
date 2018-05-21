@@ -71,6 +71,16 @@ function editFile(){
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
+    }
+    selectedValue = selectedValue.replace(".","-");
+	var queryString = "?sourcecode="+selectedValue;
+	var win = window.open('../Create Code.php'+queryString);
+	if (win) {
+		//Browser has allowed it to be opened
+		win.focus();
+	} else {
+		//Browser has blocked it
+		alert('Please allow popups for this website');
 	}
 }
 function exportFile(){
