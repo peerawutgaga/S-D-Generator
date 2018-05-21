@@ -104,6 +104,7 @@ function showRenameDialog(){
 		alert("Please select a file");
 		return;
     }
+    document.getElementById("filename").value = "";
     renameModal.style.display = "block";
 }
 function refreshPage(){

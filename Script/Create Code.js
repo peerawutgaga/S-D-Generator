@@ -151,7 +151,6 @@ function rename(){
         'oldFilename' : oldFilename+"."+fileExtension, 
         'newFilename' : currentFilename,
 	}, function(returnedData){
-        console.log(returnedData);
         if(returnedData == "failed"){
              alert("Rename failed");
         }else if(returnedData =="Exist"){

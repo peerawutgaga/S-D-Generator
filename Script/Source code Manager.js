@@ -1,9 +1,12 @@
 var fileTable = document.getElementById("fileTable");
 var fileSelect = fileTable.getElementsByClassName("selected");
+var renameModal = document.getElementById("renameModal");
+var modalClose = document.getElementsByClassName("close")[0];
 fileTable.onclick = highlight;
 window.onload = function(){
+    renameModal.style.display = "none";
     $.post('Page/SourceCodeMgrService.php',{
-        'getList': "Sequence",
+        'method': "getList",
     },function (returnedData){
         addListToTable(returnedData);
     }),"json";
@@ -35,37 +38,73 @@ function highlight(e){
 	e.target.parentNode.className = 'selected';  
 }
 function duplicateFile(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
 	}
 }
 function deleteFile(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
-	}
+    }
+    var confirmMsg = "Delete file: "+selectedValue+"?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
+    $.post('Page/SourceCodeMgrService.php',{
+        'method': "delete",
+        'file':selectedValue,
+    },function (returnedData){
+        if(returnedData == "fail"){
+            alert("Delete failed");
+        }else{
+            location.reload(true);
+            alert("Deleted");
+        }
+    });
 }
 function editFile(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
 	}
 }
 function exportFile(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
-	}
+    }
+    var confirmMsg = "Export file: "+selectedValue+"?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
 }
 function renameFile(){
-    var selectedValue = $("tr.selected td:first" ).html();
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
 	if(selectedValue == null){
 		alert("Please select a file");
 		return;
-	}
+    }
+}
+function showRenameDialog(){
+    var selectedValue = $("tr.selected td:eq(1)" ).html();
+	if(selectedValue == null){
+		alert("Please select a file");
+		return;
+    }
+    document.getElementById("filename").value = "";
+    renameModal.style.display = "block";
+}
+window.onclick = function (event) {
+	if (event.target == renameModal) {
+		renameModal.style.display = "none";
+    }
+};
+modalClose.onclick = function(){
+    renameModal.style.display = "none";
 }
