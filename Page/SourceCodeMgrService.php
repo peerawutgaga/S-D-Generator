@@ -10,6 +10,8 @@
         echo SourceCodeMgrService::deleteFile($_POST['file']);
     }else if($method == "rename"){
         echo SourceCodeMgrService::renameFile($_POST['oldname'],$_POST['newname']);
+    }else if($method == "export"){
+        echo SourceCodeMgrService::exportFile($_POST['file']);
     }
      class SourceCodeMgrService{
          public static function getSourceCodeList(){
@@ -43,6 +45,9 @@
                 }
             }
             echo "failed";
+        }
+        public static function exportFile($filename){
+            
         }
      }
 ?>

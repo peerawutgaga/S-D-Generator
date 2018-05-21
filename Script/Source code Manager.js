@@ -83,6 +83,11 @@ function exportFile(){
     if(!confirm(confirmMsg)){
         return;
     }
+    var idx = selectedValue.lastIndexOf(".");
+    var filename = selectedValue.substring(0,idx);
+    var extension = selectedValue.substring(idx+1);
+    var queryString = "?sourcecode="+filename+"-"+extension; 
+	window.location.href='../PHP/Download.php'+queryString;
 }
 function renameFile(){
     var selectedValue = $("tr.selected td:eq(1)" ).html();

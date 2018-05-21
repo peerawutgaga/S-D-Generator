@@ -180,6 +180,10 @@ function saveChange(){
 	});
 }
 function exportFile(){
+    var confirmMsg = "Export file: "+oldFilename+"."+fileExtension+"?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
     var filepath = oldFilename+"-"+fileExtension;
     var queryString = "?sourcecode="+filepath; 
 	window.location.href='../PHP/Download.php'+queryString;

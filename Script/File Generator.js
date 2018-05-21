@@ -71,11 +71,19 @@ function exportSelected(){
 		alert("Please select a file");
 		return;
 	}
+	var confirmMsg = "Export file: "+selectedValue+"?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
 	selectedValue = selectedValue.replace(".","-");
 	var queryString = "?sourcecode="+selectedValue; 
 	window.location.href='../PHP/Download.php'+queryString;
 }
 function exportAll(){
+	var confirmMsg = "Export all generated files?";
+    if(!confirm(confirmMsg)){
+        return;
+    }
 	var files = fileList.split(",");
 	if(files.length == 1){
 		var file = files[0].replace(".","-");
