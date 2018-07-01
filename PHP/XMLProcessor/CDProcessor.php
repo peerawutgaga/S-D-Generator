@@ -1,5 +1,6 @@
 <?php
-    require_once "ClassDiagramService.php";
+    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+    require_once "$root/PHP/ClassDiagramService.php";
     class CDProcessor{
         private static $conn;
         private static $diagramID;

@@ -1,8 +1,7 @@
 <?php
-    require_once "CallGraphService.php";
-    require_once "ClassDiagramService.php";
-    require_once "CDProcessor.php";
-    require_once "SDProcessor.php";
+    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+    require_once "$root/PHP/XMLProcessor/CDProcessor.php";
+    require_once "$root/PHP/XMLProcessor/SDProcessor.php";
 
     if(isset($_POST['SDSubmit'])){
         Uploader::upload("../Sequence Diagrams/", "SDFile");
