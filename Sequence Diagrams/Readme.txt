@@ -1,1 +1,0 @@
-This folder is for storing sequence diagram files.

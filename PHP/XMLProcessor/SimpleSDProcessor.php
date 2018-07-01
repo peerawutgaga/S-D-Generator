@@ -25,7 +25,6 @@
                         $nodeID = $node->BaseClassifier->Class['Idref'];
                     }
                     CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
-                    echo 26;
                 }else if($node->getName() == 'InteractionActor'){
                     $nodeName = $node['Name'];
                     $nodeID = $node->MasterView->InteractionActor['Idref'];

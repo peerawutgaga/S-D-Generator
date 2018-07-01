@@ -7,13 +7,7 @@ var uploadClose = document.getElementsByClassName("close")[0];
 var createCodeClose= document.getElementsByClassName("close")[1];
 var fileListClose = document.getElementsByClassName("close")[2];
 var uploadSDBtn =document.getElementById("uploadSD");
-var SDFile = document.getElementById("SDFile");
 var uploadCDBtn =document.getElementById("uploadCD");
-var CDFile = document.getElementById("CDFile");
-var SDSubmit = document.getElementById("SDSubmit");
-var CDSubmit = document.getElementById("CDSubmit");
-var SDSelect = document.getElementById("SDSelect");
-var CDSelect = document.getElementById("CDSelect");
 var ClassSelect = document.getElementById("ClassSelect");
 
 uploadBtn.style.cursor = "pointer";
@@ -50,19 +44,19 @@ window.onclick = function (event) {
 };
 
 uploadSDBtn.onclick = function(){
-	SDFile.click();
+	document.getElementById("SDFile").click();
 };
 uploadCDBtn.onclick = function(){
-	CDFile.click();
+	document.getElementById("CDFile").click();
 };
 
 function uploadSDFile()
 {
-	SDSubmit.click();
+	document.getElementById("SDSubmit").click();
 }
 function uploadCDFile()
 {
-	CDSubmit.click();
+	document.getElementById("CDSubmit").click();
 }
 function selectSD(selected){
 	$.post('Page/SetCodeProperties.php', {  
