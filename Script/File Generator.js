@@ -16,7 +16,7 @@ function createCode(){
 	}else{
 		sourceLang = 'PHP';
 	}
-	$.post('Page/SourceCodeGenerator.php', { 
+	$.post('Page/SourceCodeGen/SourceCodeGenerator.php', { 
 		'graphID': SDSelect.options[SDSelect.selectedIndex].value,
 		'diagramID' : CDSelect.options[CDSelect.selectedIndex].value, 
 		'CUT' : ClassSelect.options[ClassSelect.selectedIndex].value,
