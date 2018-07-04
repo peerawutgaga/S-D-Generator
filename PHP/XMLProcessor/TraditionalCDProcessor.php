@@ -5,7 +5,7 @@
         private static $conn;
         private static $diagramID;
         private static $dataTypeRef;
-        private static function processTraditionalCD($xml,$conn,$diagramID){
+        public static function processTraditionalCD($xml,$conn,$diagramID){
             $modelList = $xml->Models;
             self::$conn = $conn;
             self::$diagramID = $diagramID;
