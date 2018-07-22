@@ -1,4 +1,5 @@
 <?php
+    namespace SequenceDiagram;
     class ObjectNode{
         private $nodeID;
         private $nodeName;

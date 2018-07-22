@@ -1,4 +1,5 @@
 <?php
+    namespace SequenceDiagram;
     class Argument{
         private $argName;
         private $argType;

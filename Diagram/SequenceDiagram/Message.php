@@ -1,4 +1,5 @@
 <?php
+    namespace SequenceDiagram;
     class Message{
         private $messageID;
         private $messageName;
