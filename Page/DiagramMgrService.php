@@ -1,7 +1,7 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/CallGraphService.php";
-    require_once "$root/PHP/ClassDiagramService.php";
+    require_once "$root/PHP/Database/CallGraphService.php";
+    require_once "$root/PHP/Database/ClassDiagramService.php";
     require_once "$root/PHP/LocalFileManager.php";
     if(isset($_POST['getList'])){
         if($_POST['getList']=="Sequence"){

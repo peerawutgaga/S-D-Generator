@@ -1,5 +1,4 @@
 <?php
-    require_once "Script.php";
     class Database{
         public static function connectToDB(){
             $servername = "localhost";

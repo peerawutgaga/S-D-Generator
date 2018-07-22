@@ -1,8 +1,8 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/SourceCodeService.php";
-    require_once "$root/PHP/CallGraphService.php";
-    require_once "$root/PHP/ClassDiagramService.php";
+    require_once "$root/PHP/Database/SourceCodeService.php";
+    require_once "$root/PHP/Database/CallGraphService.php";
+    require_once "$root/PHP/Database/ClassDiagramService.php";
     class PHPGenerator{
         private static $root;
         private static $file;

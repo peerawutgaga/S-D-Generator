@@ -1,6 +1,6 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/CallGraphService.php";
+    require_once "$root/PHP/Database/CallGraphService.php";
     class TraditionalSDProcessor{
         private static $conn;
         private static $graphID;
