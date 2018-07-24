@@ -122,27 +122,33 @@
                 $conn = null;
             }
         }
-        public static function insertToMethodTable(Method $method){
+        public static function insertToMethodTable($diagramID, Method $method){
             $conn = Database::connectToDB("classDiagram");
             $sql = $conn->prepare("INSERT INTO method(diagramID,className,methodID, 
             methodName, returnType, visibility, typeModifier,isStatic) 
             VALUES(?,?,?,?,?,?,?,?)");
             $sql->bind_param("issssssi",$diagramID,$className,$methodID, $methodName,
              $returnType, $visibility,$typeModifier,$isStatic);
-            if($sql->execute()===FALSE){
-                    echo "Error at inserting to method table: ".$sql->error."<br>";
+             try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to method table " . $e->getMessage();
+            }finally{
+                $conn = null;
             }
-            $sql->close();
         }
-        public static function insertToParameterTable(Parameter $parameter){
+        public static function insertToParameterTable($diagramID, Parameter $parameter){
             $conn = Database::connectToDB("classDiagram");
             $sql = $conn->prepare("INSERT INTO parameter(diagramID,methodID, parameterID, parameterName, parameterType, typeModifier) 
             VALUES(?,?,?,?,?,?)");
             $sql->bind_param("isssss",$diagramID,$methodID, $parameterID, $parameterName, $parameterType, $typeModifier);
-            if($sql->execute()===FALSE){
-                    echo "Error at inserting to parameter table: ".$sql->error."<br>";
+            try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to parameter table " . $e->getMessage();
+            }finally{
+                $conn = null;
             }
-            $sql->close();
         }
         public static function selectFromDiagramTable($value,$field,$keyword){
             $conn = Database::connectToDB("classDiagram");
