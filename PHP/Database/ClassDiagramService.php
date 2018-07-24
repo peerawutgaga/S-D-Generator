@@ -1,30 +1,51 @@
 <?php
     require_once "Database.php";
+    $diagram = realpath($_SERVER["DOCUMENT_ROOT"])."/Diagram/ClassDiagram/";
+    include "$Diagram/ClassDiagram.php";
+    include "$Diagram/ObjectClass.php";
+    include "$Diagram/Method.php";
+    include "$Diagram/Parameter.php";
+    use ClassDiagram\ClassDiagram;
+    use ClassDiagram\ObjectClass;
+    use ClassDiagram\Method;
+    use ClassDiagram\Parameter;
     class ClassDiagramService{
-        private static function createDiagramTable($conn){
+        private static function createDiagramTable(){
+            $conn = Database::connectToDB("classDiagram");
             $sql =  "CREATE TABLE IF NOT EXISTS diagram(
                 diagramID INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
                 diagramName VARCHAR(30) NOT NULL,
                 fileTarget VARCHAR(100) NOT NULL,
                 createDate TIMESTAMP
             )";
-            if ($conn->query($sql) === FALSE) {
-                echo "Error at creating graph table: ".$conn->error."<br>";
-            } 
+             try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create diagram table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
+            }
         }
-        private static function createClassTable($conn){
+        private static function createClassTable(){
+            $conn = Database::connectToDB("classDiagram");
             $sql = "CREATE TABLE IF NOT EXISTS class(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
                 diagramID INT(6) UNSIGNED NOT NULL,
                 className VARCHAR(30) NOT NULL,
+                classType INT(1) UNSIGNED NOT NULL,
                 packagePath VARCHAR(255),
                 FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
-            if ($conn->query($sql) === FALSE) {
-                echo "Error at creating class table: ".$conn->error."<br>";
-            } 
+             try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create class table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
+            }
         }
-        private static function createMethodTable($conn){
+        private static function createMethodTable(){
+            $conn = Database::connectToDB("classDiagram");
             $sql = "CREATE TABLE IF NOT EXISTS method(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 diagramID INT(6) UNSIGNED NOT NULL,
@@ -37,11 +58,16 @@
                 isStatic INT(1) NOT NULL,
                 FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
-            if ($conn->query($sql) === FALSE) {
-                echo "Error at creating method table: ".$conn->error."<br>";
-            } 
+             try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create method table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
+            }
         }
-        private static function createParameterTable($conn){
+        private static function createParameterTable(){
+            $conn = Database::connectToDB("classDiagram");
             $sql = "CREATE TABLE IF NOT EXISTS parameter(
                 id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
                 diagramID INT(6) UNSIGNED NOT NULL,
@@ -52,36 +78,52 @@
                 typeModifier VARCHAR(3),
                 FOREIGN KEY (diagramID) REFERENCES diagram(diagramID) ON DELETE CASCADE
             )";
-            if ($conn->query($sql) === FALSE) {
-                echo "Error at creating parameter table: ".$conn->error."<br>";
-            } 
-        }
-        public static function initialClassDiagramDatabase($conn){
-            Database::createDatabaseIfNotExist($conn,'ClassDiagram');
-            Database::selectDB($conn,'ClassDiagram');
-            self::createDiagramTable($conn);
-            self::createClassTable($conn);
-            self::createMethodTable($conn);
-            self::createParameterTable($conn);
-        }
-        public static function insertToDiagramTable($conn, $diagramName, $fileTarget){
-            $sql = $conn->prepare("INSERT INTO diagram(diagramName, fileTarget) VALUES(?,?)");
-            $sql->bind_param("ss",$diagramName,$fileTarget);
-            if($sql->execute()===FALSE){
-                    echo "Error at inserting to diagram table: ".$sql->error."<br>";
+            try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create graph table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
             }
-            $sql->close();
         }
-        public static function insertToClassTable($conn, $diagramID, $className, $packagePath){
-            $sql = $conn->prepare("INSERT INTO class(diagramID,className,packagePath) VALUES(?,?,?)");
-            $sql->bind_param("iss",$diagramID,$className,$packagePath);
-            if($sql->execute()===FALSE){
-                    echo "Error at inserting to class table: ".$sql->error."<br>";
+        public static function initialClassDiagramDatabase(){
+            Database::createDatabaseIfNotExist('ClassDiagram');
+            self::createDiagramTable();
+            self::createClassTable();
+            self::createMethodTable();
+            self::createParameterTable();
+        }
+        public static function insertToDiagramTable(ClassDiagram $classDiagram){
+            $conn = Database::connectToDB("classDiagram");
+            $sql = "INSERT INTO diagram(diagramName, fileTarget) VALUES(:diagramName, :fileTarget)";
+            $sql->bindParam(":diagramName",$classDiagram->getDiagramName());
+            $sql->bindParam(":fileTarget",$classDiagram->getFileTarget());
+            try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to diagram table " . $e->getMessage();
+            }finally{
+                $conn = null;
             }
-            $sql->close();
         }
-        public static function insertToMethodTable($conn, $diagramID,$className, 
-        $methodID, $methodName, $returnType,$visibility,$typeModifier,$isStatic){
+        public static function insertToClassTable($diagramID, ObjectClass $objectClass){
+            $conn = Database::connectToDB("classDiagram");
+            $sql = "INSERT INTO class(diagramID,className, classType,packagePath) 
+                VALUES(:diagramID,:className, :classType,:packagePath)";
+            $sql->bindParam(":diagramID",$diagramID);
+            $sql->bindParam(":className",$objectClass->getClassName());
+            $sql->bindParam(":classType",$objectClass->getClassType());
+            $sql->bindParam(":packagePath",$objectClass->getPackagePath());
+            try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to class table " . $e->getMessage();
+            }finally{
+                $conn = null;
+            }
+        }
+        public static function insertToMethodTable(Method $method){
+            $conn = Database::connectToDB("classDiagram");
             $sql = $conn->prepare("INSERT INTO method(diagramID,className,methodID, 
             methodName, returnType, visibility, typeModifier,isStatic) 
             VALUES(?,?,?,?,?,?,?,?)");
@@ -92,7 +134,8 @@
             }
             $sql->close();
         }
-        public static function insertToParameterTable($conn, $diagramID, $methodID, $parameterID, $parameterName, $parameterType, $typeModifier){
+        public static function insertToParameterTable(Parameter $parameter){
+            $conn = Database::connectToDB("classDiagram");
             $sql = $conn->prepare("INSERT INTO parameter(diagramID,methodID, parameterID, parameterName, parameterType, typeModifier) 
             VALUES(?,?,?,?,?,?)");
             $sql->bind_param("isssss",$diagramID,$methodID, $parameterID, $parameterName, $parameterType, $typeModifier);
@@ -102,7 +145,7 @@
             $sql->close();
         }
         public static function selectFromDiagramTable($value,$field,$keyword){
-            $conn = Database::connectToDBUsingPDO('classdiagram');
+            $conn = Database::connectToDB("classDiagram");
             if($field == 'diagramID'){
                 $sql = $conn->prepare("SELECT * FROM diagram WHERE diagramID = :keyword LIMIT 1");
             }else if($field == 'diagramName'){
@@ -114,14 +157,14 @@
             return $result[$value];
         }
         public static function selectAllFromDiagram(){
-            $conn = Database::connectToDBUsingPDO('classdiagram');
+            $conn = Database::connectToDB("classDiagram");
             $sql = $conn->prepare("SELECT * FROM diagram");
             $sql->execute();
             $result = $sql->fetchAll();
             return $result;
         }
         public static function selectClassFromNodeName($diagramID, $nodeName){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $conn = Database::connectToDB('classDiagram');
             $sql = $conn->prepare("SELECT * FROM class WHERE diagramID = :diagramID AND className = :nodeName LIMIT 1");
             $sql->bindParam(':diagramID',$diagramID);
             $sql->bindParam(':nodeName',$nodeName);
@@ -130,7 +173,7 @@
             return $result;
         }
         public static function selectMethodByMethodName($diagramID, $className, $methodName){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $conn = Database::connectToDB('classDiagram');
             $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND 
             className = :className AND 
             methodName = :methodName LIMIT 1");
@@ -142,7 +185,7 @@
             return $result;
         }
         public static function selectParameterByMethodID($diagramID, $methodID){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $conn = Database::connectToDB('classDiagram');
             $sql = $conn->prepare("SELECT * FROM parameter WHERE diagramID = :diagramID AND
             methodID = :methodID");
             $sql->bindParam(':diagramID',$diagramID);
@@ -152,7 +195,7 @@
             return $result;
         }
         public static function selectAllMethodFromClassName($diagramID,$className){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $conn = Database::connectToDB('classDiagram');
             $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND
             className = :className");
             $sql->bindParam(':diagramID',$diagramID);
@@ -162,7 +205,7 @@
             return $result;
         }
         public static function deleteFromDiagram($diagramName){
-            $conn = Database::connectToDBUsingPDO("classdiagram");
+            $conn = Database::connectToDB("classdiagram");
             $sql = $conn->prepare("DELETE FROM diagram WHERE diagramName = :diagramName");
             $sql->bindParam(":diagramName",$diagramName);
             if($sql->execute() === FALSE){
@@ -171,7 +214,7 @@
             return true;
         }
         public static function renameDiagram($oldName,$newName, $path){
-            $conn = Database::connectToDBUsingPDO('classDiagram');
+            $conn = Database::connectToDB('classDiagram');
             $sql = $conn->prepare("UPDATE diagram SET diagramName = :newName, fileTarget = :path WHERE diagramName = :oldName");
             $sql->bindParam(":newName",$newName);
             $sql->bindParam(":oldName",$oldName);

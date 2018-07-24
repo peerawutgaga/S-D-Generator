@@ -1,6 +1,6 @@
 <?php
     namespace ClassDiagram;
-    class Methos{
+    class Method{
         private $methodID;
         private $methodName;
         private $returnType;

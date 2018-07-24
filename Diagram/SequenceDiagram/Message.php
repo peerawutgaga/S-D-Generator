@@ -6,7 +6,7 @@
         private $sentNodeID;
         private $receivedNodeID;
         private $arguments;
-        function __construc($messageID, $messageName){
+        function __construct($messageID, $messageName){
             $this->messageID = $messageID;
             $this->messageName = $messageName;
             $this->arguments = array();

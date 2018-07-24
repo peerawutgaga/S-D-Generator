@@ -1,6 +1,6 @@
 <?php
         namespace SequenceDiagram;
-        class SequenceDiagram{
+        class CallGraph{
         private $graphID;
         private $graphName;
         private $fileTarget;
@@ -21,6 +21,14 @@
                 return $this->graphName;
         }
 
+        public function getFileTarget()
+        {
+                return $this->fileTarget;
+        }
+        public function setFileTarget($fileTarget)
+        {
+                $this->fileTarget = $fileTarget;
+        }
         public function setGraphName($graphName)
         {
                 $this->graphName = $graphName;
