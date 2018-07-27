@@ -36,7 +36,7 @@
         public static function renameCallGraph($oldName, $newName){
             $fullOldName = "../Sequence Diagrams/".$oldName;
             $fullNewName = "../Sequence Diagrams/".$newName;
-            if(CallGraphService::selectFromGraphTable("graphName","graphName",$newName) != null){
+            if(CallGraphService::selectFromGraphByGraphName($newName) != null){
                 echo "Exist";
                 return;
             }
@@ -62,7 +62,7 @@
         public static function renameClassDiagram($oldName, $newName){
             $fullOldName = "../Class Diagrams/".$oldName;
             $fullNewName = "../Class Diagrams/".$newName;
-            if(ClassDiagramService::selectFromDiagramTable("diagramName","diagramName",$newName) != null){
+            if(ClassDiagramService::selectFromDiagramByDiagramName($newName) != null){
                 echo "Exist";
                 return;
             }

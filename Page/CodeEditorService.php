@@ -1,6 +1,6 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/SourceCodeService.php";
+    require_once "$root/PHP/Database/SourceCodeService.php";
     require_once "$root/PHP/LocalFileManager.php";
     $method = $_POST['method'];
     if($method =="rename"){
@@ -16,7 +16,7 @@
             $fullOldName = $root."/Source Code Files/".$oldName;
             $fullNewName = $root."/Source Code Files/".$newName;
             $newPath = "../Source Code Files/".$newName.".txt";
-            if(SourceCodeService::selectFromFileTable($newName)!=null){
+            if(SourceCodeService::selectFromFileTableByFileName($newName)!=null){
                 echo "Exist";
                 return;
             }

@@ -6,10 +6,8 @@
         refreshClassSelect($_POST['CUT']);
     }
     function initialDatabase(){
-        $conn = Database::connectToDB();
-        CallGraphService::initialCallGraphDatabase($conn);
-        ClassDiagramService::initialClassDiagramDatabase($conn);
-        $conn->close();
+        CallGraphService::initialCallGraphDatabase();
+        ClassDiagramService::initialClassDiagramDatabase();
     }
     function initialSDSelect(){
         echo "<h4>Select Call Graph</h4>";
