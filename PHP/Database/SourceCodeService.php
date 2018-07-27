@@ -2,7 +2,8 @@
     require_once "Database.php";
     class SourceCodeService
     {
-        private static function createSourceCodeTable($conn){
+        private static function createSourceCodeTable(){
+            $conn = Database::connectToDB("sourceCode");
             $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
                 name VARCHAR(100) PRIMARY KEY,
                 fileType VARCHAR(6) NOT NULL,
@@ -10,64 +11,92 @@
                 location VARCHAR(255) NOT NULL,
                 createDate TIMESTAMP
             )";
-            if ($conn->query($createFileTableSQL) === FALSE) {
-                echo "Error creating source code table: " . $conn->error;
-            } 
+             try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create source code table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
+            }
         }
         public static function initialSourceCodeDatabase(){
-            $conn = Database::connectToDB();
-            Database::createDatabaseIfNotExist($conn,'SourceCode');
-            Database::selectDB($conn,'SourceCode');
-            self::createSourceCodeTable($conn);
-            $conn->close();
+            Database::createDatabaseIfNotExist('SourceCode');
+            self::createSourceCodeTable();
         }
         public static function insertFile($name, $fileType, $language, $location){
-            $conn = Database::connectToDB();
-            Database::selectDB($conn,'SourceCode');
-            $sql = $conn->prepare("INSERT INTO fileTable(name, fileType, language, location) 
-            VALUES(?,?,?,?)");
-            $sql->bind_param("ssss",$name, $fileType, $language, $location);
-            if($sql->execute()===FALSE){
-                $sql->close();
-                $conn->close();
+            $conn = Database::connectToDB("sourceCode");
+            $sql = "INSERT INTO fileTable(name, fileType, language, location) 
+            VALUES(:name, :fileType, :language, :location)";
+            $sql->bindParam(":name",$name);
+            $sql->bindParam(":fileType",$fileType);
+            $sql->bindParam(":language",$language);
+            $sql->bindParam(":location",$location);
+            try{
+                $sql->execute();
+                return true;
+            }catch(PDOException $e){
+                echo "Error at insert to file table " . $e->getMessage();
                 return false;
+            }finally{
+                $conn = null;
             }
-            $sql->close();
-            $conn->close();
-            return true;
         }
         public static function renameFile($oldName,$newName,$path){
-            $conn = Database::connectToDBUsingPDO('sourcecode');
+            $conn = Database::connectToDB('sourcecode');
             $sql = $conn->prepare("UPDATE fileTable SET name = :newName, location = :path WHERE name = :oldName");
             $sql->bindParam(":newName",$newName);
             $sql->bindParam(":oldName",$oldName);
             $sql->bindParam(":path",$path);
-            if($sql->execute()==FALSE){
+            try{
+                $sql->execute();
+                return true;
+            }catch(PDOException $e){
+                echo "Error at rename file " . $e->getMessage();
                 return false;
+            }finally{
+                $conn = null;
             }
-            return true;
         }
         public static function selectAllFromFileTable(){
-            $conn = Database::connectToDBUsingPDO('sourcecode');
+            $conn = Database::connectToDB('sourcecode');
             $sql = $conn->prepare("SELECT * FROM fileTable");
-            $sql->execute();
-            return $sql->fetchAll();
+            try{
+                $sql->execute();
+                $result = $sql->fetchAll();
+                return $result;
+            }catch(PDOException $e){
+                echo "Error at selecting from file table " . $e->getMessage();
+            }finally{
+                $conn = null;
+            }
         }
-        public static function selectFromFileTable($fileName){
-            $conn = Database::connectToDBUsingPDO('sourcecode');
+        public static function selectFromFileTableByFileName($fileName){
+            $conn = Database::connectToDB('sourcecode');
             $sql = $conn->prepare("SELECT * FROM fileTable WHERE name = :fileName LIMIT 1");
             $sql->bindParam(":fileName",$fileName);
-            $sql->execute();
-            return $sql->fetch();
+            try{
+                $sql->execute();
+                $result = $sql->fetch();
+                return $result;
+            }catch(PDOException $e){
+                echo "Error at selecting from file table " . $e->getMessage();
+            }finally{
+                $conn = null;
+            }
         }
         public static function deleteFile($filename){
-            $conn = Database::connectToDBUsingPDO("sourcecode");
+            $conn = Database::connectToDB("sourcecode");
             $sql = $conn->prepare("DELETE FROM fileTable WHERE name = :filename");
             $sql->bindParam(":filename",$filename);
-            if($sql->execute() === FALSE){
+            try{
+                $sql->execute();
+                return true;
+            }catch(PDOException $e){
+                echo "Error at delete file " . $e->getMessage();
                 return false;
+            }finally{
+                $conn = null;
             }
-            return true;
         }
     }
 ?>
