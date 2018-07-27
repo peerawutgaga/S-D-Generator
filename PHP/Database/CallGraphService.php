@@ -224,7 +224,6 @@
                 return false;
             }finally{
                 $conn = null;
-                return false;
             }
         }
         public static function renameGraph($oldName,$newName, $path){
@@ -241,7 +240,6 @@
                 return false;
             }finally{
                 $conn = null;
-                return false;
             }
         }
     }
