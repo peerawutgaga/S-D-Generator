@@ -7,10 +7,8 @@
         private $className;
         private $classType;
         private $packagePath;
-        private $methods;
         function __construct($className){
             $this->className = $className;
-            $this->methods = array();
         }
         public function getClassName()
         {

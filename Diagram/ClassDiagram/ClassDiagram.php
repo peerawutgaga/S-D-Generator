@@ -3,7 +3,6 @@
     class ClassDiagram{
         private $diagramName;
         private $fileTarget;
-        private $classes;
         function __construct($diagramName){
             $this->diagramName = $diagramName;
         }

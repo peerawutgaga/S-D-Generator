@@ -3,10 +3,8 @@
         class CallGraph{
         private $graphName;
         private $fileTarget;
-        private $objectNodes;
         function __construct($graphName){
                 $this->graphName = $graphName;
-                $this->objectNodes = array();
         }
 
         public function setGraphName($graphName)

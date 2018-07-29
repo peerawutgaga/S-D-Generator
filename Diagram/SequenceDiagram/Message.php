@@ -5,11 +5,9 @@
         private $messageName;
         private $sentNodeID;
         private $receivedNodeID;
-        private $arguments;
         function __construct($messageID, $messageName){
             $this->messageID = $messageID;
             $this->messageName = $messageName;
-            $this->arguments = array();
         }
         public function getMessageID()
         {

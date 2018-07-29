@@ -8,11 +8,9 @@
         private $visibility;
         private $isStatic;
         private $isAbstract;
-        private $parameters;
         function __construct($methodID,$methodName){
             $this->methodID = $methodID;
             $this->methodName = $methodName;
-            $this->parameters = array();
         }
         public function getMethodID()
         {
