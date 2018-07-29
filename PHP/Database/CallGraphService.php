@@ -1,10 +1,10 @@
 <?php
     require_once "Database.php";
     $diagram = realpath($_SERVER["DOCUMENT_ROOT"])."/Diagram/SequenceDiagram/";
-    include "$Diagram/CallGraph.php";
-    include "$Diagram/ObjectNode.php";
-    include "$Diagram/Message.php";
-    include "$Diagram/Argument.php";
+    include_once "$Diagram/CallGraph.php";
+    include_once "$Diagram/ObjectNode.php";
+    include_once "$Diagram/Message.php";
+    include_once "$Diagram/Argument.php";
     use SequenceDiagram\CallGraph;
     use SequenceDiagram\ObjectNode;
     use SequenceDiagram\Message;

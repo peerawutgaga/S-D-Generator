@@ -1,8 +1,10 @@
 <?php
+    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "SimpleSDProcessor.php";
     require_once "TraditionalSDProcessor.php";
+    include_once "$root/Diagram/SequenceDiagram/CallGraph.php";
+    use SequenceDiagram\CallGraph;
     class SDProcessor{
-        private static $conn;
         private static $graphID;
         public static function readSequenceDiagram($fileName, $targetFile){
             $xml = simplexml_load_file($targetFile);
@@ -15,18 +17,17 @@
             }
             self::saveFileToDB($fileName,$targetFile);
             if($xml['Xml_structure'] == 'simple'){
-                SimpleSDProcessor::processSimpleSD($xml,self::$conn,self::$graphID);
+                
+                SimpleSDProcessor::processSimpleSD($xml,self::$graphID);
             }else{
-                TraditionalSDProcessor::processTraditionalSD($xml,self::$conn,self::$graphID);
+                TraditionalSDProcessor::processTraditionalSD($xml,self::$graphID);
             }
         }
         private static function saveFileToDB($fileName,$targetFile){
-            self::$conn = Database::connectToDB();
-            // Database::dropDatabase(self::$conn,'callGraph');
-            // CallGraphService::initialCallGraphDatabase(self::$conn);
-            Database::selectDB(self::$conn,'callGraph');
-            CallGraphService::insertToGraphTable(self::$conn, $fileName, $targetFile);
-            self::$graphID = CallGraphService::selectFromGraphTable('graphID','graphName',$fileName);
+            $callGraph = new CallGraph($fileName);
+            $callGraph->setFileTarget($targetFile);
+            CallGraphService::insertToGraphTable($callGraph);
+            self::$graphID = CallGraphService::selectFromGraphByGraphName($fileName)['graphID'];
         }
     }
 ?>

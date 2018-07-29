@@ -1,8 +1,8 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/XMLProcessor/CDProcessor.php";
+    require_once "$root/PHP/Script.php";
+    //require_once "$root/PHP/XMLProcessor/CDProcessor.php";
     require_once "$root/PHP/XMLProcessor/SDProcessor.php";
-
     if(isset($_POST['SDSubmit'])){
         Uploader::upload("../Sequence Diagrams/", "SDFile");
     }

@@ -1,13 +1,14 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/PHP/Database/CallGraphService.php";
+    use SequenceDiagram\ObjectNode;
+    use SequenceDiagram\Message;
+    use SequenceDiagram\Argument;
     class TraditionalSDProcessor{
-        private static $conn;
         private static $graphID;
         private static $classRef;
-        public static function processTraditionalSD($xml,$conn,$graphID){
+        public static function processTraditionalSD($xml,$graphID){
             $idx = 0;
-            self::$conn = $conn;
             self::$graphID = $graphID;
             self::$classRef = array();
             foreach($xml->Models->Model as $model){
@@ -38,7 +39,8 @@
                         $nodeName = self::$classRef[(string) $id];
                     }
                 }
-                CallGraphService::insertToNodeTable(self::$conn,self::$graphID,$nodeID,$nodeName);
+                $objectNode = new ObjectNode($nodeID, $nodeName);
+                CallGraphService::insertToNodeTable(self::$graphID, $objectNode);
             }
         }
         private static function identifyMessageTraditional($messageList){
@@ -49,7 +51,10 @@
                     $sentNodeID = $message->FromEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
                     $receivedNodeID = $message->ToEnd->Model->ModelProperties->ModelRefProperty->ModelRef['id'];
                     if(strcmp($sentNodeID,$receivedNodeID) !== 0){
-                        CallGraphService::insertToMessageTable(self::$conn, self::$graphID,$messageID, $messageName,$sentNodeID, $receivedNodeID);
+                        $messageObject = new Message($messageID,$messageName);
+                        $messageObject->setSentNodeID($sentNodeID);
+                        $messageObject->setReceivedNodeID($receivedNodeID);
+                        CallGraphService::insertToMessageTable(self::$graphID,$messageObject);
                     }
                 }
             }

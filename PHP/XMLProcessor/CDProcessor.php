@@ -1,6 +1,8 @@
 <?php
      require_once "SimpleCDProcessor.php";
      require_once "TraditionalCDProcessor.php";
+     include "$Diagram/ClassDiagram.php";
+     use ClassDiagram\ClassDiagram;
     class CDProcessor{
         private static $conn;
         private static $diagramID;
@@ -21,12 +23,11 @@
             }
         }
         private static function saveFileToDB($filename,$fileTarget){
-            self::$conn = Database::connectToDB();
             // Database::dropDatabase(self::$conn,'classDiagram');
             // ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
-            Database::selectDB(self::$conn,'classDiagram');
-            ClassDiagramService::insertToDiagramTable(self::$conn, $filename, $fileTarget);
-            self::$diagramID = ClassDiagramService::selectFromDiagramTable('diagramID','diagramName',$filename);
+            $classDiagram = new ClassDiagram($filename, $fileTarget);
+            ClassDiagramService::insertToDiagramTable($filename, $fileTarget);
+            self::$diagramID = ClassDiagramService::selectFromDiagramByDiagramName($filename)['diagramID'];
         }
     }
 ?>
