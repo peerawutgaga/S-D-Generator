@@ -1,18 +1,21 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/PHP/Database/ClassDiagramService.php";
+    include_once "$root/Diagram/ClassDiagram/ObjectClass.php";
+    include_once "$root/Diagram/ClassDiagram/Method.php";
+    include_once "$root/Diagram/ClassDiagram/Parameter.php";
+    use ClassDiagram\ObjectClass;
+    use ClassDiagram\Method;
+    use ClassDiagram\Parameter;
     class TraditionalCDProcessor{
-        private static $conn;
         private static $diagramID;
         private static $dataTypeRef;
-        public static function processTraditionalCD($xml,$conn,$diagramID){
+        public static function processTraditionalCD($xml,$diagramID){
             $modelList = $xml->Models;
-            self::$conn = $conn;
             self::$diagramID = $diagramID;
             self::$dataTypeRef = array();
             self::collectDataTypeRef($modelList);
             self::identifyPackageTraditional($modelList, "");
-            self::$conn->close();
          }
          private static function collectDataTypeRef($modelList){
              foreach($modelList->Model as $model){
@@ -38,7 +41,10 @@
          }
          private static function identifyClassTraditional($class, $packagePath){
              $className = $class['name'];
-             ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className, $packagePath);
+             $classObject = new ObjectClass($className);
+             $classObject->setPackagePath($packagePath);
+             $classObject->setClassType(ObjectClass::CONCRETE_CLASS);
+             ClassDiagramService::insertToClassTable(self::$diagramID, $classObject);
              self::identifyMethodTraditional($class->ChildModels, $className);
  
          }
@@ -46,25 +52,24 @@
              foreach($methodList->Model as $method){
                  if($method['modelType']=="Operation"){
                      $methodID = $method['id'];
-                     $methodName = $method['name'];
-                     $returnType = self::identifyType($method->ModelProperties->TextModelProperty);
-                     $visibility = self::getVisibility($method->ModelProperties);
-                     $typeModifier = self::getTypeModifier($method->ModelProperties);
-                     $isStatic = self::getIsStaticValueTraditional($method->ModelProperties);
-                     ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID,$className, 
-                     $methodID, $methodName, $returnType,$visibility,$typeModifier, $isStatic);
+                     $methodObject = new Method($methodID, $method['name']);
+                     $methodObject->setReturnType(self::identifyType($method->ModelProperties->TextModelProperty));
+                     $methodObject->setReturnTypeModifier(self::getTypeModifier($method->ModelProperties));
+                     $methodObject->setVisibility(self::getVisibility($method->ModelProperties));
+                     $methodObject->setIsStatic(self::getIsStaticValueTraditional($method->ModelProperties));
+                     //TODO Identify isAbstract
+                     $methodObject->setIsAbstract(0);
+                     ClassDiagramService::insertToMethodTable(self::$diagramID,$className, $methodObject);
                      self::identifyParameterTraditional($method->ChildModels, $methodID);
                  }
              }
          }
          private static function identifyParameterTraditional($parameterList, $methodID){
             foreach($parameterList->Model as $parameter){
-                $parameterID = $parameter['id'];
-                $parameterName = $parameter['name'];
-                $parameterType = self::identifyType($parameter->ModelProperties->TextModelProperty);
-                $typeModifier = self::getTypeModifier($parameter->ModelProperties);
-                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, 
-                $methodID,$parameterID, $parameterName, $parameterType, $typeModifier);
+                $parameterObject = new Parameter($parameter['id'],$parameter['name']);
+                $parameterObject->setParamType(self::identifyType($parameter->ModelProperties->TextModelProperty));
+                $parameterObject->setTypeModifier(self::getTypeModifier($parameter->ModelProperties));
+                ClassDiagramService::insertToParameterTable(self::$diagramID, $methodID,$parameterObject);
              }
          }     
          private static function getTypeModifier($modelProperties){

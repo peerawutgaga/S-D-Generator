@@ -19,7 +19,7 @@
             if($xml['Xml_structure'] == 'simple'){
                 SimpleCDProcessor::processSimpleCD($xml,self::$diagramID);
             }else{
-               //TraditionalCDProcessor::processTraditionalCD($xml,self::$diagramID);
+               TraditionalCDProcessor::processTraditionalCD($xml,self::$diagramID);
             }
         }
         private static function saveFileToDB($filename,$fileTarget){
