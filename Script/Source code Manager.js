@@ -130,6 +130,7 @@ function renameFile(){
         'oldname': selectedValue,
         'newname':newFilename+"."+extension,
     },function (returnedData){
+        console.log(returnedData);
         if(returnedData == "Exist"){
             alert("Filename "+newFilename+" is already existed.");
         }else if(returnedData == "success"){

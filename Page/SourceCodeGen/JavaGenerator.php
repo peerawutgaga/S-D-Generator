@@ -50,13 +50,13 @@
             return $filename;
         }
         private static function createFile($filename,$sourceCodeType){
-            $filepath = "../Source Code Files/".$filename.".txt";
+            $filepath = self::$root."/Source Code Files/".$filename.".txt";
             $success = SourceCodeService::insertFile($filename, $sourceCodeType, "Java", $filepath);
-            if(!$success){
-                return false;
+            if($success){
+                self::$file = fopen($filepath,"w");
+                return true;
             }
-            self::$file = fopen($filepath,"w");
-            return true;
+            return false;
         }
         private static function initialStubHeader($className){
             $txt = "public class ".$className."Stub {\n";

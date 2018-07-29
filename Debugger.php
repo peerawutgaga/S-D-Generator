@@ -15,6 +15,6 @@
     // $methodObject->setIsAbstract(1);
     // ClassDiagramService::insertToMethodTable(1, "test", $methodObject);
     require_once "Page/SourceCodeGen/SourceCodeGenerator.php";
-   echo SourceCodeGenerator::initial(1,30,"HW5IJfqGAqACJQe","driver","Java");
+   echo SourceCodeGenerator::initial(1,30,"HW5IJfqGAqACJQe_","driver","PHP");
 
 ?>

@@ -35,7 +35,7 @@
         }
         public static function createDriver($driver){
             self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $filename = $stub['className']."Driver.php";
+            $filename = $driver['className']."Driver.php";
             $success = self::createFile($filename,"driver");
             if(!$success){
                 return $filename;
@@ -49,13 +49,13 @@
             return $filename;
         }
         private static function createFile($filename,$sourceCodeType){
-            $filepath = "../Source Code Files/".$filename.".txt";
+            $filepath = self::$root."/Source Code Files/".$filename.".txt";
             $success = SourceCodeService::insertFile($filename, $sourceCodeType, "PHP", $filepath);
-            if(!$success){
-                return false;
+            if($success){
+                self::$file = fopen($filepath,"w");
+                return true;
             }
-            self::$file = fopen($filepath,"w");
-            return true;
+            return false;
         }
         private static function initialStubHeader($className){
             fwrite(self::$file,"<?php\n");

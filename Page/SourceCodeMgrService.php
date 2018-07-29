@@ -32,8 +32,8 @@
             $root = realpath($_SERVER["DOCUMENT_ROOT"]);
             $fullOldName = $root."/Source Code Files/".$oldName;
             $fullNewName = $root."/Source Code Files/".$newName;
-            $newPath = "../Source Code Files/".$newName.".txt";
-            if(SourceCodeService::selectFromFileTable($newName)!=null){
+            $newPath = $root."/Source Code Files/".$newName.".txt";
+            if(SourceCodeService::selectFromFileTableByFileName($newName) != null){
                 echo "Exist";
                 return;
             }

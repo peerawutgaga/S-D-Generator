@@ -43,7 +43,7 @@
         }
         public static function renameFile($oldName,$newName,$path){
             $conn = Database::connectToDB('sourcecode');
-            $sql = $conn->prepare("UPDATE fileTable SET name = :newName, location = :path WHERE name = :oldName");
+            $sql = $conn->prepare("UPDATE fileTable SET fileName = :newName, location = :path WHERE fileName = :oldName");
             $sql->bindParam(":newName",$newName);
             $sql->bindParam(":oldName",$oldName);
             $sql->bindParam(":path",$path);
@@ -72,7 +72,7 @@
         }
         public static function selectFromFileTableByFileName($fileName){
             $conn = Database::connectToDB('sourcecode');
-            $sql = $conn->prepare("SELECT * FROM fileTable WHERE name = :fileName LIMIT 1");
+            $sql = $conn->prepare("SELECT * FROM fileTable WHERE fileName = :fileName LIMIT 1");
             $sql->bindParam(":fileName",$fileName);
             try{
                 $sql->execute();
@@ -86,7 +86,7 @@
         }
         public static function deleteFile($filename){
             $conn = Database::connectToDB("sourcecode");
-            $sql = $conn->prepare("DELETE FROM fileTable WHERE name = :filename");
+            $sql = $conn->prepare("DELETE FROM fileTable WHERE fileName = :filename");
             $sql->bindParam(":filename",$filename);
             try{
                 $sql->execute();

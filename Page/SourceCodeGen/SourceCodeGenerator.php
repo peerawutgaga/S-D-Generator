@@ -2,7 +2,6 @@
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/Page/SourceCodeGen/PHPGenerator.php";
     require_once "$root/Page/SourceCodeGen/JavaGenerator.php";
-    include_once "$root/PHP/Script.php";
     $graphID = $_POST['graphID'];
     $diagramID = $_POST['diagramID'];
     $classID = $_POST['CUT'];
