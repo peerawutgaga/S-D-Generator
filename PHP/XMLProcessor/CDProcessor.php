@@ -1,10 +1,10 @@
 <?php
-     require_once "SimpleCDProcessor.php";
-     require_once "TraditionalCDProcessor.php";
-     include "$Diagram/ClassDiagram.php";
-     use ClassDiagram\ClassDiagram;
+    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+    require_once "SimpleCDProcessor.php";
+    require_once "TraditionalCDProcessor.php";
+    include_once "$root/Diagram/ClassDiagram/ClassDiagram.php";
+    use ClassDiagram\ClassDiagram;
     class CDProcessor{
-        private static $conn;
         private static $diagramID;
         public static function readClassDiagram($filename,$targetFile){
             $xml = simplexml_load_file($targetFile);
@@ -17,16 +17,15 @@
             }
             self::saveFileToDB($filename,$targetFile);
             if($xml['Xml_structure'] == 'simple'){
-                SimpleCDProcessor::processSimpleCD($xml,self::$conn,self::$diagramID);
+                SimpleCDProcessor::processSimpleCD($xml,self::$diagramID);
             }else{
-               TraditionalCDProcessor::processTraditionalCD($xml,self::$conn,self::$diagramID);
+               //TraditionalCDProcessor::processTraditionalCD($xml,self::$diagramID);
             }
         }
         private static function saveFileToDB($filename,$fileTarget){
-            // Database::dropDatabase(self::$conn,'classDiagram');
-            // ClassDiagramService::initialClassDiagramDatabase(self::$conn, $filename, $fileTarget);
-            $classDiagram = new ClassDiagram($filename, $fileTarget);
-            ClassDiagramService::insertToDiagramTable($filename, $fileTarget);
+            $classDiagram = new ClassDiagram($filename);
+            $classDiagram->setFileTarget($fileTarget);
+            ClassDiagramService::insertToDiagramTable($classDiagram);
             self::$diagramID = ClassDiagramService::selectFromDiagramByDiagramName($filename)['diagramID'];
         }
     }

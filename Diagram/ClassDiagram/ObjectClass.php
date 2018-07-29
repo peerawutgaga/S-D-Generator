@@ -4,19 +4,13 @@
         const CONCRETE_CLASS = 0;
         const ABSTRACT_CLASS = 1;
         const INTERFACE_CLASS = 2;
-        private $classID;
         private $className;
         private $classType;
         private $packagePath;
         private $methods;
-        function __construct($classID, $className){
-            $this->classID = $classID;
+        function __construct($className){
             $this->className = $className;
             $this->methods = array();
-        }
-        public function getClassID()
-        {
-                return $this->classID;
         }
         public function getClassName()
         {

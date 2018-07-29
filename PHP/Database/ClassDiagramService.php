@@ -96,7 +96,7 @@
         }
         public static function insertToDiagramTable(ClassDiagram $classDiagram){
             $conn = Database::connectToDB("classDiagram");
-            $sql = "INSERT INTO diagram(diagramName, fileTarget) VALUES(:diagramName, :fileTarget)";
+            $sql = $conn->prepare("INSERT INTO diagram(diagramName, fileTarget) VALUES(:diagramName, :fileTarget)");
             $sql->bindParam(":diagramName",$classDiagram->getDiagramName());
             $sql->bindParam(":fileTarget",$classDiagram->getFileTarget());
             try{
@@ -109,8 +109,8 @@
         }
         public static function insertToClassTable($diagramID, ObjectClass $objectClass){
             $conn = Database::connectToDB("classDiagram");
-            $sql = "INSERT INTO class(diagramID,className, classType,packagePath) 
-                VALUES(:diagramID,:className, :classType,:packagePath)";
+            $sql = $conn->prepare("INSERT INTO class(diagramID,className, classType,packagePath) 
+                VALUES(:diagramID,:className, :classType,:packagePath)");
             $sql->bindParam(":diagramID",$diagramID);
             $sql->bindParam(":className",$objectClass->getClassName());
             $sql->bindParam(":classType",$objectClass->getClassType());
@@ -125,10 +125,8 @@
         }
         public static function insertToMethodTable($diagramID, $className, Method $method){
             $conn = Database::connectToDB("classDiagram");
-            $sql = $conn->prepare("INSERT INTO method(diagramID,className,methodID, 
-            methodName, returnType, returnTypeModifier,visibility, isStatic, isAbStract) 
-            VALUES(:diagramID,:className,:methodID, 
-            :methodName, :returnType, :returnTypeModifier, :visibility,:isStatic, :isAbStract)");
+            $sql = $conn->prepare("INSERT INTO method(diagramID, className, methodID, methodName, returnType, returnTypeModifier,visibility,isStatic,isAbstract) 
+            VALUES(:diagramID,:className,:methodID, :methodName, :returnType, :returnTypeModifier, :visibility,:isStatic,:isAbstract)");
             $sql->bindParam(":diagramID",$diagramID);
             $sql->bindParam(":className",$className);
             $sql->bindParam(":methodID",$method->getMethodID());
@@ -152,9 +150,9 @@
             VALUES(:diagramID,:methodID, :parameterID, :parameterName, :parameterType, :typeModifier)");
             $sql->bindParam(":diagramID",$diagramID);
             $sql->bindParam(":methodID",$methodID);
-            $sql->bindParam(":parameterID",$parameter->getParameterID());
-            $sql->bindParam(":parameterName",$parameter->getParameterName());
-            $sql->bindParam(":parameterType",$parameter->getParameterType());
+            $sql->bindParam(":parameterID",$parameter->getParamID());
+            $sql->bindParam(":parameterName",$parameter->getParamName());
+            $sql->bindParam(":parameterType",$parameter->getParamType());
             $sql->bindParam(":typeModifier",$parameter->getTypeModifier());
             try{
                 $sql->execute();

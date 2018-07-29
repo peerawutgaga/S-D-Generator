@@ -1,21 +1,20 @@
 <?php
     namespace ClassDiagram;
     class ClassDiagram{
-        private $diagramID;
         private $diagramName;
         private $fileTarget;
         private $classes;
-        function __construct($diagramID,$diagramName){
-            $this->diagramID = $diagramID;
+        function __construct($diagramName){
             $this->diagramName = $diagramName;
         }
-        public function getDiagramID()
-        {
-                return $this->diagramID;
-        } 
         public function getDiagramName()
         {
                 return $this->diagramName;
+        }
+        
+        public function setDiagramName($diagramName)
+        {
+                $this->diagramName = $diagramName;
         }
         public function getFileTarget()
         {

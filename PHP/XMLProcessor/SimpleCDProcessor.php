@@ -1,16 +1,19 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/PHP/Database/ClassDiagramService.php";
+    include_once "$root/Diagram/ClassDiagram/ObjectClass.php";
+    include_once "$root/Diagram/ClassDiagram/Method.php";
+    include_once "$root/Diagram/ClassDiagram/Parameter.php";
+    use ClassDiagram\ObjectClass;
+    use ClassDiagram\Method;
+    use ClassDiagram\Parameter;
     class SimpleCDProcessor{
-        private static $conn;
         private static $diagramID;
-        public static function processSimpleCD($xml, $conn, $diagramID){
-            self::$conn = $conn;
+        public static function processSimpleCD($xml, $diagramID){
             self::$diagramID = $diagramID;
             $packageList = $xml->Models;
             self::identifyPackageSimple($packageList, "");
             self::identifyClassSimple($packageList, "");
-            self::$conn->close();
         }
         private static function identifyPackageSimple($packageList, $packagePath){
             foreach($packageList->Package as $package){
@@ -23,31 +26,34 @@
         private static function identifyClassSimple($classList, $packagePath){
             foreach($classList->Class as $class){
                 $className = $class['Name'];
-                ClassDiagramService::insertToClassTable(self::$conn, self::$diagramID, $className,$packagePath);
+                $classObject = new ObjectClass($className);
+                $classObject->setPackagePath($packagePath);
+                //TODO Identify Class Type
+                $classObject->setClassType(ObjectClass::CONCRETE_CLASS);
+                ClassDiagramService::insertToClassTable(self::$diagramID, $classObject);
                 self::identifyMethodSimple($class->ModelChildren, $className);
             }
         }
         private static function identifyMethodSimple($methodList, $className){
             foreach($methodList->Operation as $method){
                 $methodID = $method['Id'];
-                $methodName = $method['Name'];
-                $returnType = self::getReturnType($method->ReturnType);
-                $visibility = $method['Visibility'];
-                $typeModifier = $method['TypeModifier'];
-                $isStatic = self::getIsStaticValueSimple($method['Scope']);
-                ClassDiagramService::insertToMethodTable(self::$conn, self::$diagramID, $className, $methodID, 
-                $methodName, $returnType, $visibility,$typeModifier, $isStatic);
+                $methodObject = new Method($methodID, $method['Name']);
+                $methodObject->setReturnType(self::getReturnType($method->ReturnType));
+                $methodObject->setReturnTypeModifier($method['TypeModifier']);
+                $methodObject->setVisibility($method['Visibility']);
+                $methodObject->setIsStatic(self::getIsStaticValueSimple($method['Scope']));
+                //TODO Identify isAbstract
+                $methodObject->setIsAbstract(0);
+                ClassDiagramService::insertToMethodTable(self::$diagramID, $className, $methodObject);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
         }
         private static function identifyParameterSimple($parameterList, $methodID){
             foreach($parameterList->children() as $parameter){
-                $parameterID = $parameter['Id'];
-                $parameterName = $parameter['Name'];
-                $parameterType = self::getParameterType($parameter->Type);
-                $typeModifier = $parameter['TypeModifier'];
-                ClassDiagramService::insertToParameterTable(self::$conn, self::$diagramID, $methodID, $parameterID, 
-                $parameterName, $parameterType, $typeModifier);
+                $parameterObject = new Parameter($parameter['Id'], $parameter['Name']);
+                $parameterObject->setParamType(self::getParameterType($parameter->Type));
+                $parameterObject->setTypeModifier($parameter['TypeModifier']);
+                ClassDiagramService::insertToParameterTable(self::$diagramID, $methodID, $parameterObject);
             }
         }
         private static function getReturnType($returnType){
