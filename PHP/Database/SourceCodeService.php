@@ -4,8 +4,8 @@
     {
         private static function createSourceCodeTable(){
             $conn = Database::connectToDB("sourceCode");
-            $createFileTableSQL = "CREATE TABLE IF NOT EXISTS fileTable(
-                name VARCHAR(100) PRIMARY KEY,
+            $sql = "CREATE TABLE IF NOT EXISTS fileTable(
+                fileName VARCHAR(100) PRIMARY KEY,
                 fileType VARCHAR(6) NOT NULL,
                 language VARCHAR(6) NOT NULL,
                 location VARCHAR(255) NOT NULL,
@@ -23,11 +23,11 @@
             Database::createDatabaseIfNotExist('SourceCode');
             self::createSourceCodeTable();
         }
-        public static function insertFile($name, $fileType, $language, $location){
+        public static function insertFile($fileName, $fileType, $language, $location){
             $conn = Database::connectToDB("sourceCode");
-            $sql = "INSERT INTO fileTable(name, fileType, language, location) 
-            VALUES(:name, :fileType, :language, :location)";
-            $sql->bindParam(":name",$name);
+            $sql = $conn->prepare("INSERT INTO fileTable(fileName, fileType, language, location) 
+            VALUES(:fileName, :fileType, :language, :location)");
+            $sql->bindParam(":fileName",$fileName);
             $sql->bindParam(":fileType",$fileType);
             $sql->bindParam(":language",$language);
             $sql->bindParam(":location",$location);
@@ -35,7 +35,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at insert to file table " . $e->getMessage();
+                //echo "Error at insert to file table " . $e->getMessage();
                 return false;
             }finally{
                 $conn = null;

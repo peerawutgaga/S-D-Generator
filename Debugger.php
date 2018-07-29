@@ -1,9 +1,9 @@
 <?php
     //require_once "PHP/XMLProcessor/SDProcessor.php";
     //SDProcessor::readSequenceDiagram("getGPAX","./Example XML/Old Testsuite/getGPAX Traditional.xml");
-    require_once "PHP/XMLProcessor/CDProcessor.php";
+    // require_once "PHP/XMLProcessor/CDProcessor.php";
     // CDProcessor::readClassDiagram("Register Simple","./Example XML/Old Testsuite/Register Simple.xml");
-    CDProcessor::readClassDiagram('Register Traditional','./Example XML/Old Testsuite/Register Traditional.xml');
+    // CDProcessor::readClassDiagram('Register Traditional','./Example XML/Old Testsuite/Register Traditional.xml');
     // require_once "PHP/Database/ClassDiagramService.php";
     // require_once "Diagram/ClassDiagram/Method.php";
     // use ClassDiagram\Method;
@@ -14,4 +14,7 @@
     // $methodObject->setIsStatic(1);
     // $methodObject->setIsAbstract(1);
     // ClassDiagramService::insertToMethodTable(1, "test", $methodObject);
+    require_once "Page/SourceCodeGen/SourceCodeGenerator.php";
+   echo SourceCodeGenerator::initial(1,30,"HW5IJfqGAqACJQe","driver","Java");
+
 ?>

@@ -204,7 +204,7 @@
             $sql->bindParam(':nodeID',$nodeID);
             try{
                 $sql->execute();
-                $result = $sql->fetchAll();
+                $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
                 echo "Error at selecting from node table " . $e->getMessage();

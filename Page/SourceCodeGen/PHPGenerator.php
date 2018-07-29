@@ -26,7 +26,7 @@
                 return $filename;
             }
             self::initialStubHeader($stub['className']);
-            $methodList = ClassDiagramService::selectAllMethodFromClassName($stub['diagramID'],$stub['className']);
+            $methodList = ClassDiagramService::selectMethodByClassName($stub['diagramID'],$stub['className']);
             foreach($methodList as $method){
                     self::writeMethod($method);
                 }
@@ -41,7 +41,7 @@
                 return $filename;
             }
             self::initialDriverHeader($driver);
-            $methodList = ClassDiagramService::selectAllMethodFromClassName($driver['diagramID'],$driver['className']);
+            $methodList = ClassDiagramService::selectMethodByClassName($driver['diagramID'],$driver['className']);
             foreach($methodList as $method){
                 self::writeUnitTest($method);
             }
