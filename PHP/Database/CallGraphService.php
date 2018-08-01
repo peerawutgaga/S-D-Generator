@@ -62,11 +62,25 @@
                 $conn = null;
             }
         } 
+        private static function addUniqueKey(){
+            $conn = Database::connectToDB("CallGraph");
+            $uniqueNode = "ALTER TABLE node ADD CONSTRAINT nodeIdx UNIQUE INDEX (graphID, nodeID)";
+            $uniqueMessage = "ALTER TABLE message ADD CONSTRAINT messageIdx UNIQUE INDEX (graphID, messageID)";
+            try{
+                $conn->exec($uniqueNode);
+                $conn->exec($uniqueMessage);
+            }catch(PDOException $e){
+                //Ignore
+            }finally{
+                $conn = null;
+            }
+        }
         public static function initialCallGraphDatabase(){
             Database::createDatabaseIfNotExist('CallGraph');
             self::createGraphTable();
             self::createNodeTable();
             self::createMessageTable();
+            self::addUniqueKey();
         }
         public static function insertToGraphTable(CallGraph $callGraph){
             $conn = Database::connectToDB("CallGraph");
