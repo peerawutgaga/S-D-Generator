@@ -62,6 +62,26 @@
                 $conn = null;
             }
         } 
+        private static function createArgumentTable(){
+            $conn = Database::connectToDB("callGraph");
+            $sql = "CREATE TABLE IF NOT EXISTS argument(
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                graphID INT(6) UNSIGNED NOT NULL,
+                FOREIGN KEY (graphID) REFERENCES graph(graphID) ON DELETE CASCADE,
+                messageID VARCHAR(16)NOT NULL, 
+                argumentID VARCHAR(16) NOT NULL,
+                argumentName VARCHAR(50) NOT NULL,
+                argumentType VARCHAR(50),
+                typeModifier VARCHAR(3)
+            )";
+            try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create argument table failed " . $e->getMessage());
+            }finally{
+                $conn = null;
+            }
+        }
         private static function addUniqueKey(){
             $conn = Database::connectToDB("CallGraph");
             $uniqueNode = "ALTER TABLE node ADD CONSTRAINT nodeIdx UNIQUE INDEX (graphID, nodeID)";
@@ -80,6 +100,7 @@
             self::createGraphTable();
             self::createNodeTable();
             self::createMessageTable();
+            self::createArgumentTable();
             self::addUniqueKey();
         }
         public static function insertToGraphTable(CallGraph $callGraph){
@@ -122,6 +143,24 @@
                 $sql->execute();
             }catch(PDOException $e){
                 echo "Error at insert to message table " . $e->getMessage();
+            }finally{
+                $conn = null;
+            }
+        }
+        public static function insertToArgumentTable($graphID,$messageID,Argument $argument){
+            $conn = Database::connectToDB("CallGraph");
+            $sql = $conn->prepare("INSERT INTO message(graphID, messageID, argumentID, argumentName, argumentType, typeModifier) 
+                VALUES(:graphID, :messageID, :argumentID, :argumentName, :argumentType, :typeModifier)");
+            $sql->bindParam(":graphID",$graphID);
+            $sql->bindParam(":messageID",$messageID);
+            $sql->bindParam(":argumentID",$argument->getArgID());
+            $sql->bindParam(":argumentName",$argument->getArgName());
+            $sql->bindParam(":argumentType",$argument->getArgType());
+            $sql->bindParam(":typeModifier",$argument->getTypeModifier());
+            try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to argument table " . $e->getMessage();
             }finally{
                 $conn = null;
             }
