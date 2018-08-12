@@ -61,8 +61,6 @@
             if($message->Arguments != null){
                 $messageID = $message->MasterView->Message['Idref'];
                 foreach($message->Arguments->children() as $argument){
-                    echo $argument["Id"];
-                    echo $argument["Value"];
                     $argumentObject = new Argument($argument["Id"],$argument["Value"]);
                     CallGraphService::insertToArgumentTable(self::$graphID,$messageID,$argumentObject);
                 }

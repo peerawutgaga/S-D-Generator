@@ -55,6 +55,23 @@
                         $messageObject->setSentNodeID($sentNodeID);
                         $messageObject->setReceivedNodeID($receivedNodeID);
                         CallGraphService::insertToMessageTable(self::$graphID,$messageObject);
+                        self::identifyArgumentTraditional($message);
+                    }
+                }
+            }
+        }
+        private static function identifyArgumentTraditional($message){
+            foreach($message->ModelProperties->children() as $property){
+                if(strcmp($property['name'],"arguments")==0){
+                    foreach($property->children() as $arguementModel){
+                        $argID = $arguementModel["id"];
+                        foreach($arguementModel->ModelProperties->children() as $arguementModelProperty){
+                            if(strcmp($arguementModelProperty['name'],"value")==0){
+                                $argName = $arguementModelProperty->StringValue["value"];
+                                $argumentObject = new Argument($argID,$argName);
+                                CallGraphService::insertToArgumentTable(self::$graphID,$message['id'],$argumentObject);
+                            }
+                        }
                     }
                 }
             }

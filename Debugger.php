@@ -1,7 +1,7 @@
 <?php
     require_once "PHP/XMLProcessor/SDProcessor.php";
     //SDProcessor::readSequenceDiagram("getGPAX","./Example XML/Old Testsuite/getGPAX Traditional.xml");
-    SDProcessor::readSequenceDiagram("openCourse","./Example XML/Register System/OpenCourse Simple.xml");
+    SDProcessor::readSequenceDiagram("openCourse","./Example XML/Register System/OpenCourse Traditional.xml");
     // require_once "PHP/XMLProcessor/CDProcessor.php";
     // CDProcessor::readClassDiagram("Register Simple","./Example XML/Old Testsuite/Register Simple.xml");
     // CDProcessor::readClassDiagram('Register Traditional','./Example XML/Old Testsuite/Register Traditional.xml');
