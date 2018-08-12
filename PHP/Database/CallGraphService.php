@@ -149,7 +149,7 @@
         }
         public static function insertToArgumentTable($graphID,$messageID,Argument $argument){
             $conn = Database::connectToDB("CallGraph");
-            $sql = $conn->prepare("INSERT INTO message(graphID, messageID, argumentID, argumentName, argumentType, typeModifier) 
+            $sql = $conn->prepare("INSERT INTO argument(graphID, messageID, argumentID, argumentName, argumentType, typeModifier) 
                 VALUES(:graphID, :messageID, :argumentID, :argumentName, :argumentType, :typeModifier)");
             $sql->bindParam(":graphID",$graphID);
             $sql->bindParam(":messageID",$messageID);
