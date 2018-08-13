@@ -10,10 +10,12 @@
     class TraditionalCDProcessor{
         private static $diagramID;
         private static $dataTypeRef;
+        private static $stereoTypeRef;
         public static function processTraditionalCD($xml,$diagramID){
             $modelList = $xml->Models;
             self::$diagramID = $diagramID;
             self::$dataTypeRef = array();
+            self::$stereoTypeRef = array();
             self::collectDataTypeRef($modelList);
             self::identifyPackageTraditional($modelList, "");
          }
@@ -21,10 +23,12 @@
              foreach($modelList->Model as $model){
                  if($model['modelType'] == "DataType"){
                      self::$dataTypeRef[(string)$model['id']] = (string)$model['name'];
-                 }else if($model['modelType']=="Class"){
+                 }else if($model['modelType'] == "Class"){
                      self::$dataTypeRef[(string)$model['id']] = (string)$model['name'];
-                 }else if($model['modelType']=="Package"){
+                 }else if($model['modelType'] == "Package"){
                      self::collectDataTypeRef($model->ChildModels);
+                 }else if($model['modelType'] == "Stereotype"){
+                    self::$stereoTypeRef[(string)$model['id']] = (string)$model['name'];
                  }
              }
          }
@@ -43,7 +47,7 @@
              $className = $class['name'];
              $classObject = new ObjectClass($className);
              $classObject->setPackagePath($packagePath);
-             $classObject->setClassType(ObjectClass::CONCRETE_CLASS);
+             $classObject->setClassType(self::getClassTypeTraditional($class->ModelProperties));
              ClassDiagramService::insertToClassTable(self::$diagramID, $classObject);
              self::identifyMethodTraditional($class->ChildModels, $className);
  
@@ -56,9 +60,8 @@
                      $methodObject->setReturnType(self::identifyType($method->ModelProperties->TextModelProperty));
                      $methodObject->setReturnTypeModifier(self::getTypeModifier($method->ModelProperties));
                      $methodObject->setVisibility(self::getVisibility($method->ModelProperties));
-                     $methodObject->setIsStatic(self::getIsStaticValueTraditional($method->ModelProperties));
-                     //TODO Identify isAbstract
-                     $methodObject->setIsAbstract(0);
+                     $methodObject->setIsStatic(self::getIsStaticBooleanValueTraditional($method->ModelProperties));
+                     $methodObject->setIsAbstract(self::getIsAbstactBooleanValueTraditional($method->ModelProperties));
                      ClassDiagramService::insertToMethodTable(self::$diagramID,$className, $methodObject);
                      self::identifyParameterTraditional($method->ChildModels, $methodID);
                  }
@@ -73,9 +76,9 @@
              }
          }     
          private static function getTypeModifier($modelProperties){
-             foreach($modelProperties->StringProperty as $strProp){
-                 if($strProp['name']=="typeModifier"){
-                     return $strProp['value'];
+             foreach($modelProperties->StringProperty as $stringProperty){
+                 if($stringProperty['name']=="typeModifier"){
+                     return $stringProperty['value'];
                  }
              }
          }
@@ -85,10 +88,10 @@
                  return self::$dataTypeRef[$typeID];
              }
          }
-         private static function getIsStaticValueTraditional($modelProperties){
-             foreach($modelProperties->StringProperty as $strProp){
-                 if($strProp['name']=="scope"){
-                     if($strProp['value'] == "instance"){
+         private static function getIsStaticBooleanValueTraditional($modelProperties){
+             foreach($modelProperties->StringProperty as $stringProperty){
+                 if($stringProperty['name'] == "scope"){
+                     if($stringProperty['value'] == "instance" ){
                          return 0;
                      }
                      return 1;
@@ -96,11 +99,37 @@
              }
          }
          private static function getVisibility($modelProperties){
-             foreach($modelProperties->StringProperty as $strProp){
-                 if($strProp['name']=="visibility"){
-                     return $strProp['value'];
+             foreach($modelProperties->StringProperty as $stringProperty){
+                 if($stringProperty['name'] == "visibility"){
+                     return $stringProperty['value'];
                  }
              }
+         }
+         private static function getIsAbstactBooleanValueTraditional($modelProperties){
+            foreach($modelProperties->BooleanProperty as $booleanProperty){
+                if($booleanProperty["name"] == "abstract"){
+                    if($booleanProperty["value"] == "true"){
+                        return 1;
+                    }
+                    return 0;
+                }
+            }
+         }
+         private static function getClassTypeTraditional($modelProperties){
+            if(self::getIsAbstactBooleanValueTraditional($modelProperties)){
+                return ObjectClass::ABSTRACT_CLASS;
+            }else{
+                foreach($modelProperties->ModelRefsProperty as $modelRefsProperty){
+                    if($modelRefsProperty["name"]=="stereotypes"){
+                        $modelRef = self::$stereoTypeRef[(string)$modelRefsProperty->ModelRef["id"]];
+                        if($modelRef == "Interface"){
+                            return ObjectClass::INTERFACE_CLASS;
+                        }
+                        
+                    }
+                }
+                return ObjectClass::CONCRETE_CLASS;
+            }
          }
     }
 ?>

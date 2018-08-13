@@ -21,7 +21,7 @@
              try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create diagram table failed " . $e->getMessage());
+                die("Create diagram table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -39,7 +39,7 @@
              try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create class table failed " . $e->getMessage());
+                die("Create class table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -62,7 +62,7 @@
              try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create method table failed " . $e->getMessage());
+                die("Create method table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -82,7 +82,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create graph table failed " . $e->getMessage());
+                die("Create graph table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -102,7 +102,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to diagram table " . $e->getMessage();
+                echo "Error at insert to diagram table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -118,7 +118,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to class table " . $e->getMessage();
+                echo "Error at insert to class table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -139,7 +139,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to method table " . $e->getMessage();
+                echo "Error at insert to method table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -157,7 +157,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to parameter table " . $e->getMessage();
+                echo "Error at insert to parameter table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -171,7 +171,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from diagram table " . $e->getMessage();
+                echo "Error at selecting from diagram table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -185,7 +185,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from diagram table " . $e->getMessage();
+                echo "Error at selecting from diagram table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -198,7 +198,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from diagram table " . $e->getMessage();
+                echo "Error at selecting from diagram table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -213,7 +213,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from class table " . $e->getMessage();
+                echo "Error at selecting from class table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -231,7 +231,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from method table " . $e->getMessage();
+                echo "Error at selecting from method table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -247,7 +247,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from parameter table " . $e->getMessage();
+                echo "Error at selecting from parameter table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -263,7 +263,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from method table " . $e->getMessage();
+                echo "Error at selecting from method table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -276,7 +276,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at delete diagram " . $e->getMessage();
+                echo "Error at delete diagram " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;
@@ -292,7 +292,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at rename diagram " . $e->getMessage();
+                echo "Error at rename diagram " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;

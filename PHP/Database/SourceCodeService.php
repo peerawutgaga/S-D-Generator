@@ -14,7 +14,7 @@
              try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create source code table failed " . $e->getMessage());
+                die("Create source code table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -51,7 +51,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at rename file " . $e->getMessage();
+                echo "Error at rename file " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;
@@ -65,7 +65,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from file table " . $e->getMessage();
+                echo "Error at selecting from file table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -79,7 +79,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from file table " . $e->getMessage();
+                echo "Error at selecting from file table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -92,7 +92,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at delete file " . $e->getMessage();
+                echo "Error at delete file " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;

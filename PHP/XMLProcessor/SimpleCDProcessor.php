@@ -28,8 +28,7 @@
                 $className = $class['Name'];
                 $classObject = new ObjectClass($className);
                 $classObject->setPackagePath($packagePath);
-                //TODO Identify Class Type
-                $classObject->setClassType(ObjectClass::CONCRETE_CLASS);
+                $classObject->setClassType(self::getClassType($class));
                 ClassDiagramService::insertToClassTable(self::$diagramID, $classObject);
                 self::identifyMethodSimple($class->ModelChildren, $className);
             }
@@ -41,9 +40,8 @@
                 $methodObject->setReturnType(self::getReturnType($method->ReturnType));
                 $methodObject->setReturnTypeModifier($method['TypeModifier']);
                 $methodObject->setVisibility($method['Visibility']);
-                $methodObject->setIsStatic(self::getIsStaticValueSimple($method['Scope']));
-                //TODO Identify isAbstract
-                $methodObject->setIsAbstract(0);
+                $methodObject->setIsStatic(self::getIsStaticBooleanValueSimple($method['Scope']));
+                $methodObject->setIsAbstract(self::getIsAbstractBooleanValueSimple($method['Abstract']));
                 ClassDiagramService::insertToMethodTable(self::$diagramID, $className, $methodObject);
                 self::identifyParameterSimple($method->ModelChildren, $methodID);
             }
@@ -72,11 +70,27 @@
                 return $type->Class['Name'];
             }
         }
-        private static function getIsStaticValueSimple($isStatic){
-            if($isStatic == "instance"){
+        private static function getIsStaticBooleanValueSimple($isStatic){
+            if($isStatic=="instance"){
                 return 0;
             }
             return 1;
+        }
+        private static function getIsAbstractBooleanValueSimple($isAbstract){
+            if($isAbstract=="true"){
+                return 1;
+            }
+            return 0;
+        }
+        private static function getClassType($class){
+            if($class['Abstract']=="true"){
+                return ObjectClass::ABSTRACT_CLASS;
+            }else if(isset($class->Stereotypes)){
+                if($class->Stereotypes->Stereotype['Name'] == "Interface"){
+                    return ObjectClass::INTERFACE_CLASS;
+                }
+            }
+            return ObjectClass::CONCRETE_CLASS;
         }
     }
 ?>

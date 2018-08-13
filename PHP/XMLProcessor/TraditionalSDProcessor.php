@@ -55,14 +55,32 @@
                         $messageObject->setSentNodeID($sentNodeID);
                         $messageObject->setReceivedNodeID($receivedNodeID);
                         CallGraphService::insertToMessageTable(self::$graphID,$messageObject);
+                        self::identifyArgumentTraditional($message);
                     }
                 }
             }
         }
+        private static function identifyArgumentTraditional($message){
+            foreach($message->ModelProperties->ModelsProperty as $modelsProperty){
+                if(strcmp($modelsProperty['name'],"arguments")==0){
+                    foreach($modelsProperty->children() as $arguementModel){
+                        $argID = $arguementModel["id"];
+                        foreach($arguementModel->ModelProperties->children() as $arguementModelProperty){
+                            if($arguementModelProperty['name'] == "value"){
+                                $argName = $arguementModelProperty->StringValue["value"];
+                                $argumentObject = new Argument($argID,$argName);
+                                CallGraphService::insertToArgumentTable(self::$graphID,$message['id'],$argumentObject);
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
         private static function isReturn($message){
-            foreach($message->ModelProperties->children() as $property){
-                if(strcmp($property['name'],"actionType")==0){
-                    if($property->Model['name']=='Return'){
+            foreach($message->ModelProperties->ModelProperty as $modelProperty){
+                if($modelProperty['name'] == "actionType"){
+                    if($modelProperty->Model['name']=='Return'){
                         return true;
                     }
                 }

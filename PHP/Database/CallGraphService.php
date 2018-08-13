@@ -21,7 +21,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create graph table failed " . $e->getMessage());
+                die("Create graph table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -38,7 +38,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create node table failed " . $e->getMessage());
+                die("Create node table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -57,11 +57,31 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create message table failed " . $e->getMessage());
+                die("Create message table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
         } 
+        private static function createArgumentTable(){
+            $conn = Database::connectToDB("callGraph");
+            $sql = "CREATE TABLE IF NOT EXISTS argument(
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                graphID INT(6) UNSIGNED NOT NULL,
+                FOREIGN KEY (graphID) REFERENCES graph(graphID) ON DELETE CASCADE,
+                messageID VARCHAR(16)NOT NULL, 
+                argumentID VARCHAR(16) NOT NULL,
+                argumentName VARCHAR(50) NOT NULL,
+                argumentType VARCHAR(50),
+                typeModifier VARCHAR(3)
+            )";
+            try{
+                $conn->exec($sql);
+            }catch(PDOException $e){
+                die("Create argument table failed " . $e->getMessage()."<br>");
+            }finally{
+                $conn = null;
+            }
+        }
         private static function addUniqueKey(){
             $conn = Database::connectToDB("CallGraph");
             $uniqueNode = "ALTER TABLE node ADD CONSTRAINT nodeIdx UNIQUE INDEX (graphID, nodeID)";
@@ -80,6 +100,7 @@
             self::createGraphTable();
             self::createNodeTable();
             self::createMessageTable();
+            self::createArgumentTable();
             self::addUniqueKey();
         }
         public static function insertToGraphTable(CallGraph $callGraph){
@@ -90,7 +111,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to graph table " . $e->getMessage();
+                echo "Error at insert to graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -104,7 +125,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to node table " . $e->getMessage();
+                echo "Error at insert to node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -121,7 +142,25 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to message table " . $e->getMessage();
+                echo "Error at insert to message table " . $e->getMessage()."<br>";
+            }finally{
+                $conn = null;
+            }
+        }
+        public static function insertToArgumentTable($graphID,$messageID,Argument $argument){
+            $conn = Database::connectToDB("CallGraph");
+            $sql = $conn->prepare("INSERT INTO argument(graphID, messageID, argumentID, argumentName, argumentType, typeModifier) 
+                VALUES(:graphID, :messageID, :argumentID, :argumentName, :argumentType, :typeModifier)");
+            $sql->bindParam(":graphID",$graphID);
+            $sql->bindParam(":messageID",$messageID);
+            $sql->bindParam(":argumentID",$argument->getArgID());
+            $sql->bindParam(":argumentName",$argument->getArgName());
+            $sql->bindParam(":argumentType",$argument->getArgType());
+            $sql->bindParam(":typeModifier",$argument->getTypeModifier());
+            try{
+                $sql->execute();
+            }catch(PDOException $e){
+                echo "Error at insert to argument table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -135,7 +174,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -149,7 +188,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -162,7 +201,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -176,7 +215,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage();
+                echo "Error at selecting from node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -191,7 +230,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage();
+                echo "Error at selecting from message table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -206,7 +245,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage();
+                echo "Error at selecting from message table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -221,7 +260,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage();
+                echo "Error at selecting from node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -234,7 +273,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at delete graph " . $e->getMessage();
+                echo "Error at delete graph " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;
@@ -250,7 +289,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at rename graph " . $e->getMessage();
+                echo "Error at rename graph " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;

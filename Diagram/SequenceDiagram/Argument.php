@@ -1,11 +1,13 @@
 <?php
     namespace SequenceDiagram;
     class Argument{
+        private $argID;
         private $argName;
         private $argType;
-        function __construct($argName,$argType){
+        private $typeModifier;
+        function __construct($argID,$argName){
+            $this->argID = $argID;
             $this->argName = $argName;
-            $this->argType = $argType;
         }
         public function getArgName()
         {
@@ -14,6 +16,24 @@
         public function getArgType()
         {
                 return $this->argType;
+        } 
+        public function getArgID()
+        {
+                return $this->argID;
+        }
+        public function setArgType($argType)
+        {
+                $this->argType = $argType;
+        }
+ 
+        public function getTypeModifier()
+        {
+                return $this->typeModifier;
+        }
+ 
+        public function setTypeModifier($typeModifier)
+        {
+                $this->typeModifier = $typeModifier;
         }
     }
 ?>

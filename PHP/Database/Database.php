@@ -13,7 +13,7 @@
                 // set the PDO error mode to exception
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             }catch(PDOException $e){
-                die("Connection failed: " . $e->getMessage());
+                die("Connection failed: " . $e->getMessage()."<br>");
             }
             return $conn;
         }
@@ -22,7 +22,7 @@
             try{
                 $conn->exec("CREATE DATABASE IF NOT EXISTS $db_name");;
             }catch(PDOException $e){
-                die("Create Database Failed: " . $e->getMessage());
+                die("Create Database Failed: " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -33,7 +33,7 @@
             try{
                 $conn->exec("DROP DATABASE IF EXISTS $db_name");
             }catch(PDOException $e){
-                die("Drop Database Failed: " . $e->getMessage());
+                die("Drop Database Failed: " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
