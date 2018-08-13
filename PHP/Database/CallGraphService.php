@@ -21,7 +21,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create graph table failed " . $e->getMessage());
+                die("Create graph table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -38,7 +38,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create node table failed " . $e->getMessage());
+                die("Create node table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -57,7 +57,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create message table failed " . $e->getMessage());
+                die("Create message table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -77,7 +77,7 @@
             try{
                 $conn->exec($sql);
             }catch(PDOException $e){
-                die("Create argument table failed " . $e->getMessage());
+                die("Create argument table failed " . $e->getMessage()."<br>");
             }finally{
                 $conn = null;
             }
@@ -111,7 +111,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to graph table " . $e->getMessage();
+                echo "Error at insert to graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -125,7 +125,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to node table " . $e->getMessage();
+                echo "Error at insert to node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -142,7 +142,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to message table " . $e->getMessage();
+                echo "Error at insert to message table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -160,7 +160,7 @@
             try{
                 $sql->execute();
             }catch(PDOException $e){
-                echo "Error at insert to argument table " . $e->getMessage();
+                echo "Error at insert to argument table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -174,7 +174,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -188,7 +188,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -201,7 +201,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage();
+                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -215,7 +215,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage();
+                echo "Error at selecting from node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -230,7 +230,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage();
+                echo "Error at selecting from message table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -245,7 +245,7 @@
                 $result = $sql->fetchAll();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage();
+                echo "Error at selecting from message table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -260,7 +260,7 @@
                 $result = $sql->fetch();
                 return $result;
             }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage();
+                echo "Error at selecting from node table " . $e->getMessage()."<br>";
             }finally{
                 $conn = null;
             }
@@ -273,7 +273,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at delete graph " . $e->getMessage();
+                echo "Error at delete graph " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;
@@ -289,7 +289,7 @@
                 $sql->execute();
                 return true;
             }catch(PDOException $e){
-                echo "Error at rename graph " . $e->getMessage();
+                echo "Error at rename graph " . $e->getMessage()."<br>";
                 return false;
             }finally{
                 $conn = null;
