@@ -20,7 +20,8 @@
                 
                 SimpleSDProcessor::processSimpleSD($xml,self::$graphID);
             }else{
-                TraditionalSDProcessor::processTraditionalSD($xml,self::$graphID);
+                //TODO Echo warning when sent
+               // TraditionalSDProcessor::processTraditionalSD($xml,self::$graphID);
             }
         }
         private static function saveFileToDB($fileName,$targetFile){

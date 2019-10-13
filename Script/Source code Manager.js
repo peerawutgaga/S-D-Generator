@@ -2,6 +2,7 @@ var fileTable = document.getElementById("fileTable");
 var fileSelect = fileTable.getElementsByClassName("selected");
 var renameModal = document.getElementById("renameModal");
 var modalClose = document.getElementsByClassName("close")[0];
+//TODO Refactor
 fileTable.onclick = highlight;
 window.onload = function(){
     renameModal.style.display = "none";

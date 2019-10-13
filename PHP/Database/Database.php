@@ -17,28 +17,6 @@
             }
             return $conn;
         }
-        public static function createDatabaseIfNotExist($db_name){
-            $conn = self::connectToDB(null);
-            try{
-                $conn->exec("CREATE DATABASE IF NOT EXISTS $db_name");;
-            }catch(PDOException $e){
-                die("Create Database Failed: " . $e->getMessage()."<br>");
-            }finally{
-                $conn = null;
-            }
-           
-        }
-        public static function dropDatabase($db_name){
-            $conn = self::connectToDB(null);
-            try{
-                $conn->exec("DROP DATABASE IF EXISTS $db_name");
-            }catch(PDOException $e){
-                die("Drop Database Failed: " . $e->getMessage()."<br>");
-            }finally{
-                $conn = null;
-            }
-        }
-
     }
     
 ?>

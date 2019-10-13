@@ -8,6 +8,7 @@ var defaultDataTypeSelect = document.getElementById('defaultDataTypeSelect');
 var maxDataTypeSelect = document.getElementById('maxDataTypeSelect');
 var minDataTypeSelect = document.getElementById('minDataTypeSelect');
 var randomDataTypeSelect = document.getElementById('randomDataTypeSelect');
+//TODO Refactor
 codeEditor.onkeydown = function(e) {
     if (e.keyCode === 9) {
         insert('\t');

@@ -1,6 +1,7 @@
 <?php
     namespace ClassDiagram;
     class ObjectClass{
+        //TODO Re-Structure
         const CONCRETE_CLASS = 0;
         const ABSTRACT_CLASS = 1;
         const INTERFACE_CLASS = 2;

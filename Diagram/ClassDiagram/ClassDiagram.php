@@ -1,6 +1,7 @@
 <?php
     namespace ClassDiagram;
     class ClassDiagram{
+        //TODO Re-Structure
         private $diagramName;
         private $fileTarget;
         function __construct($diagramName){

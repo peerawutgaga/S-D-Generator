@@ -9,7 +9,7 @@ var fileListClose = document.getElementsByClassName("close")[2];
 var uploadSDBtn =document.getElementById("uploadSD");
 var uploadCDBtn =document.getElementById("uploadCD");
 var ClassSelect = document.getElementById("ClassSelect");
-
+//TODO Refactor
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
 	uploadModal.style.display = "block";

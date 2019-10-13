@@ -37,7 +37,8 @@
         if($language == 'java'){
             initialOptionsJava($name);
         }else{
-            initialOptionsPHP($name);
+            //TODO Echoo warning when called. This will be disable
+            //initialOptionsPHP($name);
         }
         echo "</select>"; 
         if($name == "random"){

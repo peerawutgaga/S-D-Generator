@@ -2,7 +2,9 @@ var table = document.getElementById("fileListTable");
 var selected = table.getElementsByClassName('selected');
 var fileList;
 table.onclick = highlight;
+//TODO Refactor
 function createCode(){
+	//TODO Disable PHP generator
 	var form = document.getElementById('codeProperties');
 	var sourceType;
 	var sourceLang;

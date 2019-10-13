@@ -1,6 +1,7 @@
 <?php
     namespace SequenceDiagram;
     class Argument{
+        //TODO Re-Structure
         private $argID;
         private $argName;
         private $argType;

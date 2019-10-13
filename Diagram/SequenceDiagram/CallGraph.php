@@ -1,28 +1,37 @@
 <?php
-        namespace SequenceDiagram;
-        class CallGraph{
-        private $graphName;
-        private $fileTarget;
-        function __construct($graphName){
-                $this->graphName = $graphName;
-        }
+namespace SequenceDiagram;
 
-        public function setGraphName($graphName)
-        {
-                $this->graphName = $graphName;
-        }
-        public function getGraphName()
-        {
-                return $this->graphName;
-        }
+class CallGraph
+{
 
-        public function getFileTarget()
-        {
-                return $this->fileTarget;
-        }
-        public function setFileTarget($fileTarget)
-        {
-                $this->fileTarget = $fileTarget;
-        }
-  }  
+    // TODO Re-Structure
+    private $graphName;
+
+    private $fileTarget;
+
+    function __construct($graphName)
+    {
+        $this->graphName = $graphName;
+    }
+
+    public function setGraphName($graphName)
+    {
+        $this->graphName = $graphName;
+    }
+
+    public function getGraphName()
+    {
+        return $this->graphName;
+    }
+
+    public function getFileTarget()
+    {
+        return $this->fileTarget;
+    }
+
+    public function setFileTarget($fileTarget)
+    {
+        $this->fileTarget = $fileTarget;
+    }
+}
 ?>

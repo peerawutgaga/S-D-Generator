@@ -83,6 +83,7 @@
             return 0;
         }
         private static function getClassType($class){
+            //TODO Identify concrete descendance when class is an abstract or an interface
             if($class['Abstract']=="true"){
                 return ObjectClass::ABSTRACT_CLASS;
             }else if(isset($class->Stereotypes)){

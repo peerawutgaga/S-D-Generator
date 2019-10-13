@@ -1,6 +1,7 @@
 <?php
     namespace ClassDiagram;
     class Parameter{
+        //TODO Re-Structure
         private $paramID;
         private $paramName;
         private $paramType;

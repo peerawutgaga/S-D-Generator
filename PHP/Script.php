@@ -1,5 +1,6 @@
 <?php
     class Script{
+        //TODO Revise if it still neeeds or not
         public static function alert($message){
             echo "<script type='text/javascript'>
                 alert('$message');

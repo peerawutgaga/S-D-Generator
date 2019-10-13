@@ -5,6 +5,7 @@ var classDiagramSelected = classDiagramTable.getElementsByClassName('selected');
 var renameModal = document.getElementById("renameModal");
 var modalClose = document.getElementsByClassName("close")[0];
 var currentTable;
+//TODO Refactor
 callGraphTable.onclick = highlightCallGraph;
 classDiagramTable.onclick = highlightClassDiagram;
 function openTable(evt, tableName) {

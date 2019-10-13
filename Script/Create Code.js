@@ -10,6 +10,7 @@ var closeMinBtn = document.getElementsByClassName("close")[2];
 var closeRandomBtn = document.getElementsByClassName("close")[3];
 var fileExtension;
 var oldFilename;
+//TODO Refactor
 window.onload = function(){
     var filename = decodeURIComponent(window.location.search);
     filename = filename.substring(12);

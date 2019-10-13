@@ -1,6 +1,7 @@
 <?php
     namespace SequenceDiagram;
     class Message{
+        //TODO Re-Structure
         private $messageID;
         private $messageName;
         private $sentNodeID;

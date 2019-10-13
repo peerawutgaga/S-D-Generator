@@ -13,13 +13,11 @@
 <article>
   <!-- Information Side Bar -->
   <div class = "description">
-    <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating stubs or drivers for Object-Oriented program testing from sequence and class diagrams</p>
+    <p id="tool-info"><b>Stub and Driver Generator Online Tool</b> is a tool for creating stubs or drivers for class integration testing from sequence and class diagrams</p>
     <h3>Instruction</h3>
     <ol>
       <li>Upload UML diagram as XML files.</li>
-      <li>Select class under test.</li>
-      <li>Choose source code type (Stub or Driver).</li>
-      <li>Choose language.</li>
+      <li>Select class(es) under test.</li>
       <li>Edit the source codes.</li>
       <li>Export.</li>
     </ol>
@@ -75,7 +73,6 @@
     <div id = "SelectDiagram">
           <?php
             require "Page/SetCodeProperties.php";
-            initialDatabase();
             initialSDSelect();
             initialCDSelect();
             initialClassSelect();

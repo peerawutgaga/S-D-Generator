@@ -5,11 +5,8 @@
     if(isset($_POST['CUT'])){
         refreshClassSelect($_POST['CUT']);
     }
-    function initialDatabase(){
-        CallGraphService::initialCallGraphDatabase();
-        ClassDiagramService::initialClassDiagramDatabase();
-    }
     function initialSDSelect(){
+        //TODO re-design UI
         echo "<h4>Select Call Graph</h4>";
         echo "<select id = 'SDSelect' onchange = selectSD(this.value)>";
         echo "<option value = '0' selected disabled hidden>Please Select Call Graph</option>";
@@ -22,6 +19,7 @@
         echo "</select>";
     }
     function initialCDSelect(){
+        //TODO re-design UI
         echo "<h4>Select Class Diagram</h4>";
         echo "<select id = 'CDSelect'>";
         echo "<option value = '0' selected disabled hidden>Please Select Class Diagram</option>";
@@ -34,6 +32,7 @@
         echo "</select>";
     }
     function initialClassSelect(){
+        //TODO re-design UI and function
         echo "<h4>Select Class Under Test</h4>";
         echo "<select id = 'ClassSelect'>";
         echo "<option value = '0' selected disabled hidden>Please Select Class Under Test</option>";

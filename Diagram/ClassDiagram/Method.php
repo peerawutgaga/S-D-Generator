@@ -1,6 +1,7 @@
 <?php
     namespace ClassDiagram;
     class Method{
+        //TODO Re-Structure
         private $methodID;
         private $methodName;
         private $returnType;

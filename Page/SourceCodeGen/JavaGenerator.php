@@ -4,6 +4,7 @@
     require_once "$root/PHP/Database/CallGraphService.php";
     require_once "$root/PHP/Database/ClassDiagramService.php";
     class JavaGenerator{
+        //TODO Refactor
         private static $root;
         private static $file;
         private static function getDefaultValue($returnType){
