@@ -72,10 +72,10 @@
     <h3>Set Code Property</h3>
     <div id = "SelectDiagram">
           <?php
-            require "php/pages/SetCodeProperties.php";
-            initialSDSelect();
-            initialCDSelect();
-            initialClassSelect();
+            //require "php/pages/SetCodeProperties.php";
+            //initialSDSelect();
+            //initialCDSelect();
+            //initialClassSelect();
           ?>  
       </div>
       <div id = "SetProperties">

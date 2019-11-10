@@ -9,10 +9,8 @@
         }
 
         public static function consoleLog( $message ) {
-            $output = $message;
-            if ( is_array( $output ) )
-                $output = implode( ',', $output);
-            echo "<script>console.log( '" . $output . "' );</script>";
+            $message = str_replace("'","\'",$message);
+            echo "<script>console.log( '$message' );</script>";
         }
         public static function printObject($object){
             echo "<pre>";

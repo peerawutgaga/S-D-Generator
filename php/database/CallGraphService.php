@@ -1,208 +1,233 @@
 <?php
-    require_once "Database.php";
-    $diagram = realpath($_SERVER["DOCUMENT_ROOT"])."/Diagram/SequenceDiagram/";
-    include_once "$Diagram/CallGraph.php";
-    include_once "$Diagram/ObjectNode.php";
-    include_once "$Diagram/Message.php";
-    include_once "$Diagram/Argument.php";
-    use SequenceDiagram\CallGraph;
-    use SequenceDiagram\ObjectNode;
-    use SequenceDiagram\Message;
-    use SequenceDiagram\Argument;
-    class CallGraphService{
-        //TODO Interface change aware
-        public static function insertToGraphTable(CallGraph $callGraph){
-            $conn = Database::connectToDB("CallGraph");
-            $sql = $conn->prepare("INSERT INTO graph(graphName, fileTarget) VALUES(:graphName,:fileTarget)");
-            $sql->bindParam(":graphName",$callGraph->getGraphName());
-            $sql->bindParam(":fileTarget",$callGraph->getFileTarget());
-            try{
-                $sql->execute();
-            }catch(PDOException $e){
-                echo "Error at insert to graph table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
+require_once "Database.php";
+include_once "php/utilities/Script.php";
+
+class CallGraphService
+{
+
+    // TODO Interface change aware
+    public static function insertIntoCallGraph($callGraphName, $filePath)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.graph` (`callGraphName`, `filePath`) VALUES(:callGraphName,:filePath)");
+        $sql->bindParam(":callGraphName", $callGraphName);
+        $sql->bindParam(":filePath", $filePath);
+        try {
+            $sql->execute();
+            $callGraphId = $conn->lastInsertId();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
         }
-        public static function insertToNodeTable($graphID, ObjectNode $node){
-            $conn = Database::connectToDB("CallGraph");
-            $sql = $conn->prepare("INSERT INTO node(graphID, nodeID, nodeName) VALUES(:graphID,:nodeID,:nodeName)");
-            $sql->bindParam(":graphID",$graphID);
-            $sql->bindParam(":nodeID",$node->getNodeID());
-            $sql->bindParam(":nodeName",$node->getNodeName());
-            try{
-                $sql->execute();
-            }catch(PDOException $e){
-                echo "Error at insert to node table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
+        return $callGraphId;
+    }
+
+    public static function insertIntoObjectNode($callGraphID,$objectName,$baseIdentifier)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.objectNode`(`callGraphId`, `objectName`, `baseIdentifier`) VALUES(:callGraphId,:objectName,:baseIdentifier)");
+        $sql->bindParam(":callGraphId", $callGraphID);
+        $sql->bindParam(":objectName", $objectName);
+        $sql->bindParam(":baseIdentifier", $baseIdentifier);
+        try {
+            $sql->execute();
+            $objectId = $conn->lastInsertId();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
         }
-        public static function insertToMessageTable($graphID, Message $message){
-            $conn = Database::connectToDB("CallGraph");
-            $sql = $conn->prepare("INSERT INTO message(graphID, messageID, messageName, sentNodeID, receivedNodeID) 
-                VALUES(:graphID, :messageID, :messageName, :sentNodeID, :receivedNodeID)");
-            $sql->bindParam(":graphID",$graphID);
-            $sql->bindParam(":messageID",$message->getMessageID());
-            $sql->bindParam(":messageName",$message->getMessageName());
-            $sql->bindParam(":sentNodeID",$message->getSentNodeID());
-            $sql->bindParam(":receivedNodeID",$message->getReceivedNodeID());
-            try{
-                $sql->execute();
-            }catch(PDOException $e){
-                echo "Error at insert to message table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
+        return $objectId;
+    }
+
+    public static function insertIntoMessage($fromObjectId, $toObjectId,$messageName,$messageType)
+    {
+        $conn = Database::getConnection();
+        $messageType = strtoupper($messageType);
+        $sql = $conn->prepare("INSERT INTO `callgraph.message`(`fromObjectId`, `toObjectId`,`messageName`, `messageType`) 
+                VALUES(:fromObjectId, :toObjectId, :messageName, :messageType)");
+        $sql->bindParam(":fromObjectId", $fromObjectId);
+        $sql->bindParam(":toObjectId", $toObjectId);
+        $sql->bindParam(":messageName", $messageName);
+        $sql->bindParam(":messageType", $messageType);
+        try {
+            $sql->execute();
+            $messageId = $conn->lastInsertId();
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
         }
-        public static function insertToArgumentTable($graphID,$messageID,Argument $argument){
-            $conn = Database::connectToDB("CallGraph");
-            $sql = $conn->prepare("INSERT INTO argument(graphID, messageID, argumentID, argumentName, argumentType, typeModifier) 
-                VALUES(:graphID, :messageID, :argumentID, :argumentName, :argumentType, :typeModifier)");
-            $sql->bindParam(":graphID",$graphID);
-            $sql->bindParam(":messageID",$messageID);
-            $sql->bindParam(":argumentID",$argument->getArgID());
-            $sql->bindParam(":argumentName",$argument->getArgName());
-            $sql->bindParam(":argumentType",$argument->getArgType());
-            $sql->bindParam(":typeModifier",$argument->getTypeModifier());
-            try{
-                $sql->execute();
-            }catch(PDOException $e){
-                echo "Error at insert to argument table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectFromGraphByGraphID($graphID){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM graph WHERE graphID = :graphID LIMIT 1");          
-            $sql->bindParam(':graphID',$graphID);
-            try{
-                $sql->execute();
-                $result = $sql->fetch();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectFromGraphByGraphName($graphName){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM graph WHERE graphName = :graphName LIMIT 1");          
-            $sql->bindParam(':graphName',$graphName);
-            try{
-                $sql->execute();
-                $result = $sql->fetch();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectAllFromGraph(){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM graph");
-            try{
-                $sql->execute();
-                $result = $sql->fetchAll();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from graph table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectAllFromNode($graphID){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM node WHERE graphID = :graphID");
-            $sql->bindParam(':graphID',$graphID);
-            try{
-                $sql->execute();
-                $result = $sql->fetchAll();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectMessageBySentNodeID($graphID, $sentNodeID){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM message WHERE graphID = :graphID AND sentNodeID = :sentNodeID");
-            $sql->bindParam(':graphID',$graphID);
-            $sql->bindParam(':sentNodeID',$sentNodeID);
-            try{
-                $sql->execute();
-                $result = $sql->fetchAll();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectMessageByReceivedNodeID($graphID, $receivedNodeID){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM message WHERE graphID = :graphID AND receivedNodeID = :receivedNodeID");
-            $sql->bindParam(':graphID',$graphID);
-            $sql->bindParam(':receivedNodeID',$receivedNodeID);
-            try{
-                $sql->execute();
-                $result = $sql->fetchAll();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from message table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function selectNodeByNodeID($graphID, $nodeID){
-            $conn = Database::connectToDB('callGraph');
-            $sql = $conn->prepare("SELECT * FROM node WHERE graphID = :graphID AND nodeID = :nodeID LIMIT 1");
-            $sql->bindParam(':graphID',$graphID);
-            $sql->bindParam(':nodeID',$nodeID);
-            try{
-                $sql->execute();
-                $result = $sql->fetch();
-                return $result;
-            }catch(PDOException $e){
-                echo "Error at selecting from node table " . $e->getMessage()."<br>";
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function deleteFromGraph($graphName){
-            $conn = Database::connectToDB("callgraph");
-            $sql = $conn->prepare("DELETE FROM graph WHERE graphName = :graphName");
-            $sql->bindParam(":graphName",$graphName);
-            try{
-                $sql->execute();
-                return true;
-            }catch(PDOException $e){
-                echo "Error at delete graph " . $e->getMessage()."<br>";
-                return false;
-            }finally{
-                $conn = null;
-            }
-        }
-        public static function renameGraph($oldName,$newName, $path){
-            $conn = Database::connectToDB('callgraph');
-            $sql = $conn->prepare("UPDATE graph SET graphName = :newName, fileTarget = :path WHERE graphName = :oldName");
-            $sql->bindParam(":newName",$newName);
-            $sql->bindParam(":oldName",$oldName);
-            $sql->bindParam(":path",$path);
-            try{
-                $sql->execute();
-                return true;
-            }catch(PDOException $e){
-                echo "Error at rename graph " . $e->getMessage()."<br>";
-                return false;
-            }finally{
-                $conn = null;
-            }
+        return $messageId;
+    }
+
+    public static function insertIntoArgument($messageId, $arguName, $seqIdx, $dataType)
+    {
+       $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.argument`(`messageId`, `arguName`, `seqIdx`, `dataType`) 
+                VALUES(:messageID, :arguName, :seqIdx, :dataType)");
+        $sql->bindParam(":messageID", $messageId);
+        $sql->bindParam(":arguName", $arguName);
+        $sql->bindParam(":seqIdx", $seqIdx);
+        $sql->bindParam(":dataType", $dataType);
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
         }
     }
+
+    public static function selectFromGraphByCallGraphId($callGraphID)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.graph` WHERE `callGraphId` = :callGraphID");
+        $sql->bindParam(':callGraphID', $callGraphID);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();   
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+
+    public static function selectFromGraphByCallGraphName($callGraphName)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.graph` WHERE `callGraphName` = :callGraphName");
+        $sql->bindParam(':callGraphName', $callGraphName);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+            
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+
+    public static function selectAllFromGraph()
+    {
+       $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.graph`");
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+           
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+
+    public static function selectFromObjectNodeByCallGraphId($callGraphId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID");
+        $sql->bindParam(':callGraphID', $callGraphId);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();        
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+    public static function selectObjectNodeByObjectID($objectId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE objectId = :objectId");
+        $sql->bindParam(':objectId', $objectId);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+            
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+    public static function selectMessageByFromObjectID($fromObjectId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `fromObjectId` = :fromObjectId");
+        $sql->bindParam(':fromObjectId', $fromObjectId);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+            
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+
+    public static function selectMessageByToObjectNodeID($toObjectId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `toObjectId` = :toObjectId");
+        $sql->bindParam(':toObjectId', $toObjectId);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();           
+        } catch (PDOException $e) {
+             Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }   
+
+    public static function deleteFromGraph($callGraphId)
+    {
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("DELETE FROM `callgraph.graph` WHERE `callGraphId` = :callGraphId");
+        $sql->bindParam(":callGraphId", $callGraphId);
+        try {
+            $sql->execute(); 
+            $result = true;
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+            return false;
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+
+    public static function updateGraphSetCallGraphName($callGraphId, $callGraphName)
+    {
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("UPDATE `callgraph.graph` SET callGraphName = :callGraphName WHERE callGraphId = :callGraphId");
+        $sql->bindParam(":callGraphId", $callGraphId);
+        $sql->bindParam(":callGraphName", $callGraphName);
+        try {
+            $sql->execute();
+            $result = true;
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
+}
 
 ?>
