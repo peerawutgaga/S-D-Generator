@@ -4,8 +4,6 @@ namespace SequenceDiagram;
 class ObjectNode
 {
     //TODO Re-Structure
-    private $nodeID;
-
     private $nodeName;
 
     function __construct($nodeID, $nodeName)

@@ -34,14 +34,14 @@ function openTable(evt, tableName) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("SDContent").click();
 function getCallGraphList(){
-    $.post('Page/DiagramMgrService.php',{
+    $.post('php/pages/DiagramMgrService.php',{
         'getList': "Sequence",
     },function (returnedData){
         addItemToTable("CallGraphTable",returnedData);
     }),"json";
 }
 function getClassDiagramList(){
-    $.post('Page/DiagramMgrService.php',{
+    $.post('php/pages/DiagramMgrService.php',{
         'getList': "ClassDiagram",
     },function (returnedData){
         addItemToTable("ClassDiagramTable",returnedData);
@@ -87,7 +87,7 @@ function deleteDiagram(){
     if(!confirm(confirmMsg)){
         return;
     }
-    $.post('Page/DiagramMgrService.php',{
+    $.post('php/pages/DiagramMgrService.php',{
         'delete': selectedValue,
         'table':currentTable,
     },function (returnedData){
@@ -133,7 +133,7 @@ function rename(){
     if(!confirm(confirmMsg)){
         return;
     }
-    $.post('Page/DiagramMgrService.php',{
+    $.post('php/pages/DiagramMgrService.php',{
         'rename': selectedValue,
         'table':currentTable,
         'newName':newFilename + ".xml",

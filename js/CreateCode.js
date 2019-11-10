@@ -42,7 +42,7 @@ function recordFileInfo(filename){
 }
 function initialDefaultModal(){
     if(fileExtension == "php"){
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "php",
             'modal': "default",
         }, function(returnedData){
@@ -59,7 +59,7 @@ function initialDefaultModal(){
 }
 function initialMaxModal(){
     if(fileExtension == "php"){
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "php",
             'modal': "max",
         }, function(returnedData){
@@ -76,14 +76,14 @@ function initialMaxModal(){
 }
 function initialMinModal(){
     if(fileExtension == "php"){
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "php",
             'modal': "min",
         }, function(returnedData){
            document.getElementById("minDataTypeSelect").innerHTML = returnedData;
         });
     }else{
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "java",
             'modal': "min",
         }, function(returnedData){
@@ -93,14 +93,14 @@ function initialMinModal(){
 }
 function initialRandomModal(){
     if(fileExtension == "php"){
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "php",
             'modal': "random",
         }, function(returnedData){
            document.getElementById("randomDataTypeSelect").innerHTML = returnedData;
         });
     }else{
-        $.post('Page/InsertValueModal.php', { 
+        $.post('php/pages/InsertValueModal.php', { 
             'language': "java",
             'modal': "random",
         }, function(returnedData){
@@ -109,7 +109,8 @@ function initialRandomModal(){
     }
 }
 function openFile(){
-    var filename = oldFilename+"."+fileExtension;
+	//TODO rewrite the function
+   /* var filename = oldFilename+"."+fileExtension;
     filepath = "../Source Code Files/"+filename+".txt";
     var client = new XMLHttpRequest();
     client.open('GET', filepath);
@@ -124,7 +125,7 @@ function openFile(){
             }
         }
     }
-    client.send();
+    client.send();*/
 }
 function rename(){
     var currentFilename = filenameArea.value;
@@ -147,7 +148,7 @@ function rename(){
         alert("Filename cannot be empty");
         return;
     }
-    $.post('Page/CodeEditorService.php', { 
+    $.post('php/pages/CodeEditorService.php', { 
 		'method': "rename",
         'oldFilename' : oldFilename+"."+fileExtension, 
         'newFilename' : currentFilename,
@@ -164,10 +165,11 @@ function rename(){
 }
 function refreshCreatCodePage(sourceCodePath){
 	var queryString = "?sourcecode="+sourceCodePath; 
-	window.location.href='../Create Code.php'+queryString;
+	window.location.href='../CreateCode.php'+queryString;
 }
 function saveChange(){
-    if(!confirm("Save Change ?")){
+	//TODO rewrite the function
+    /*if(!confirm("Save Change ?")){
         return;
     }
     var filepath = "/Source Code Files/"+oldFilename+"."+fileExtension+".txt";
@@ -178,7 +180,7 @@ function saveChange(){
         'content' : content,
 	}, function(returnedData){
         alert("Saved");
-	});
+	});*/
 }
 function exportFile(){
     var confirmMsg = "Export file: "+oldFilename+"."+fileExtension+"?";
@@ -187,7 +189,7 @@ function exportFile(){
     }
     var filepath = oldFilename+"-"+fileExtension;
     var queryString = "?sourcecode="+filepath; 
-	window.location.href='../PHP/Download.php'+queryString;
+	window.location.href='../php/Download.php'+queryString;
 }
 function showDefaultModal(){
     defaultModal.style.display = "block";
@@ -225,28 +227,28 @@ function showOption(value){
     }
 }
 function showLengthOption(){
-    $.post('Page/InsertValueModal.php', { 
+    $.post('php/pages/InsertValueModal.php', { 
 		'option': "length",
 	}, function(returnedData){
         document.getElementById('randomOption').innerHTML = returnedData;
 	});
 }
 function showRangeOption(){
-    $.post('Page/InsertValueModal.php', { 
+    $.post('php/pages/InsertValueModal.php', { 
 		'option': "range",
 	}, function(returnedData){
         document.getElementById('randomOption').innerHTML = returnedData;
 	});
 }
 function showBothOption(){
-    $.post('Page/InsertValueModal.php', { 
+    $.post('php/pages/InsertValueModal.php', { 
 		'option': "both",
 	}, function(returnedData){
         document.getElementById('randomOption').innerHTML = returnedData;
 	});
 }
 function clearOption(){
-    $.post('Page/InsertValueModal.php', { 
+    $.post('php/pages/InsertValueModal.php', { 
 		'option': "clear",
 	}, function(returnedData){
         document.getElementById('randomOption').innerHTML = returnedData;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Main</title>
-<link rel = "stylesheet" href = "CSS/Main.css">
+<link rel = "stylesheet" href = "css/Main.css">
 </head>
 
 <body>
@@ -33,9 +33,9 @@
             Create Source Code</div></td>
         </tr>
         <tr>
-          <td class = "UI-td"><a href="Diagram Manager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/><br>
+          <td class = "UI-td"><a href="DiagramManager.php"><img src="Image/Diagram Manager.png" width="170" height="170" alt=""/><br>
             XML Manager</a></td>
-          <td class = "UI-td"><a href="Source Code Manager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/><br>
+          <td class = "UI-td"><a href="SourceCodeManager.php"><img src="Image/File Manager.png" width="170" height="170" alt=""/><br>
             Source Code Manager</a></td>
         </tr>
       </tbody>
@@ -46,7 +46,7 @@
 <div id="uploadModal" class="modal">
   <div class="uploadModal-content"> <span class="close">&times;</span>
     <h3>Upload XML File</h3>
-    <form id = "uploadForm" action = "./PHP/Uploader.php" method = "post" enctype="multipart/form-data">
+    <form id = "uploadForm" action = "./php/Uploader.php" method = "post" enctype="multipart/form-data">
 	    <input type = "file" id = "SDFile" name = "SDFile" style = "display: none" onchange="uploadSDFile()" multiple size= "1">
       <input type = "file" id = "CDFile" name = "CDFile" style = "display: none" onchange="uploadCDFile()" multiple size= "1">
       <input type = "submit" id = "SDSubmit" name = "SDSubmit" style = "display: none">
@@ -72,7 +72,7 @@
     <h3>Set Code Property</h3>
     <div id = "SelectDiagram">
           <?php
-            require "Page/SetCodeProperties.php";
+            require "php/pages/SetCodeProperties.php";
             initialSDSelect();
             initialCDSelect();
             initialClassSelect();
@@ -107,7 +107,7 @@
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="Script/Main.js"></script>
-<script src="Script/File Generator.js"></script>
+<script src="js/Main.js"></script>
+<script src="js/FileGenerator.js"></script>
 </body>
 </html>

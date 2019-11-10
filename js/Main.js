@@ -59,7 +59,7 @@ function uploadCDFile()
 	document.getElementById("CDSubmit").click();
 }
 function selectSD(selected){
-	$.post('Page/SetCodeProperties.php', {  
+	$.post('php/pages/SetCodeProperties.php', {  
 		'CUT' : selected,
 	}, function(returnedData){
 		 ClassSelect.innerHTML = returnedData;

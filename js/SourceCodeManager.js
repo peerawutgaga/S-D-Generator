@@ -6,7 +6,7 @@ var modalClose = document.getElementsByClassName("close")[0];
 fileTable.onclick = highlight;
 window.onload = function(){
     renameModal.style.display = "none";
-    $.post('Page/SourceCodeMgrService.php',{
+    $.post('php/pages/SourceCodeMgrService.php',{
         'method': "getList",
     },function (returnedData){
         addListToTable(returnedData);
@@ -44,7 +44,7 @@ function duplicateFile(){
 		alert("Please select a file");
 		return;
     }
-    $.post('Page/SourceCodeMgrService.php',{
+    $.post('php/pages/SourceCodeMgrService.php',{
         'method': "duplicate",
         'file':selectedValue,
     },function (returnedData){
@@ -65,7 +65,7 @@ function deleteFile(){
     if(!confirm(confirmMsg)){
         return;
     }
-    $.post('Page/SourceCodeMgrService.php',{
+    $.post('php/pages/SourceCodeMgrService.php',{
         'method': "delete",
         'file':selectedValue,
     },function (returnedData){
@@ -85,7 +85,7 @@ function editFile(){
     }
     selectedValue = selectedValue.replace(".","-");
 	var queryString = "?sourcecode="+selectedValue;
-	var win = window.open('../Create Code.php'+queryString);
+	var win = window.open('../CreateCode.php'+queryString);
 	if (win) {
 		//Browser has allowed it to be opened
 		win.focus();
@@ -108,7 +108,7 @@ function exportFile(){
     var filename = selectedValue.substring(0,idx);
     var extension = selectedValue.substring(idx+1);
     var queryString = "?sourcecode="+filename+"-"+extension; 
-	window.location.href='../PHP/Download.php'+queryString;
+	window.location.href='../php/Download.php'+queryString;
 }
 function renameFile(){
     var selectedValue = $("tr.selected td:eq(1)" ).html();
@@ -126,7 +126,7 @@ function renameFile(){
     if(!confirm(confirmMsg)){
         return;
     }
-    $.post('Page/SourceCodeMgrService.php',{
+    $.post('php/pages/SourceCodeMgrService.php',{
         'method': "rename",
         'oldname': selectedValue,
         'newname':newFilename+"."+extension,

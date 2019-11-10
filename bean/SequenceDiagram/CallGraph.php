@@ -6,7 +6,6 @@ class CallGraph
 
     // TODO Re-Structure
     private $graphName;
-
     private $fileTarget;
 
     function __construct($graphName)

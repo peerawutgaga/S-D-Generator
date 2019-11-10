@@ -18,7 +18,7 @@ function createCode(){
 	}else{
 		sourceLang = 'PHP';
 	}
-	$.post('Page/SourceCodeGen/SourceCodeGenerator.php', { 
+	$.post('php/pages/SourceCodeGen/SourceCodeGenerator.php', { 
 		'graphID': SDSelect.options[SDSelect.selectedIndex].value,
 		'diagramID' : CDSelect.options[CDSelect.selectedIndex].value, 
 		'CUT' : ClassSelect.options[ClassSelect.selectedIndex].value,
@@ -58,7 +58,7 @@ function editCode(){
 	}
 	selectedValue = selectedValue.replace(".","-");
 	var queryString = "?sourcecode="+selectedValue;
-	var win = window.open('../Create Code.php'+queryString);
+	var win = window.open('../CreateCode.php'+queryString);
 	if (win) {
 		//Browser has allowed it to be opened
 		win.focus();
@@ -90,14 +90,14 @@ function exportAll(){
 	if(files.length == 1){
 		var file = files[0].replace(".","-");
 		var queryString = "?sourcecode="+file; 
-		window.location.href='../PHP/Download.php'+queryString;
+		window.location.href='../php/Download.php'+queryString;
 		return;
 	}
-	$.post('Page/CodeEditorService.php', { 
+	$.post('php/pages/CodeEditorService.php', { 
 		'method': "exportAll",
         'filepath' : fileList, 
 	}, function(returnedData){
         var queryString = "?sourcecode=Source_Code_Files-zip"; 
-		window.location.href='../PHP/Download.php'+queryString;
+		window.location.href='..php/Download.php'+queryString;
 	});
 }
