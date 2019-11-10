@@ -56,7 +56,7 @@ CREATE TABLE `callgraph.gateobject` (
 --
 
 CREATE TABLE `callgraph.graph` (
-  `callgraphId` int(10) NOT NULL COMMENT 'Call graph ID. This field is meaningless running number',
+  `callGraphId` int(10) NOT NULL COMMENT 'Call graph ID. This field is meaningless running number',
   `callGraphName` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Call graph name',
   `filePath` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'XML file path in repository',
   `createTimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Upload timestamp',
@@ -108,7 +108,7 @@ CREATE TABLE `callgraph.message` (
 --
 
 CREATE TABLE `callgraph.objectnode` (
-  `objectid` int(10) NOT NULL COMMENT 'Object Id. This field is meaningless running number',
+  `objectId` int(10) NOT NULL COMMENT 'Object Id. This field is meaningless running number',
   `callGraphId` int(10) NOT NULL COMMENT 'Parent call graph Id',
   `objectName` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Object name',
   `classId` int(10) DEFAULT NULL COMMENT 'Reference class Id',
@@ -249,7 +249,7 @@ ALTER TABLE `callgraph.gateobject`
 -- Indexes for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  ADD PRIMARY KEY (`callgraphId`),
+  ADD PRIMARY KEY (`callGraphId`),
   ADD KEY `GraphDiagramFK` (`classDiagramId`);
 
 --
@@ -277,7 +277,7 @@ ALTER TABLE `callgraph.message`
 -- Indexes for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
-  ADD PRIMARY KEY (`objectid`),
+  ADD PRIMARY KEY (`objectId`),
   ADD KEY `ObjectNodeCallGraphFK` (`callGraphId`),
   ADD KEY `ObjectClassFK` (`classId`);
 
@@ -352,7 +352,7 @@ ALTER TABLE `callgraph.gateobject`
 -- AUTO_INCREMENT for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  MODIFY `callgraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number';
+  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number';
 --
 -- AUTO_INCREMENT for table `callgraph.guardcondition`
 --
@@ -367,7 +367,7 @@ ALTER TABLE `callgraph.message`
 -- AUTO_INCREMENT for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
-  MODIFY `objectid` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number';
+  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number';
 --
 -- AUTO_INCREMENT for table `callgraph.returnmessage`
 --
@@ -423,8 +423,8 @@ ALTER TABLE `callgraph.argument`
 -- Constraints for table `callgraph.gateobject`
 --
 ALTER TABLE `callgraph.gateobject`
-  ADD CONSTRAINT `GateObjCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callgraphId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `GateObjObjectFK` FOREIGN KEY (`gateMsgId`) REFERENCES `callgraph.objectnode` (`objectid`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `GateObjCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `GateObjObjectFK` FOREIGN KEY (`gateMsgId`) REFERENCES `callgraph.objectnode` (`objectId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `callgraph.graph`
@@ -443,14 +443,14 @@ ALTER TABLE `callgraph.guardcondition`
 --
 ALTER TABLE `callgraph.message`
   ADD CONSTRAINT `MessageMethodFK` FOREIGN KEY (`methodId`) REFERENCES `classdiagram.method` (`methodId`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `MessageObjectFK` FOREIGN KEY (`fromObjectId`) REFERENCES `callgraph.objectnode` (`objectid`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `MessageObjectFK` FOREIGN KEY (`fromObjectId`) REFERENCES `callgraph.objectnode` (`objectId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
   ADD CONSTRAINT `ObjectClassFK` FOREIGN KEY (`classId`) REFERENCES `classdiagram.class` (`classId`) ON DELETE SET NULL ON UPDATE NO ACTION,
-  ADD CONSTRAINT `ObjectNodeCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callgraphId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `ObjectNodeCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `callgraph.returnmessage`
