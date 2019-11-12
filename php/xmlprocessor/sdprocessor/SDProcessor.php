@@ -3,7 +3,6 @@
     require_once "SimpleSDProcessor.php";
     require_once "TraditionalSDProcessor.php";
     include_once "$root/Diagram/SequenceDiagram/CallGraph.php";
-    use SequenceDiagram\CallGraph;
     class SDProcessor{
         private static $graphID;
         public static function readSequenceDiagram($fileName, $targetFile){

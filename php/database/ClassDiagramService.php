@@ -1,247 +1,215 @@
 <?php
 require_once "Database.php";
-$diagram = realpath($_SERVER["DOCUMENT_ROOT"]) . "/Diagram/ClassDiagram/";
-include "$Diagram/ClassDiagram.php";
-include "$Diagram/ObjectClass.php";
-include "$Diagram/Method.php";
-include "$Diagram/Parameter.php";
-use ClassDiagram\ClassDiagram;
-use ClassDiagram\ObjectClass;
-use ClassDiagram\Method;
-use ClassDiagram\Parameter;
+include_once "php/utilities/Script.php";
 
 class ClassDiagramService
 {
 
     // TODO Interface change aware
-    public static function insertToDiagramTable(ClassDiagram $classDiagram)
+    public static function insertIntoDiagram($diagramName, $filePath)
     {
-        $conn = Database::connectToDB("classDiagram");
-        $sql = $conn->prepare("INSERT INTO diagram(diagramName, fileTarget) VALUES(:diagramName, :fileTarget)");
-        $sql->bindParam(":diagramName", $classDiagram->getDiagramName());
-        $sql->bindParam(":fileTarget", $classDiagram->getFileTarget());
+        $conn = Database::getConnection();
+        $diagramId = - 1;
+        $sql = $conn->prepare("INSERT INTO `classdiagram.diagram`(`diagramName`, `filePath`) VALUES(:diagramName, :filePath)");
+        $sql->bindParam(":diagramName", $diagramName);
+        $sql->bindParam(":filePath", $filePath);
         try {
             $sql->execute();
+            $diagramId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at insert to diagram table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $diagramId;
     }
 
-    public static function insertToClassTable($diagramID, ObjectClass $objectClass)
+    public static function insertIntoPackage($diagramId, $packageName, $namespace)
     {
-        $conn = Database::connectToDB("classDiagram");
-        $sql = $conn->prepare("INSERT INTO class(diagramID,className, classType,packagePath) 
-                VALUES(:diagramID,:className, :classType,:packagePath)");
-        $sql->bindParam(":diagramID", $diagramID);
-        $sql->bindParam(":className", $objectClass->getClassName());
-        $sql->bindParam(":classType", $objectClass->getClassType());
-        $sql->bindParam(":packagePath", $objectClass->getPackagePath());
+        $conn = Database::getConnection();
+        $packageId = - 1;
+        $sql = $conn->prepare("INSERT INTO `classdiagram.package`(`diagramId`,`packageName`, `namespace`) VALUES(:diagramId, :packageName,:namespace)");
+        $sql->bindParam(":diagramId", $diagramId);
+        $sql->bindParam(":packageName", $packageName);
+        $sql->bindParam(":namespace", $namespace);
         try {
             $sql->execute();
+            $packageId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at insert to class table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $packageId;
     }
 
-    public static function insertToMethodTable($diagramID, $className, Method $method)
+    public static function insertIntoClass($packageId, $className, $instanceType)
     {
-        $conn = Database::connectToDB("classDiagram");
-        $sql = $conn->prepare("INSERT INTO method(diagramID, className, methodID, methodName, returnType, returnTypeModifier,visibility,isStatic,isAbstract) 
-            VALUES(:diagramID,:className,:methodID, :methodName, :returnType, :returnTypeModifier, :visibility,:isStatic,:isAbstract)");
-        $sql->bindParam(":diagramID", $diagramID);
+        $conn = Database::getConnection();
+        $classId = - 1;
+        $instanceType = strtoupper($instanceType);
+        $sql = $conn->prepare("INSERT INTO `classdiagram.class`(`packageId`,`className`, `instanceType`) 
+                VALUES(:packageId,:className, :instanceType)");
+        $sql->bindParam(":packageId", $packageId);
         $sql->bindParam(":className", $className);
-        $sql->bindParam(":methodID", $method->getMethodID());
-        $sql->bindParam(":methodName", $method->getMethodName());
-        $sql->bindParam(":returnType", $method->getReturnType());
-        $sql->bindParam(":returnTypeModifier", $method->getReturnTypeModifier());
-        $sql->bindParam(":visibility", $method->getVisibility());
-        $sql->bindParam(":isStatic", $method->getIsStatic());
-        $sql->bindParam(":isAbstract", $method->getIsAbstract());
+        $sql->bindParam(":instanceType", $instanceType);
         try {
             $sql->execute();
+            $classId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at insert to method table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $classId;
     }
 
-    public static function insertToParameterTable($diagramID, $methodID, Parameter $parameter)
+    public static function insertIntoMethod($classId, $methodName, $visibility, $returnType, $instanceType, $isConstructor)
     {
-        $conn = Database::connectToDB("classDiagram");
-        $sql = $conn->prepare("INSERT INTO parameter(diagramID,methodID, parameterID, parameterName, parameterType, typeModifier) 
-            VALUES(:diagramID,:methodID, :parameterID, :parameterName, :parameterType, :typeModifier)");
-        $sql->bindParam(":diagramID", $diagramID);
-        $sql->bindParam(":methodID", $methodID);
-        $sql->bindParam(":parameterID", $parameter->getParamID());
-        $sql->bindParam(":parameterName", $parameter->getParamName());
-        $sql->bindParam(":parameterType", $parameter->getParamType());
-        $sql->bindParam(":typeModifier", $parameter->getTypeModifier());
+        $conn = Database::getConnection();
+        $methodId = - 1;
+        $visibility = strtolower($visibility);
+        $instanceType = strtoupper($instanceType);
+        $sql = $conn->prepare("INSERT INTO `classdiagram.method`(`classId`, `methodName`, `visibility`, `returnType`, `instanceType`, `isConstructor`) 
+            VALUES(:classId,:methodName,:visibility, :returnType, :instanceType, :isConstructor)");
+        $sql->bindParam(":classId", $classId);
+        $sql->bindParam(":methodName", $methodName);
+        $sql->bindParam(":visibility", $visibility);
+        $sql->bindParam(":returnType", $returnType);
+        $sql->bindParam(":instanceType", $instanceType);
+        $sql->bindParam(":isConstructor", $isConstructor);
         try {
             $sql->execute();
+            $methodId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at insert to parameter table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $methodId;
     }
 
-    public static function selectFromDiagramByDiagramID($diagram)
+    public static function insertIntoParam($methodId, $paramName, $dataType, $seqIdx, $isObject)
     {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM diagram WHERE diagramID = :diagramID LIMIT 1");
-        $sql->bindParam(':diagramID', $diagramID);
+        $conn = Database::getConnection();
+        $paramId = - 1;
+        $sql = $conn->prepare("INSERT INTO `classdiagram.param`(`methodId`,`paramName`, `dataType`, `seqIdx`, `isObject`) 
+            VALUES(:methodId,:paramName, :dataType, :seqIdx, :isObject)");
+        $sql->bindParam(":methodId", $methodId);
+        $sql->bindParam(":paramName", $paramName);
+        $sql->bindParam(":dataType", $dataType);
+        $sql->bindParam(":seqIdx", $seqIdx);
+        $sql->bindParam(":isObject", $isObject);
         try {
             $sql->execute();
-            $result = $sql->fetch();
-            return $result;
+            $paramId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at selecting from diagram table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $paramId;
     }
 
-    public static function selectFromDiagramByDiagramName($diagramName)
+    public static function selectFromDiagramByDiagramId($diagramId)
     {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM diagram WHERE diagramName = :diagramName LIMIT 1");
-        $sql->bindParam(':diagramName', $diagramName);
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `classdiagram.diagram` WHERE `diagramId` = :diagramId");
+        $sql->bindParam(':diagramId', $diagramId);
         try {
             $sql->execute();
-            $result = $sql->fetch();
-            return $result;
+            $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            echo "Error at selecting from diagram table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
 
     public static function selectAllFromDiagram()
     {
-        $conn = Database::connectToDB("classDiagram");
-        $sql = $conn->prepare("SELECT * FROM diagram");
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `classdiagram.diagram`");
         try {
             $sql->execute();
             $result = $sql->fetchAll();
-            return $result;
         } catch (PDOException $e) {
-            echo "Error at selecting from diagram table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
 
-    public static function selectClassFromNodeName($diagramID, $nodeName)
+    public static function selectClassByDiagramIdAndObjectBase($diagramId, $baseIdentifier)
     {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM class WHERE diagramID = :diagramID AND className = :nodeName LIMIT 1");
-        $sql->bindParam(':diagramID', $diagramID);
-        $sql->bindParam(':nodeName', $nodeName);
-        try {
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result;
-        } catch (PDOException $e) {
-            echo "Error at selecting from class table " . $e->getMessage() . "<br>";
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function selectMethodByMethodName($diagramID, $className, $methodName)
-    {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND 
-            className = :className AND 
-            methodName = :methodName LIMIT 1");
-        $sql->bindParam(':diagramID', $diagramID);
-        $sql->bindParam(':className', $className);
-        $sql->bindParam(':methodName', $methodName);
-        try {
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result;
-        } catch (PDOException $e) {
-            echo "Error at selecting from method table " . $e->getMessage() . "<br>";
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function selectParameterByMethodID($diagramID, $methodID)
-    {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM parameter WHERE diagramID = :diagramID AND
-            methodID = :methodID");
-        $sql->bindParam(':diagramID', $diagramID);
-        $sql->bindParam(':methodID', $methodID);
+        $conn = Database::getConnection();
+        $statement = "SELECT p.namespace, c.classId, c.className, c.InstanceType FROM `classdiagram.diagram` d 
+        INNER JOIN `classdiagram.package` p on d.diagramId = p.diagramId
+        INNER JOIN `classdiagram.class` c on p.packageId = c.packageId
+        WHERE d.diagramId = :diagramId AND c.className = :baseIdentifier";
+        $sql = $conn->prepare($statement);
+        $sql->bindParam(':diagramId', $diagramId);
+        $sql->bindParam(':baseIdentifier', $baseIdentifier);
         try {
             $sql->execute();
             $result = $sql->fetchAll();
-            return $result;
         } catch (PDOException $e) {
-            echo "Error at selecting from parameter table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
-
-    public static function selectMethodByClassName($diagramID, $className)
-    {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("SELECT * FROM method WHERE diagramID = :diagramID AND
-            className = :className");
-        $sql->bindParam(':diagramID', $diagramID);
-        $sql->bindParam(':className', $className);
+    public static function selectMethodByClassIdAndMessageName($classId,$messageName){
+        $conn = Database::getConnection();
+        $statement = "SELECT * FROM `classdiagram.method` 
+        WHERE classId = :classId AND methodName = :messageName";
+        $sql = $conn->prepare($statement);
+        $sql->bindParam(':classId', $classId);
+        $sql->bindParam(':messageName', $messageName);
         try {
             $sql->execute();
             $result = $sql->fetchAll();
-            return $result;
         } catch (PDOException $e) {
-            echo "Error at selecting from method table " . $e->getMessage() . "<br>";
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
-
-    public static function deleteFromDiagram($diagramName)
-    {
-        $conn = Database::connectToDB("classdiagram");
-        $sql = $conn->prepare("DELETE FROM diagram WHERE diagramName = :diagramName");
-        $sql->bindParam(":diagramName", $diagramName);
+    public static function selectParamByMethodIdAndArguName($methodId,$arguName){
+        $conn = Database::getConnection();
+        $statement = "SELECT * FROM `classdiagram.param`
+        WHERE methodId = :methodId AND paramName = :arguName";
+        $sql = $conn->prepare($statement);
+        $sql->bindParam(':methodId', $methodId);
+        $sql->bindParam(':arguName', $arguName);
         try {
             $sql->execute();
-            return true;
+            $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            echo "Error at delete diagram " . $e->getMessage() . "<br>";
-            return false;
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
-
-    public static function renameDiagram($oldName, $newName, $path)
-    {
-        $conn = Database::connectToDB('classDiagram');
-        $sql = $conn->prepare("UPDATE diagram SET diagramName = :newName, fileTarget = :path WHERE diagramName = :oldName");
-        $sql->bindParam(":newName", $newName);
-        $sql->bindParam(":oldName", $oldName);
-        $sql->bindParam(":path", $path);
+    public static function deleteFromDiagramByDiagramId($diagramId){
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("DELETE FROM `classdiagram.diagram` where diagramId = :diagramId");
+        $sql->bindParam(':diagramId', $diagramId);
         try {
             $sql->execute();
-            return true;
+            $result = true;
         } catch (PDOException $e) {
-            echo "Error at rename diagram " . $e->getMessage() . "<br>";
-            return false;
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $result;
     }
 }
 ?>

@@ -1,12 +1,6 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "$root/PHP/Database/CallGraphService.php";
-    include_once "$root/Diagram/SequenceDiagram/ObjectNode.php";
-    include_once "$root/Diagram/SequenceDiagram/Message.php";
-    include_once "$root/Diagram/SequenceDiagram/Argument.php";
-    use SequenceDiagram\ObjectNode;
-    use SequenceDiagram\Message;
-    use SequenceDiagram\Argument;
     class SimpleSDProcessor{
         private static $graphID;
         public static function processSimpleSD($xml,$graphID){

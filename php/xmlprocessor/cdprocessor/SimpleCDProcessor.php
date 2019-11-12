@@ -1,12 +1,5 @@
 <?php
-    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/PHP/Database/ClassDiagramService.php";
-    include_once "$root/Diagram/ClassDiagram/ObjectClass.php";
-    include_once "$root/Diagram/ClassDiagram/Method.php";
-    include_once "$root/Diagram/ClassDiagram/Parameter.php";
-    use ClassDiagram\ObjectClass;
-    use ClassDiagram\Method;
-    use ClassDiagram\Parameter;
+    require_once "php/database/ClassDiagramService.php";
     class SimpleCDProcessor{
         private static $diagramID;
         public static function processSimpleCD($xml, $diagramID){

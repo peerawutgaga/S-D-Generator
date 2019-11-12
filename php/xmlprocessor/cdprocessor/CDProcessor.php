@@ -1,9 +1,6 @@
 <?php
-    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once "SimpleCDProcessor.php";
     require_once "TraditionalCDProcessor.php";
-    include_once "$root/Diagram/ClassDiagram/ClassDiagram.php";
-    use ClassDiagram\ClassDiagram;
     class CDProcessor{
         private static $diagramID;
         public static function readClassDiagram($filename,$targetFile){

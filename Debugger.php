@@ -1,6 +1,6 @@
 <?php
-require_once "./php/database/CallGraphService.php";
-$result = CallGraphService::updateGraphSetCallGraphName(4,"Test");
-Script::consoleLog($result);
-//Script::printObject($result);
+require_once "./php/database/ClassDiagramService.php";
+$result = ClassDiagramService::deleteFromDiagramByDiagramId(2);
+//Script::consoleLog($result);
+Script::printObject($result);
 ?>
