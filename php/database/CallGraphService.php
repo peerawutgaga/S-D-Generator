@@ -41,7 +41,20 @@ class CallGraphService
         }
         return $objectId;
     }
-
+    public static function insertIntoGateObject($objectId,$callGraphId,$gateMsgId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.gateObject`(`objectId`, `callGraphId`, `gateMsgId`) VALUES(:objectId,:callGraphId,:gateMsgId)");
+        $sql->bindParam(":callGraphId", $callGraphId);
+        $sql->bindParam(":objectId", $objectId);
+        $sql->bindParam(":gateMsgId", $gateMsgId);
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+    }
     public static function insertIntoMessage($fromObjectId, $toObjectId, $messageName, $messageType)
     {
         $conn = Database::getConnection();
@@ -62,6 +75,21 @@ class CallGraphService
             $conn = null;
         }
         return $messageId;
+    }
+    public static function insertIntoReturnMessage($messageId,$dataType,$parentMessageId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.returnmessage`(`messageId`, `dataType`,`parentMessageId`)
+                VALUES(:messageId, :dataType, :parentMessageId)");
+        $sql->bindParam(":messageId", $messageId);
+        $sql->bindParam(":dataType", $dataType);
+        $sql->bindParam(":parentMessageId", $parentMessageId);
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
     }
 
     public static function insertIntoArgument($messageId, $arguName, $seqIdx, $dataType)
@@ -84,7 +112,24 @@ class CallGraphService
         }
         return $arguId;
     }
-
+    public static function insertIntoGuardCondition($messageId,$statement){
+        $conn = Database::getConnection();
+        $guardCondId = - 1;
+        $sql = $conn->prepare("INSERT INTO `callgraph.guardcondition`(`messageId`,`statement`)
+        VALUES(:messageId,:statement)");
+        $sql->bindParam(":messageId",$messageId);
+        $sql->bindParam(":statement",$statement);
+        try {
+            $sql->execute();
+            $guardCondId = $sql->lastInsertId();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $guardCondId;
+        
+    }
     public static function selectFromGraphByCallGraphId($callGraphID)
     {
         $conn = Database::getConnection();
@@ -179,12 +224,28 @@ class CallGraphService
         }
         return $result;
     }
+    public static function selectMessageByFromAndToObjectId($fromObjectId, $toObjectId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `fromObjectId` = :fromObjectId AND `toObjectId` = :toObjectId");
+        $sql->bindParam(':fromObjectId', $fromObjectId);
+        $sql->bindParam(':toObjectId', $toObjectId);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
 
     public static function deleteFromGraphByCallGraphId($callGraphId)
     {
         $conn = Database::getConnection();
         $result = false;
         $sql = $conn->prepare("DELETE FROM `callgraph.graph` WHERE `callGraphId` = :callGraphId");
+        
         $sql->bindParam(":callGraphId", $callGraphId);
         try {
             $sql->execute();

@@ -110,7 +110,20 @@ class ClassDiagramService
         }
         return $paramId;
     }
-
+    public static function insertIntoInheritance($superClassId,$childClassId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `classdiagram.inheritance`(`superClassId`,`childClassId`)
+            VALUES(:superClassId,:childClassId)");
+        $sql->bindParam(":superClassId", $superClassId);
+        $sql->bindParam(":childClassId", $childClassId);
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+    }
     public static function selectFromDiagramByDiagramId($diagramId)
     {
         $conn = Database::getConnection();

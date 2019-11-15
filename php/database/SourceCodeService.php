@@ -1,92 +1,44 @@
 <?php
 require_once "Database.php";
+include_once "php/utilities/Script.php";
 
 class SourceCodeService
 {
-    //TODO Interface change aware
-    public static function insertFile($fileName, $fileType, $language, $location)
-    {
-        $conn = Database::connectToDB("sourceCode");
-        $sql = $conn->prepare("INSERT INTO fileTable(fileName, fileType, language, location) 
-            VALUES(:fileName, :fileType, :language, :location)");
-        $sql->bindParam(":fileName", $fileName);
-        $sql->bindParam(":fileType", $fileType);
-        $sql->bindParam(":language", $language);
-        $sql->bindParam(":location", $location);
-        try {
-            $sql->execute();
-            return true;
-        } catch (PDOException $e) {
-            // echo "Error at insert to file table " . $e->getMessage();
-            return false;
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function renameFile($oldName, $newName, $path)
-    {
-        $conn = Database::connectToDB('sourcecode');
-        $sql = $conn->prepare("UPDATE fileTable SET fileName = :newName, location = :path WHERE fileName = :oldName");
-        $sql->bindParam(":newName", $newName);
-        $sql->bindParam(":oldName", $oldName);
-        $sql->bindParam(":path", $path);
-        try {
-            $sql->execute();
-            return true;
-        } catch (PDOException $e) {
-            echo "Error at rename file " . $e->getMessage() . "<br>";
-            return false;
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function selectAllFromFileTable()
-    {
-        $conn = Database::connectToDB('sourcecode');
-        $sql = $conn->prepare("SELECT * FROM fileTable");
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-            return $result;
-        } catch (PDOException $e) {
-            echo "Error at selecting from file table " . $e->getMessage() . "<br>";
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function selectFromFileTableByFileName($fileName)
-    {
-        $conn = Database::connectToDB('sourcecode');
-        $sql = $conn->prepare("SELECT * FROM fileTable WHERE fileName = :fileName LIMIT 1");
-        $sql->bindParam(":fileName", $fileName);
-        try {
-            $sql->execute();
-            $result = $sql->fetch();
-            return $result;
-        } catch (PDOException $e) {
-            echo "Error at selecting from file table " . $e->getMessage() . "<br>";
-        } finally{
-            $conn = null;
-        }
-    }
-
-    public static function deleteFile($filename)
-    {
-        $conn = Database::connectToDB("sourcecode");
-        $sql = $conn->prepare("DELETE FROM fileTable WHERE fileName = :filename");
+    public static function insertIntoSourceCodeFile($filename,$filePayload,$language,$sourceType){
+        $conn = Database::getConnection();
+        $fileId = - 1;
+        $language = strtoupper($language);
+        $sourceType = strtoupper($sourceType);
+        $sql = $conn->prepare("INSERT INTO `code.sourcecodefile` (`filename`, `filePayload`,`language`,`sourceType`) VALUES(:filename,:filePayload,:language,:sourceType)");
         $sql->bindParam(":filename", $filename);
+        $sql->bindParam(":filePayload", $filePayload);
+        $sql->bindParam(":language", $language);
+        $sql->bindParam(":sourceType", $sourceType);
         try {
             $sql->execute();
-            return true;
+            $fileId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            echo "Error at delete file " . $e->getMessage() . "<br>";
-            return false;
+            Script::consoleLog($e->getMessage());
         } finally{
             $conn = null;
         }
+        return $fileId;
+    }
+    public static function updateSourceCodeFileSetFilePayloadByFileId($filePayload,$fileId){
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filePayload = :filePayload WHERE fileId = :fileId");
+        $sql->bindParam(":filePayload", $filePayload);
+        $sql->bindParam(":fileId", $fileId);
+        try {
+            $sql->execute();
+            $result = true;
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
     }
 }
 ?>
