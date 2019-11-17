@@ -1,5 +1,5 @@
 .DS_Store
 Source\ Code\ Files/
-Class\ Diagrams/
-Sequence\ Diagrams/
+ClassDiagrams/
+SequenceDiagrams/
 Debugger.php
