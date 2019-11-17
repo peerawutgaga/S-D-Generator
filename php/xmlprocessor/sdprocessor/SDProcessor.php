@@ -1,12 +1,11 @@
 <?php
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "SimpleSDProcessor.php";
-    require_once "TraditionalSDProcessor.php";
-    include_once "$root/Diagram/SequenceDiagram/CallGraph.php";
+    require_once $root."/php/xmlprocessor/sdprocessor/SimpleSDProcessor.php";
+    require_once $root.'/php/database/CallGraphService.php';
     class SDProcessor{
-        private static $graphID;
-        public static function readSequenceDiagram($fileName, $targetFile){
-            $xml = simplexml_load_file($targetFile);
+        private static $callGraphId;
+        public static function readSequenceDiagramFile($filename, $filePath){
+            $xml = simplexml_load_file($filePath);
             if ($xml === false) {
                 echo "Failed loading XML: "."<br>";
                 foreach(libxml_get_errors() as $error) {
@@ -14,20 +13,12 @@
                 }
                 die("XMLProcessor Terminated.");
             }
-            self::saveFileToDB($fileName,$targetFile);
+            self::$callGraphId = CallGraphService::insertIntoCallGraph($filename, $filePath);
             if($xml['Xml_structure'] == 'simple'){
-                
-                SimpleSDProcessor::processSimpleSD($xml,self::$graphID);
+                SimpleSDProcessor::processSimpleSD($xml,self::$callGraphId);
             }else{
-                //TODO Echo warning when sent
-               // TraditionalSDProcessor::processTraditionalSD($xml,self::$graphID);
+               Script::alert("Traditional XML format does not support.");
             }
-        }
-        private static function saveFileToDB($fileName,$targetFile){
-            $callGraph = new CallGraph($fileName);
-            $callGraph->setFileTarget($targetFile);
-            CallGraphService::insertToGraphTable($callGraph);
-            self::$graphID = CallGraphService::selectFromGraphByGraphName($fileName)['graphID'];
         }
     }
 ?>

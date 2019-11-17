@@ -1,6 +1,7 @@
  <?php
+ 
 require_once "Database.php";
-include_once "php/utilities/Script.php";
+include_once "../utilities/Script.php";
 
 class CallGraphService
 {

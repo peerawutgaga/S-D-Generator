@@ -40,5 +40,21 @@ class SourceCodeService
         }
         return $result;
     }
+    public static function updateSouceCodeFileSetFilenameByFileId($filename,$fileId){
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filename = :filename WHERE fileId = :fileId");
+        $sql->bindParam(":filename", $filename);
+        $sql->bindParam(":fileId", $fileId);
+        try {
+            $sql->execute();
+            $result = true;
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        } finally{
+            $conn = null;
+        }
+        return $result;
+    }
 }
 ?>

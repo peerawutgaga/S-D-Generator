@@ -1,13 +1,15 @@
 <?php
     class Script{
-        //TODO Revise if it still neeeds or not
         public static function alert($message){
             echo "<script type='text/javascript'>
                 alert('$message');
-                window.location.href='../index.php';
             </script>";
         }
-
+        public static function returnTo($pageURL){
+            echo "<script type='text/javascript'>
+                window.location.href='$pageURL';
+            </script>";
+        }
         public static function consoleLog( $message ) {
             $message = str_replace("'","\'",$message);
             echo "<script>console.log( '$message' );</script>";
