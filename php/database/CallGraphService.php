@@ -1,7 +1,7 @@
  <?php
- 
-require_once "Database.php";
-include_once "../utilities/Script.php";
+ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/php/database/Database.php";
+require_once "$root/php/utilities/Script.php";
 
 class CallGraphService
 {
@@ -19,7 +19,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+            unset($conn);
         }
         return $callGraphId;
     }
@@ -38,7 +38,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $objectId;
     }
@@ -53,7 +53,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
     }
     public static function insertIntoMessage($fromObjectId, $toObjectId, $messageName, $messageType)
@@ -73,7 +73,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $messageId;
     }
@@ -89,7 +89,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
     }
 
@@ -109,7 +109,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $arguId;
     }
@@ -126,7 +126,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $guardCondId;
         
@@ -142,7 +142,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -157,7 +157,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -173,7 +173,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -189,7 +189,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -205,7 +205,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -221,7 +221,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -236,7 +236,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -254,7 +254,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -272,7 +272,7 @@ class CallGraphService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }

@@ -20,7 +20,7 @@ class SourceCodeService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $fileId;
     }
@@ -36,7 +36,7 @@ class SourceCodeService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -52,7 +52,7 @@ class SourceCodeService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }

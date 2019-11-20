@@ -19,7 +19,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $diagramId;
     }
@@ -38,7 +38,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $packageId;
     }
@@ -59,7 +59,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $classId;
     }
@@ -84,7 +84,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $methodId;
     }
@@ -106,7 +106,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $paramId;
     }
@@ -121,7 +121,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
     }
     public static function selectFromDiagramByDiagramId($diagramId)
@@ -135,7 +135,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -150,7 +150,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -171,7 +171,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -188,7 +188,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -205,7 +205,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
@@ -220,7 +220,7 @@ class ClassDiagramService
         } catch (PDOException $e) {
             Script::consoleLog($e->getMessage());
         } finally{
-            $conn = null;
+             unset($conn);
         }
         return $result;
     }
