@@ -36,7 +36,7 @@
             }else{
                 Script::alert("Upload failed.");
             }
-            //Script::returnTo("../../index.php");
+            Script::returnTo("../../index.php");
         }
         public static function uploadCD(){
             $isUploadSuccess = Uploader::upload("../../ClassDiagrams/","CDFile");

@@ -2,6 +2,7 @@
     $root = realpath($_SERVER["DOCUMENT_ROOT"]);
     require_once $root."/php/xmlprocessor/sdprocessor/SimpleSDProcessor.php";
     require_once $root.'/php/database/CallGraphService.php';
+    require_once $root.'/php/utilities/Script.php';
     class SDProcessor{
         private static $callGraphId;
         public static function readSequenceDiagramFile($filename, $filePath){
