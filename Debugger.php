@@ -1,5 +1,9 @@
 <?php
-require_once "php/xmlprocessor/sdprocessor/SDProcessor.php";
-SDProcessor::readSequenceDiagram("test", "./SequenceDiagrams/1573976903_getGPAX.xml");
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/php/xmlprocessor/sdprocessor/SDProcessor.php";
+require_once "$root/php/database/CallGraphProcessingService.php";
+
+ SDProcessor::readSequenceDiagramFile("test", "$root/SequenceDiagrams/1574255330_getGPAX.xml");
+
 
 ?>

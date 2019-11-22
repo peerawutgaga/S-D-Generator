@@ -56,5 +56,19 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
             Script::consoleLog($e->getMessage());
         }
     }
+    public static function selectObjectIdByObjectIdStr($objectIdStr){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT objectId FROM `processing.objectnode` WHERE objectIdStr = :objectIdStr");
+        $sql->bindParam(':objectIdStr', $objectIdStr);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+        } catch (PDOException $e) {
+            Script::consoleLog($e->getMessage());
+        }finally{
+            unset($conn);
+        }
+        return $result;
+    }
 }
 ?>
