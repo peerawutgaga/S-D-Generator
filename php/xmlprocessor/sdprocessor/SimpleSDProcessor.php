@@ -70,38 +70,63 @@ class SimpleSDProcessor
             }
             if ($actionType == "Call") {
                 $operationId = $message->ActionType->ActionTypeCall["Operation"];
-                $messageName = self::$xml->xpath("//Operation[@Id='$operationId']")[0]["Name"];
-                if ($message["Type"] == "Create Message") {
-                    $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);
-                } else {
+                if (isset($operationId)) {
+                    $messageName = self::$xml->xpath("//Operation[@Id='$operationId']")[0]["Name"];
                     $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::callingMessageType);
-                }
-                CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
-                if($message["ReturnMessage"]!=null){
-                    self::handleReturnMessage($messageId,$message,$operationId,$fromObjectId["objectId"],$toObjectId["objectId"]);
+                    CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
+                    if ($message["ReturnMessage"] != null) {
+                        self::handleReturnMessage($messageId, $message, $operationId, $fromObjectId["objectId"], $toObjectId["objectId"]);
+                    }
+                    self::identifyArgument($messageId, $operationId);
+                }else{
+                    $messageName = $message["Name"];
+                    if ($message["Type"] == "Create Message"){
+                        $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);                                           
+                    }else{
+                        $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::callingMessageType);
+                    }
+                    CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
                 }
             }
         }
     }
 
-    private static function handleReturnMessage($parentMsgId,$message,$operationId,$fromObjectId,$toObjectId)
+    private static function handleReturnMessage($parentMsgId, $message, $operationId, $fromObjectId, $toObjectId)
     {
         $returnMessageId = $message["ReturnMessage"];
         $returnType = self::$xml->xpath("//Operation[@Id='$operationId']")[0]->ReturnType;
-        $messageName = self::$xml->xpath("//Message[@Id='$returnMessageId']")[0]["Name"]; 
+        $messageName = self::$xml->xpath("//Message[@Id='$returnMessageId']")[0]["Name"];
         $isObject = 0;
-        if(isset($returnType->Class)){  
+        if (isset($returnType->Class)) {
             $isObject = 1;
             $dataType = $returnType->Class["Name"];
-        }else{ 
-            $dataType = $returnType->DataType["Name"];       
+        } else {
+            $dataType = $returnType->DataType["Name"];
         }
-        $messageId = CallGraphService::insertIntoMessage($toObjectId,$fromObjectId, $messageName, self::returnMessageType);
-        CallGraphService::insertIntoReturnMessage($messageId, $dataType, $isObject, $parentMsgId);     
+        $messageId = CallGraphService::insertIntoMessage($toObjectId, $fromObjectId, $messageName, self::returnMessageType);
+        CallGraphService::insertIntoReturnMessage($messageId, $dataType, $isObject, $parentMsgId);
     }
 
-    private static function identifyArgument($message)
-    {}
+    private static function identifyArgument($messageId, $operationId)
+    {
+        $operation = self::$xml->xpath("//Operation[@Id='$operationId']")[0];
+        if(isset($operation->ModelChildren->Parameter)){
+            $seqIdx = 1;
+            foreach ($operation->ModelChildren->Parameter as $argument){
+                $isObject = 0;
+                $arguName = $argument["Name"];
+                if (isset($argument->Type->Class)) {
+                    $isObject = 1;
+                    $dataType = $argument->Type->Class["Name"];
+                } else {
+                    $dataType = $argument->Type->DataType["Name"];
+                }
+                echo $messageId." ".$arguName." ".$seqIdx." ".$dataType." ".$isObject."<br>";
+                CallGraphService::insertIntoArgument($messageId, $arguName, $seqIdx, $dataType,$isObject);
+                $seqIdx++;
+            }
+        }
+    }
     // TODO Guard condition identify
     // TODO Reference Diagram linking
 }

@@ -93,25 +93,26 @@ class CallGraphService
         }
     }
 
-    public static function insertIntoArgument($messageId, $arguName, $seqIdx, $dataType)
+    public static function insertIntoArgument($messageId, $arguName, $seqIdx, $dataType, $isObject)
     {
         $conn = Database::getConnection();
         $arguId = - 1;
-        $sql = $conn->prepare("INSERT INTO `callgraph.argument`(`messageId`, `arguName`, `seqIdx`, `dataType`) 
-                VALUES(:messageID, :arguName, :seqIdx, :dataType)");
+        $sql = $conn->prepare("INSERT INTO `callgraph.argument`(`messageId`, `arguName`, `seqIdx`, `dataType`,`isObject`) 
+                VALUES(:messageID, :arguName, :seqIdx, :dataType,:isObject)");
         $sql->bindParam(":messageID", $messageId);
         $sql->bindParam(":arguName", $arguName);
         $sql->bindParam(":seqIdx", $seqIdx);
         $sql->bindParam(":dataType", $dataType);
+        $sql->bindParam(":isObject", $isObject);
         try {
             $sql->execute();
-            $arguId = $sql->lastInsertId();
+            $arguId = $conn->lastInsertId();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
-             unset($conn);
+            unset($conn);
         }
-        return $arguId;
+       return $arguId;
     }
     public static function insertIntoGuardCondition($messageId,$statement){
         $conn = Database::getConnection();
