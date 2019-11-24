@@ -1,8 +1,9 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/database/Database.php";
-require_once "$root/php/utilities/Script.php";
+require_once "$root/php/utilities/Logger.php";
 class CallGraphProcessingService{
+    
     public static function insertIntoProcessingObject($objectId,$objectIdStr){
         $conn = Database::getConnection();
         $sql = $conn->prepare("INSERT INTO `processing.objectnode` (`objectId`, `objectIdStr`) VALUES(:objectId,:objectIdStr)");
@@ -11,7 +12,7 @@ class CallGraphProcessingService{
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphProcessingService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -28,7 +29,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
         } finally{
              unset($conn);
         }
@@ -44,7 +45,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
         }
     }
     private static function deleteAllFromProcessingObjectNode($conn){
@@ -53,7 +54,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
         }
     }
     public static function selectObjectIdByObjectIdStr($objectIdStr){
@@ -64,7 +65,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
         }finally{
             unset($conn);
         }

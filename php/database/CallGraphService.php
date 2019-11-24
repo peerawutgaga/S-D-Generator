@@ -1,8 +1,7 @@
  <?php
  $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/database/Database.php";
-require_once "$root/php/utilities/Script.php";
-
+require_once "$root/php/utilities/Logger.php";
 class CallGraphService
 {
 
@@ -17,7 +16,7 @@ class CallGraphService
             $sql->execute();
             $callGraphId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
             unset($conn);
         }
@@ -36,7 +35,7 @@ class CallGraphService
             $sql->execute();
             $objectId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -51,7 +50,7 @@ class CallGraphService
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -71,25 +70,26 @@ class CallGraphService
             $sql->execute();
             $messageId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
         return $messageId;
     }
-    public static function insertIntoReturnMessage($messageId,$dataType,$parentMessageId){
+    public static function insertIntoReturnMessage($messageId,$dataType,$isObject,$parentMessageId){
         $conn = Database::getConnection();
-        $sql = $conn->prepare("INSERT INTO `callgraph.returnmessage`(`messageId`, `dataType`,`parentMessageId`)
-                VALUES(:messageId, :dataType, :parentMessageId)");
+        $sql = $conn->prepare("INSERT INTO `callgraph.returnmessage`(`messageId`, `dataType`,`isObject`,`parentMessageId`)
+                VALUES(:messageId, :dataType,:isObject ,:parentMessageId)");
         $sql->bindParam(":messageId", $messageId);
         $sql->bindParam(":dataType", $dataType);
+        $sql->bindParam(":isObject", $isObject);
         $sql->bindParam(":parentMessageId", $parentMessageId);
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
-             unset($conn);
+            unset($conn);
         }
     }
 
@@ -107,7 +107,7 @@ class CallGraphService
             $sql->execute();
             $arguId = $sql->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -124,7 +124,7 @@ class CallGraphService
             $sql->execute();
             $guardCondId = $sql->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -140,7 +140,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -155,7 +155,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -171,7 +171,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -187,7 +187,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -203,7 +203,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -219,7 +219,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -234,7 +234,7 @@ class CallGraphService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -252,7 +252,7 @@ class CallGraphService
             $sql->execute();
             $result = true;
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -270,7 +270,7 @@ class CallGraphService
             $sql->execute();
             $result = true;
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+           Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
         }

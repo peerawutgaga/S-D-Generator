@@ -1,11 +1,9 @@
 <?php
-require_once "Database.php";
-include_once "php/utilities/Script.php";
-
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/php/database/Database.php";
+require_once "$root/php/utilities/Logger.php";
 class ClassDiagramService
 {
-
-    // TODO Interface change aware
     public static function insertIntoDiagram($diagramName, $filePath)
     {
         $conn = Database::getConnection();
@@ -17,7 +15,7 @@ class ClassDiagramService
             $sql->execute();
             $diagramId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -36,7 +34,7 @@ class ClassDiagramService
             $sql->execute();
             $packageId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -57,7 +55,7 @@ class ClassDiagramService
             $sql->execute();
             $classId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -82,7 +80,7 @@ class ClassDiagramService
             $sql->execute();
             $methodId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -104,7 +102,7 @@ class ClassDiagramService
             $sql->execute();
             $paramId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -119,7 +117,7 @@ class ClassDiagramService
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -133,7 +131,7 @@ class ClassDiagramService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -148,7 +146,7 @@ class ClassDiagramService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -169,7 +167,7 @@ class ClassDiagramService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -186,7 +184,7 @@ class ClassDiagramService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -203,7 +201,7 @@ class ClassDiagramService
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -218,7 +216,7 @@ class ClassDiagramService
             $sql->execute();
             $result = true;
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
         } finally{
              unset($conn);
         }

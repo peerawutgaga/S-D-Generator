@@ -1,7 +1,7 @@
 <?php
-require_once "Database.php";
-include_once "php/utilities/Script.php";
-
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/php/database/Database.php";
+require_once "$root/php/utilities/Logger.php";
 class SourceCodeService
 {
     public static function insertIntoSourceCodeFile($filename,$filePayload,$language,$sourceType){
@@ -18,7 +18,7 @@ class SourceCodeService
             $sql->execute();
             $fileId = $conn->lastInsertId();
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("SourceCodeService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -34,7 +34,7 @@ class SourceCodeService
             $sql->execute();
             $result = true;
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("SourceCodeService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -50,7 +50,7 @@ class SourceCodeService
             $sql->execute();
             $result = true;
         } catch (PDOException $e) {
-            Script::consoleLog($e->getMessage());
+            Logger::logDatabaseError("SourceCodeService",$e->getMessage());
         } finally{
              unset($conn);
         }
