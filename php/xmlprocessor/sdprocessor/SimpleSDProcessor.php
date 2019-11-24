@@ -29,6 +29,7 @@ class SimpleSDProcessor
         CallGraphProcessingService::cleanProcessingDatabase();
         self::identifyNode($objectList);
         self::identifyMessage($messageList);
+        self::identifyGuardCondition();
     }
 
     private static function identifyNode($objectList)
@@ -78,15 +79,23 @@ class SimpleSDProcessor
                         self::handleReturnMessage($messageId, $message, $operationId, $fromObjectId["objectId"], $toObjectId["objectId"]);
                     }
                     self::identifyArgument($messageId, $operationId);
-                }else{
+                } else {
                     $messageName = $message["Name"];
-                    if ($message["Type"] == "Create Message"){
-                        $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);                                           
-                    }else{
+                    if ($message["Type"] == "Create Message") {
+                        $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);
+                    }  else {
                         $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::callingMessageType);
                     }
                     CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
                 }
+                if (isset($message->ActionType->ActionTypeCall["Guard"])) {
+                    $statement = $message->ActionType->ActionTypeCall["Guard"];
+                    CallGraphService::insertIntoGuardCondition($messageId, $statement);
+                }
+            }else if ($actionType == "Destroy") {
+                $messageName = $message["Name"];
+                $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::detroyMessageType);
+                CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
             }
         }
     }
@@ -110,9 +119,9 @@ class SimpleSDProcessor
     private static function identifyArgument($messageId, $operationId)
     {
         $operation = self::$xml->xpath("//Operation[@Id='$operationId']")[0];
-        if(isset($operation->ModelChildren->Parameter)){
+        if (isset($operation->ModelChildren->Parameter)) {
             $seqIdx = 1;
-            foreach ($operation->ModelChildren->Parameter as $argument){
+            foreach ($operation->ModelChildren->Parameter as $argument) {
                 $isObject = 0;
                 $arguName = $argument["Name"];
                 if (isset($argument->Type->Class)) {
@@ -121,13 +130,25 @@ class SimpleSDProcessor
                 } else {
                     $dataType = $argument->Type->DataType["Name"];
                 }
-                echo $messageId." ".$arguName." ".$seqIdx." ".$dataType." ".$isObject."<br>";
-                CallGraphService::insertIntoArgument($messageId, $arguName, $seqIdx, $dataType,$isObject);
-                $seqIdx++;
+                CallGraphService::insertIntoArgument($messageId, $arguName, $seqIdx, $dataType, $isObject);
+                $seqIdx ++;
             }
         }
     }
-    // TODO Guard condition identify
+
+    private static function identifyGuardCondition()
+    {
+        $combinedFragments = self::$xml->xpath("//CombinedFragment[@OperatorKind='alt']");
+        foreach ($combinedFragments as $combinedFragment) {
+            $operands = $combinedFragment->ModelChildren->InteractionOperand;            
+            foreach ($operands as $operand) {
+                $messageIdStr = $operand->Messages->Message[0]["Idref"];
+                $statement = $operand->Guard->InteractionConstraint[0]["Constraint"];
+                $messageId = CallGraphProcessingService::selectMessageIdByMessageIdStr($messageIdStr);
+                CallGraphService::insertIntoGuardCondition($messageId[0]["messageId"], $statement);
+            }
+        }
+    }
     // TODO Reference Diagram linking
 }
 ?>

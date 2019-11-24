@@ -123,8 +123,8 @@ class CallGraphService
         $sql->bindParam(":statement",$statement);
         try {
             $sql->execute();
-            $guardCondId = $sql->lastInsertId();
-        } catch (PDOException $e) {
+            $guardCondId = $conn->lastInsertId();
+        } catch (Exception $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
              unset($conn);
@@ -139,7 +139,7 @@ class CallGraphService
         $sql->bindParam(':callGraphID', $callGraphID);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -154,7 +154,7 @@ class CallGraphService
         $sql = $conn->prepare("SELECT * FROM `callgraph.graph`");
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -170,7 +170,7 @@ class CallGraphService
         $sql->bindParam(':callGraphID', $callGraphId);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -186,7 +186,7 @@ class CallGraphService
         $sql->bindParam(':objectId', $objectId);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -202,7 +202,7 @@ class CallGraphService
         $sql->bindParam(':fromObjectId', $fromObjectId);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -218,7 +218,7 @@ class CallGraphService
         $sql->bindParam(':toObjectId', $toObjectId);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{
@@ -233,7 +233,7 @@ class CallGraphService
         $sql->bindParam(':toObjectId', $toObjectId);
         try {
             $sql->execute();
-            $result = $sql->fetchAll();
+            $result = $conn->fetchAll();
         } catch (PDOException $e) {
            Logger::logDatabaseError("CallGraphService",$e->getMessage());
         } finally{

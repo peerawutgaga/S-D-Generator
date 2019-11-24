@@ -71,5 +71,19 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         }
         return $result;
     }
+    public static function selectMessageIdByMessageIdStr($msgIdStr){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT messageId FROM `processing.message` WHERE msgIdStr = :msgIdStr");
+        $sql->bindParam(':msgIdStr', $msgIdStr);
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+        }finally{
+            unset($conn);
+        }
+        return $result;
+    }
 }
 ?>
