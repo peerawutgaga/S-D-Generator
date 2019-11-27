@@ -49,7 +49,7 @@ class SimpleSDProcessor
                     CallGraphProcessingService::insertIntoProcessingObject($objectId, $objectNode['Id']);
                 }
             } else if ($objectNode->getName() == 'Gate') {
-                // TODO handle Gate
+                $gateIdStr = $objectNode["Id"];
             }
         }
     }
@@ -58,9 +58,9 @@ class SimpleSDProcessor
     {
         foreach ($messageList as $message) {
             $actionType = $message->ActionType->children()[0]["Name"];
-            $fromObjectIdStr = $message->FromEnd->MessageEnd["EndModelElement"];
+            $fromObjectIdStr = $message["EndRelationshipFromMetaModelElement"];
             $fromObjectId = CallGraphProcessingService::selectObjectIdByObjectIdStr($fromObjectIdStr)[0];
-            $toObjectIdStr = $message->ToEnd->MessageEnd["EndModelElement"];
+            $toObjectIdStr = $message["EndRelationshipToMetaModelElement"];
             $toObjectId = CallGraphProcessingService::selectObjectIdByObjectIdStr($toObjectIdStr)[0];
             if ($fromObjectId == null || $toObjectId == null) {
                 Script::alert("Invalid XML file");
@@ -149,6 +149,8 @@ class SimpleSDProcessor
             }
         }
     }
-    // TODO Reference Diagram linking
+    private static function convertGateToClass($gateIdStr){
+        
+    }
 }
 ?>
