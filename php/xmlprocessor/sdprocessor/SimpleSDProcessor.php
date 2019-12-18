@@ -24,7 +24,7 @@ class SimpleSDProcessor
     {
         self::$graphID = $graphID;
         self::$xml = $xml;
-        $objectList = $xml->Models->Frame->ModelChildren;
+        $objectList = $xml->Models->Frame[0]->ModelChildren;
         $messageList = $xml->Models->ModelRelationshipContainer->ModelChildren->ModelRelationshipContainer->ModelChildren->Message;
         CallGraphProcessingService::cleanProcessingDatabase();
         self::identifyNode($objectList);
@@ -35,24 +35,32 @@ class SimpleSDProcessor
     private static function identifyNode($objectList)
     {
         foreach ($objectList->children() as $objectNode) {
+            $objectIdStr = $objectNode['Id'];
+            $objectName = $objectNode['Name'];
             if ($objectNode->getName() == 'InteractionLifeLine') {
-                $objectName = $objectNode['Name'];
                 $baseIdentifier = $objectNode->BaseClassifier->Class['Name'];
-                $objectId = CallGraphService::insertIntoObjectNode(self::$graphID, $objectName, $baseIdentifier);
-                if ($objectId != null) {
-                    CallGraphProcessingService::insertIntoProcessingObject($objectId, $objectNode['Id']);
-                }
+                self::insertIntoObjectNode($objectIdStr, $objectName, $baseIdentifier);
             } else if ($objectNode->getName() == 'InteractionActor') {
-                $objectName = $objectNode['Name'];
-                $objectId = CallGraphService::insertIntoObjectNode(self::$graphID, $objectName, "Actor");
-                if ($objectId != null) {
-                    CallGraphProcessingService::insertIntoProcessingObject($objectId, $objectNode['Id']);
-                }
+                self::insertIntoObjectNode($objectIdStr, $objectName, "Actor");
             } else if ($objectNode->getName() == 'Gate') {
-                $gateIdStr = $objectNode["Id"];
+                self::insertIntoObjectNode($objectIdStr, $objectName, "Gate");
+            } else if ($objectNode->getName() == 'InteractionOccurrence') {
+                $objectId = CallGraphService::insertIntoObjectNode(self::$graphID, $objectName, "RefDiagram");
+                self::processReferenceDiagram($objectNode["ReferTo"]);
             }
         }
     }
+
+    private static function insertIntoObjectNode($objectIdStr, $objectName, $objectType)
+    {
+        $objectId = CallGraphService::insertIntoObjectNode(self::$graphID, $objectName, $objectType);
+        if ($objectId != null) {
+            CallGraphProcessingService::insertIntoProcessingObject($objectId, $objectIdStr);
+        }
+    }
+
+    private static function processReferenceDiagram($referToIdStr)
+    {}
 
     private static function identifyMessage($messageList)
     {
@@ -83,7 +91,7 @@ class SimpleSDProcessor
                     $messageName = $message["Name"];
                     if ($message["Type"] == "Create Message") {
                         $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);
-                    }  else {
+                    } else {
                         $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::callingMessageType);
                     }
                     CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
@@ -92,7 +100,7 @@ class SimpleSDProcessor
                     $statement = $message->ActionType->ActionTypeCall["Guard"];
                     CallGraphService::insertIntoGuardCondition($messageId, $statement);
                 }
-            }else if ($actionType == "Destroy") {
+            } else if ($actionType == "Destroy") {
                 $messageName = $message["Name"];
                 $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::detroyMessageType);
                 CallGraphProcessingService::insertIntoProcessingMessage($messageId, $message["Id"], $message["ReturnMessage"], $fromObjectIdStr, $toObjectIdStr);
@@ -140,7 +148,7 @@ class SimpleSDProcessor
     {
         $combinedFragments = self::$xml->xpath("//CombinedFragment[@OperatorKind='alt']");
         foreach ($combinedFragments as $combinedFragment) {
-            $operands = $combinedFragment->ModelChildren->InteractionOperand;            
+            $operands = $combinedFragment->ModelChildren->InteractionOperand;
             foreach ($operands as $operand) {
                 $messageIdStr = $operand->Messages->Message[0]["Idref"];
                 $statement = $operand->Guard->InteractionConstraint[0]["Constraint"];
@@ -149,8 +157,8 @@ class SimpleSDProcessor
             }
         }
     }
-    private static function convertGateToClass($gateIdStr){
-        
-    }
+
+    private static function convertGateToClass($gateIdStr)
+    {}
 }
 ?>
