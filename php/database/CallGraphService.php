@@ -23,12 +23,12 @@ class CallGraphService
         return $callGraphId;
     }
 
-    public static function insertIntoObjectNode($callGraphID, $objectName, $baseIdentifier)
+    public static function insertIntoObjectNode($callGraphId, $objectName, $baseIdentifier)
     {
         $conn = Database::getConnection();
         $objectId = - 1;
         $sql = $conn->prepare("INSERT INTO `callgraph.objectNode`(`callGraphId`, `objectName`, `baseIdentifier`) VALUES(:callGraphId,:objectName,:baseIdentifier)");
-        $sql->bindParam(":callGraphId", $callGraphID);
+        $sql->bindParam(":callGraphId", $callGraphId);
         $sql->bindParam(":objectName", $objectName);
         $sql->bindParam(":baseIdentifier", $baseIdentifier);
         try {
