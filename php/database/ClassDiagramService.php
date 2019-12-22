@@ -88,17 +88,17 @@ class ClassDiagramService
         return $methodId;
     }
 
-    public static function insertIntoParam($methodId, $paramName, $dataType, $seqIdx, $isObject)
+    public static function insertIntoParam($methodId, $paramName, $dataType, $typeModifier,$seqIdx)
     {
         $conn = Database::getConnection();
         $paramId = - 1;
-        $sql = $conn->prepare("INSERT INTO `classdiagram.param`(`methodId`,`paramName`, `dataType`, `seqIdx`, `isObject`) 
-            VALUES(:methodId,:paramName, :dataType, :seqIdx, :isObject)");
+        $sql = $conn->prepare("INSERT INTO `classdiagram.param`(`methodId`,`paramName`, `dataType`, `typeModifier`, `seqIdx`) 
+            VALUES(:methodId,:paramName, :dataType, :typeModifier, :seqIdx)");
         $sql->bindParam(":methodId", $methodId);
         $sql->bindParam(":paramName", $paramName);
         $sql->bindParam(":dataType", $dataType);
+        $sql->bindParam(":typeModifier", $typeModifier);
         $sql->bindParam(":seqIdx", $seqIdx);
-        $sql->bindParam(":isObject", $isObject);
         try {
             $sql->execute();
             $paramId = $conn->lastInsertId();
