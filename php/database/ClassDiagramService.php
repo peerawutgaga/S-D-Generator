@@ -62,18 +62,19 @@ class ClassDiagramService
         return $classId;
     }
 
-    public static function insertIntoMethod($classId, $methodName, $visibility, $returnType, $instanceType, $isConstructor)
+    public static function insertIntoMethod($classId, $methodName, $visibility, $returnType, $typeModifier, $instanceType, $isConstructor)
     {
         $conn = Database::getConnection();
         $methodId = - 1;
         $visibility = strtolower($visibility);
         $instanceType = strtoupper($instanceType);
-        $sql = $conn->prepare("INSERT INTO `classdiagram.method`(`classId`, `methodName`, `visibility`, `returnType`, `instanceType`, `isConstructor`) 
-            VALUES(:classId,:methodName,:visibility, :returnType, :instanceType, :isConstructor)");
+        $sql = $conn->prepare("INSERT INTO `classdiagram.method`(`classId`, `methodName`, `visibility`, `returnType`, `typeModifier`,`instanceType`, `isConstructor`) 
+            VALUES(:classId,:methodName,:visibility, :returnType, :typeModifier,:instanceType, :isConstructor)");
         $sql->bindParam(":classId", $classId);
         $sql->bindParam(":methodName", $methodName);
         $sql->bindParam(":visibility", $visibility);
         $sql->bindParam(":returnType", $returnType);
+        $sql->bindParam(":typeModifier", $typeModifier);
         $sql->bindParam(":instanceType", $instanceType);
         $sql->bindParam(":isConstructor", $isConstructor);
         try {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 24, 2019 at 01:05 PM
+-- Generation Time: Dec 22, 2019 at 08:07 AM
 -- Server version: 5.6.34-log
 -- PHP Version: 7.1.5
 
@@ -168,6 +168,7 @@ CREATE TABLE `classdiagram.method` (
   `methodName` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Method name',
   `visibility` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Visibility of method. E.g. public, private',
   `returnType` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Method return type',
+  `typeModifier` varchar(10) COLLATE utf8_bin DEFAULT NULL COMMENT 'Return type modifier',
   `instanceType` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Method abstraction. E.g.concrete, abstract, static',
   `isConstructor` tinyint(3) NOT NULL COMMENT 'Indicator whether method is a constructor'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='This table records methods of each class';
@@ -403,37 +404,37 @@ ALTER TABLE `processing.objectnode`
 -- AUTO_INCREMENT for table `callgraph.argument`
 --
 ALTER TABLE `callgraph.argument`
-  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=183;
+  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=90;
 --
 -- AUTO_INCREMENT for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=27;
+  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=112;
 --
 -- AUTO_INCREMENT for table `callgraph.guardcondition`
 --
 ALTER TABLE `callgraph.guardcondition`
-  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=19;
+  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `callgraph.message`
 --
 ALTER TABLE `callgraph.message`
-  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=182;
+  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=138;
 --
 -- AUTO_INCREMENT for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
-  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=131;
+  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=350;
 --
 -- AUTO_INCREMENT for table `classdiagram.class`
 --
 ALTER TABLE `classdiagram.class`
-  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=3;
+  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=99;
 --
 -- AUTO_INCREMENT for table `classdiagram.diagram`
 --
 ALTER TABLE `classdiagram.diagram`
-  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=2;
+  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `classdiagram.inheritance`
 --
@@ -448,7 +449,7 @@ ALTER TABLE `classdiagram.method`
 -- AUTO_INCREMENT for table `classdiagram.package`
 --
 ALTER TABLE `classdiagram.package`
-  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=2;
+  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=63;
 --
 -- AUTO_INCREMENT for table `classdiagram.param`
 --
@@ -463,7 +464,7 @@ ALTER TABLE `code.sourcecodefile`
 -- AUTO_INCREMENT for table `logging.event`
 --
 ALTER TABLE `logging.event`
-  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=33;
+  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=50;
 --
 -- Constraints for dumped tables
 --

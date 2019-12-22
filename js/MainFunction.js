@@ -1,6 +1,10 @@
-function uploadFile()
+function uploadSDFile()
 {
-	document.getElementById("submitFile").click();
+	document.getElementById("SDSubmit").click();
+}
+function uploadCDFile()
+{
+	document.getElementById("CDSubmit").click();
 }
 function selectSD(selected){
 	$.post('php/pages/SetCodeProperties.php', {  

@@ -4,10 +4,9 @@ require_once $root . '/php/database/CallGraphService.php';
 require_once $root . '/php/database/CallGraphProcessingService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
-
 class SDProcessor
 {
-
+    
     private static $callGraphId;
 
     private static $xml;
@@ -35,15 +34,15 @@ class SDProcessor
             Logger::logDatabaseError("SDProcessor", $errorMessage);
             return;
         }
-        self::$callGraphId = CallGraphService::insertIntoCallGraph($filename, $filePath);
         if (self::$xml['Xml_structure'] == 'simple') {
-            self::processDiagram();
+            self::$callGraphId = CallGraphService::insertIntoCallGraph($filename, $filePath);
+            self::processSequenceDiagram();
         } else {
             Script::alert("Traditional XML format does not support by the tool.");
         }
     }
 
-    private static function processDiagram()
+    private static function processSequenceDiagram()
     {
         CallGraphProcessingService::cleanProcessingDatabase();
         // Assume that the first interaction diagram is the primary diagram.
