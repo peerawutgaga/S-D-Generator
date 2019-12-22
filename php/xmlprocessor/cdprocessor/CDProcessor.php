@@ -128,6 +128,8 @@ class CDProcessor
                 $dataType = $param->Type->DataType["Name"];
             } else if (isset($param->Type->Class)) {
                 $dataType = $param->Type->Class["Name"];
+            }else{
+                $dataType = $param["Type"];
             }
             ClassDiagramService::insertIntoParam($methodId, $paramName, $dataType, $typeModifier, $seqIdx);
             $seqIdx++;
