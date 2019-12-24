@@ -2,7 +2,7 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/database/Database.php";
 require_once "$root/php/utilities/Logger.php";
-class CallGraphProcessingService{
+class ProcessingDBService{
     
     public static function insertIntoProcessingObject($objectId,$objectIdStr){
         $conn = Database::getConnection();
@@ -12,7 +12,7 @@ class CallGraphProcessingService{
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService",$e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService",$e->getMessage());
         } finally{
              unset($conn);
         }
@@ -29,7 +29,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
         } finally{
              unset($conn);
         }
@@ -38,6 +38,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         $conn = Database::getConnection();
         self::deleteAllFromProcessingMessage($conn);
         self::deleteAllFromProcessingObjectNode($conn);
+        self::deleteAllFromProcessingInheritance($conn);
         unset($conn);
     }
     private static function deleteAllFromProcessingMessage($conn){     
@@ -45,16 +46,23 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
         }
     }
     private static function deleteAllFromProcessingObjectNode($conn){
-        $conn = Database::getConnection();
         $sql = $conn->prepare("DELETE FROM `processing.objectnode`");
         try {
             $sql->execute();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
+        }
+    }
+    private static function deleteAllFromProcessingInheritance($conn){
+        $sql = $conn->prepare("DELETE FROM `processing.inheritance`");
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
         }
     }
     public static function selectObjectIdByObjectIdStr($objectIdStr){
@@ -65,7 +73,7 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
         }finally{
             unset($conn);
         }
@@ -79,11 +87,25 @@ VALUES(:messageId,:msgIdStr,:returnMsgId,:fromObjectId,:toObjectId)");
             $sql->execute();
             $result = $sql->fetchAll();
         } catch (PDOException $e) {
-            Logger::logDatabaseError("CallGraphProcessingService", $e->getMessage());
+            Logger::logDatabaseError("ProcessingDBService", $e->getMessage());
         }finally{
             unset($conn);
         }
         return $result;
+    }
+    public static function insertIntoProcessingInheritance($realizationId, $parentId,$childId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `processing.inheritance` (`realizationId`,`parentId`, `childId`) VALUES(:realizationId,:parentId,:childId)");
+        $sql->bindParam(":realizationId", $realizationId);
+        $sql->bindParam(":parentId", $parentId);
+        $sql->bindParam(":childId", $childId);
+        try {
+            $sql->execute();
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("ProcessingDBService",$e->getMessage());
+        } finally{
+            unset($conn);
+        }
     }
 }
 ?>

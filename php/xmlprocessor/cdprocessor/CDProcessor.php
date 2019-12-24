@@ -1,6 +1,7 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/ClassDiagramService.php';
+require_once $root . '/php/database/ProcessingDBService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
 
@@ -40,6 +41,7 @@ class CDProcessor
 
     private static function processClassDiagram()
     {
+        ProcessingDBService::cleanProcessingDatabase();
         $packages = self::$xml->Models->Package;
         foreach ($packages as $package) {
             self::identifyPackage($package, "");
@@ -67,6 +69,7 @@ class CDProcessor
     private static function identifyClass($packageId, $class)
     {
         $className = $class["Name"];
+        $classIdStr = $class["Id"];
         $classId = - 1;
         if ($class["Abstract"] == "true") {
             $classId = ClassDiagramService::insertIntoClass($packageId, $className, self::abstractInstance);
@@ -82,6 +85,10 @@ class CDProcessor
                 self::identifyClass($packageId, $innerClass);
             }
             self::identifyMethod($classId, $methodList);
+        }
+        if(isset($class->FromSimpleRelationships->Realization)){
+            $realizations = $class->FromSimpleRelationships->Realization;
+            self::identifyChildClass($classIdStr,$realizations);
         }
     }
 
@@ -133,6 +140,18 @@ class CDProcessor
             }
             ClassDiagramService::insertIntoParam($methodId, $paramName, $dataType, $typeModifier, $seqIdx);
             $seqIdx++;
+        }
+    }
+    private static function identifyChildClass($parentId,$realizations){       
+        foreach($realizations as $realization){
+            $realizationId = $realization["Idref"];            
+            $childClasses = self::$xml->xpath("//Class[ToSimpleRelationships/Realization[@Idref='$realizationId']]");
+            if(isset($childClasses)){
+                foreach ($childClasses as $childClass){
+                    $childId = $childClass["Id"];
+                    ProcessingDBService::insertIntoProcessingInheritance($realizationId,$parentId, $childId);
+                }
+            }
         }
     }
 }

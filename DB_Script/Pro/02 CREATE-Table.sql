@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 22, 2019 at 08:34 AM
+-- Generation Time: Dec 24, 2019 at 03:00 PM
 -- Server version: 5.6.34-log
 -- PHP Version: 7.1.5
 
@@ -247,6 +247,18 @@ CREATE TABLE `processing.gateobject` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `processing.inheritance`
+--
+
+CREATE TABLE `processing.inheritance` (
+  `realizationId` varchar(255) NOT NULL COMMENT 'Realization Original Id',
+  `parentId` varchar(255) NOT NULL COMMENT 'Parent class original id',
+  `childId` varchar(255) NOT NULL COMMENT 'Child class original id'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table records parent and child classes pair';
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `processing.message`
 --
 
@@ -385,6 +397,12 @@ ALTER TABLE `processing.gateobject`
   ADD PRIMARY KEY (`gateobjectIdStr`);
 
 --
+-- Indexes for table `processing.inheritance`
+--
+ALTER TABLE `processing.inheritance`
+  ADD PRIMARY KEY (`realizationId`);
+
+--
 -- Indexes for table `processing.message`
 --
 ALTER TABLE `processing.message`
@@ -409,7 +427,7 @@ ALTER TABLE `callgraph.argument`
 -- AUTO_INCREMENT for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=112;
+  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=113;
 --
 -- AUTO_INCREMENT for table `callgraph.guardcondition`
 --
@@ -429,32 +447,32 @@ ALTER TABLE `callgraph.objectnode`
 -- AUTO_INCREMENT for table `classdiagram.class`
 --
 ALTER TABLE `classdiagram.class`
-  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=121;
+  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=605;
 --
 -- AUTO_INCREMENT for table `classdiagram.diagram`
 --
 ALTER TABLE `classdiagram.diagram`
-  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=18;
+  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=40;
 --
 -- AUTO_INCREMENT for table `classdiagram.inheritance`
 --
 ALTER TABLE `classdiagram.inheritance`
-  MODIFY `inheritId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Inheritance pair Id. This field is meaning less running number', AUTO_INCREMENT=2;
+  MODIFY `inheritId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Inheritance pair Id. This field is meaning less running number';
 --
 -- AUTO_INCREMENT for table `classdiagram.method`
 --
 ALTER TABLE `classdiagram.method`
-  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=102;
+  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=2280;
 --
 -- AUTO_INCREMENT for table `classdiagram.package`
 --
 ALTER TABLE `classdiagram.package`
-  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=68;
+  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=178;
 --
 -- AUTO_INCREMENT for table `classdiagram.param`
 --
 ALTER TABLE `classdiagram.param`
-  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=5;
+  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=2357;
 --
 -- AUTO_INCREMENT for table `code.sourcecodefile`
 --
@@ -464,7 +482,7 @@ ALTER TABLE `code.sourcecodefile`
 -- AUTO_INCREMENT for table `logging.event`
 --
 ALTER TABLE `logging.event`
-  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=50;
+  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=68;
 --
 -- Constraints for dumped tables
 --
