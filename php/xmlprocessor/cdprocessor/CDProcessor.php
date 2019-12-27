@@ -48,8 +48,7 @@ class CDProcessor
         foreach ($packages as $package) {
             self::identifyPackage($package, "");
         }
-        Script::printObject(self::$classList);
-        Script::printObject(self::$inheritanceList);
+        self::identifyInheritance();
     }
 
     private static function identifyPackage($package, $namespace)
@@ -157,6 +156,13 @@ class CDProcessor
                     array_push(self::$inheritanceList,array("parent"=>(string)$parentId,"child"=>(string)$childId));
                 }
             }
+        }
+    }
+    private static function identifyInheritance(){
+        foreach (self::$inheritanceList as $inheritance){
+            $parentId = self::$classList[$inheritance["parent"]];
+            $childId = self::$classList[$inheritance["child"]];
+            ClassDiagramService::insertIntoInheritance($parentId, $childId);
         }
     }
 }
