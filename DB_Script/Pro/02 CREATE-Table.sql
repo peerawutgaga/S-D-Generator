@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 24, 2019 at 03:00 PM
+-- Generation Time: Dec 27, 2019 at 01:28 PM
 -- Server version: 5.6.34-log
 -- PHP Version: 7.1.5
 
@@ -232,55 +232,6 @@ CREATE TABLE `logging.event` (
   `eventPayload` longtext COMMENT 'Event payload'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table records all event occurred in this program';
 
--- --------------------------------------------------------
-
---
--- Table structure for table `processing.gateobject`
---
-
-CREATE TABLE `processing.gateobject` (
-  `gateobjectIdStr` varchar(255) NOT NULL COMMENT 'Original gate Id',
-  `fromCallGraphId` int(10) NOT NULL DEFAULT '0' COMMENT 'Source call graph Id',
-  `toCallGraphId` int(10) NOT NULL DEFAULT '0' COMMENT 'Destination call graph Id'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table records gate original Id';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `processing.inheritance`
---
-
-CREATE TABLE `processing.inheritance` (
-  `realizationId` varchar(255) NOT NULL COMMENT 'Realization Original Id',
-  `parentId` varchar(255) NOT NULL COMMENT 'Parent class original id',
-  `childId` varchar(255) NOT NULL COMMENT 'Child class original id'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table records parent and child classes pair';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `processing.message`
---
-
-CREATE TABLE `processing.message` (
-  `messageId` int(10) NOT NULL COMMENT 'MessageId in call graph',
-  `msgIdStr` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Original messageId',
-  `returnMsgId` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT 'Original return message Id',
-  `FromObjectId` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Source object original Id',
-  `ToObjectId` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Destination object original Id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='This table is process call graph working DB';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `processing.objectnode`
---
-
-CREATE TABLE `processing.objectnode` (
-  `objectId` int(11) NOT NULL COMMENT 'Object Id in call graph',
-  `objectIdStr` varchar(255) NOT NULL COMMENT 'Original object Id'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 --
 -- Indexes for dumped tables
 --
@@ -391,30 +342,6 @@ ALTER TABLE `logging.event`
   ADD PRIMARY KEY (`eventId`);
 
 --
--- Indexes for table `processing.gateobject`
---
-ALTER TABLE `processing.gateobject`
-  ADD PRIMARY KEY (`gateobjectIdStr`);
-
---
--- Indexes for table `processing.inheritance`
---
-ALTER TABLE `processing.inheritance`
-  ADD PRIMARY KEY (`realizationId`);
-
---
--- Indexes for table `processing.message`
---
-ALTER TABLE `processing.message`
-  ADD PRIMARY KEY (`messageId`);
-
---
--- Indexes for table `processing.objectnode`
---
-ALTER TABLE `processing.objectnode`
-  ADD PRIMARY KEY (`objectId`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -422,37 +349,37 @@ ALTER TABLE `processing.objectnode`
 -- AUTO_INCREMENT for table `callgraph.argument`
 --
 ALTER TABLE `callgraph.argument`
-  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=90;
+  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=47;
 --
 -- AUTO_INCREMENT for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=113;
+  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=126;
 --
 -- AUTO_INCREMENT for table `callgraph.guardcondition`
 --
 ALTER TABLE `callgraph.guardcondition`
-  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=3;
+  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `callgraph.message`
 --
 ALTER TABLE `callgraph.message`
-  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=138;
+  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=67;
 --
 -- AUTO_INCREMENT for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
-  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=350;
+  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=59;
 --
 -- AUTO_INCREMENT for table `classdiagram.class`
 --
 ALTER TABLE `classdiagram.class`
-  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=605;
+  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=133;
 --
 -- AUTO_INCREMENT for table `classdiagram.diagram`
 --
 ALTER TABLE `classdiagram.diagram`
-  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=40;
+  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `classdiagram.inheritance`
 --
@@ -462,17 +389,17 @@ ALTER TABLE `classdiagram.inheritance`
 -- AUTO_INCREMENT for table `classdiagram.method`
 --
 ALTER TABLE `classdiagram.method`
-  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=2280;
+  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=595;
 --
 -- AUTO_INCREMENT for table `classdiagram.package`
 --
 ALTER TABLE `classdiagram.package`
-  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=178;
+  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT for table `classdiagram.param`
 --
 ALTER TABLE `classdiagram.param`
-  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=2357;
+  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=643;
 --
 -- AUTO_INCREMENT for table `code.sourcecodefile`
 --
@@ -482,7 +409,7 @@ ALTER TABLE `code.sourcecodefile`
 -- AUTO_INCREMENT for table `logging.event`
 --
 ALTER TABLE `logging.event`
-  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=68;
+  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=77;
 --
 -- Constraints for dumped tables
 --

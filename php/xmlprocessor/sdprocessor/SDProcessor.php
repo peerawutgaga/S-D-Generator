@@ -1,15 +1,11 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/CallGraphService.php';
-require_once $root . '/php/database/ProcessingDBService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
+
 class SDProcessor
 {
-    
-    private static $callGraphId;
-
-    private static $xml;
 
     const callingMessageType = "CALLING";
 
@@ -22,6 +18,14 @@ class SDProcessor
     const actorObjectType = "ACTOR";
 
     const referenceDiagramObjectType = "REF";
+
+    private static $callGraphId;
+
+    private static $xml;
+
+    private static $objectList;
+
+    private static $messageList;
 
     public static function readSequenceDiagramFile($filename, $filePath)
     {
@@ -44,14 +48,15 @@ class SDProcessor
 
     private static function processSequenceDiagram()
     {
-        ProcessingDBService::cleanProcessingDatabase();
         // Assume that the first interaction diagram is the primary diagram.
         $diagram = self::$xml->Diagrams->InteractionDiagram[0];
         $frame = self::$xml->Models->Frame[0];
-        $messageList = self::$xml->Models->ModelRelationshipContainer->ModelChildren->ModelRelationshipContainer->ModelChildren;
+        $messages = self::$xml->Models->ModelRelationshipContainer->ModelChildren->ModelRelationshipContainer->ModelChildren;
         $connectors = $diagram->Connectors;
+        self::$objectList = array();
+        self::$messageList = array();
         self::identifyObjectNode($diagram, $frame);
-        self::identifyMessage($messageList, $connectors);
+        self::identifyMessage($messages, $connectors);
         self::identifyGuardCondition();
     }
 
@@ -77,19 +82,17 @@ class SDProcessor
     {
         $objectId = CallGraphService::insertIntoObjectNode(self::$callGraphId, $objectName, $baseIdentifier);
         if ($objectId != - 1) {
-            ProcessingDBService::insertIntoProcessingObject($objectId, $objectIdStr);
+            self::$objectList[(string) $objectIdStr] = $objectId;
         }
     }
 
-    private static function identifyMessage($messageList, $connectors)
+    private static function identifyMessage($messages, $connectors)
     {
         foreach ($connectors->children() as $connector) {
             $messageIdStr = $connector["Model"];
-            $message = $messageList->xpath("./Message[@Id='$messageIdStr']")[0];
-            $fromObjectIdStr = $message["EndRelationshipFromMetaModelElement"];
-            $fromObjectId = ProcessingDBService::selectObjectIdByObjectIdStr($fromObjectIdStr)[0];
-            $toObjectIdStr = $message["EndRelationshipToMetaModelElement"];
-            $toObjectId = ProcessingDBService::selectObjectIdByObjectIdStr($toObjectIdStr)[0];
+            $message = $messages->xpath("./Message[@Id='$messageIdStr']")[0];
+            $fromObjectId = self::$objectList[(string) $message["EndRelationshipFromMetaModelElement"][0]];
+            $toObjectId = self::$objectList[(string) $message["EndRelationshipToMetaModelElement"][0]];
             $messageType = $message["Type"];
             $returnMessageIdStr = $message["ReturnMessage"];
             if ($fromObjectId == null || $toObjectId == null) {
@@ -108,10 +111,10 @@ class SDProcessor
                     } else {
                         $messageName = $message["Name"];
                     }
-                    $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::callingMessageType);
-                    ProcessingDBService::insertIntoProcessingMessage($messageId, $messageIdStr, $returnMessageIdStr, $fromObjectIdStr, $toObjectIdStr);
+                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::callingMessageType);
+                    self::$messageList[(string) $messageIdStr] = $messageId;
                     if ($returnMessageIdStr != null) {
-                        self::handleReturnMessage($messageId, $message, $operationId, $fromObjectId["objectId"], $toObjectId["objectId"]);
+                        self::handleReturnMessage($messageId, $message, $operationId, $fromObjectId, $toObjectId);
                     }
                     self::identifyArgument($messageId, $operationId);
                     if (isset($message->ActionType->ActionTypeCall["Guard"])) {
@@ -120,13 +123,13 @@ class SDProcessor
                     }
                 } else if ($actionType == "Destroy") {
                     $messageName = $message["Name"];
-                    $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::destroyMessageType);
-                    ProcessingDBService::insertIntoProcessingMessage($messageId, $messageIdStr, $returnMessageIdStr, $fromObjectIdStr, $toObjectIdStr);
+                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::destroyMessageType);
+                    self::$messageList[(string) $messageIdStr] = $messageId;
                 }
             } else if ($messageType == "Create Message") {
                 $messageName = $message["Name"];
-                $messageId = CallGraphService::insertIntoMessage($fromObjectId["objectId"], $toObjectId["objectId"], $messageName, self::createMessageType);
-                ProcessingDBService::insertIntoProcessingMessage($messageId, $messageIdStr, $returnMessageIdStr, $fromObjectIdStr, $toObjectIdStr);
+                $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::createMessageType);
+                self::$messageList[(string) $messageIdStr] = $messageId;
             }
         }
     }
@@ -175,8 +178,8 @@ class SDProcessor
             foreach ($operands as $operand) {
                 $messageIdStr = $operand->Messages->Message[0]["Idref"];
                 $statement = $operand->Guard->InteractionConstraint[0]["Constraint"];
-                $messageId = ProcessingDBService::selectMessageIdByMessageIdStr($messageIdStr);
-                CallGraphService::insertIntoGuardCondition($messageId[0]["messageId"], $statement);
+                $messageId = self::$messageList[(string) $messageIdStr];
+                CallGraphService::insertIntoGuardCondition($messageId, $statement);
             }
         }
     }

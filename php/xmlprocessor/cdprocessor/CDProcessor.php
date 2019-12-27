@@ -1,16 +1,11 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/ClassDiagramService.php';
-require_once $root . '/php/database/ProcessingDBService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
 
 class CDProcessor
 {
-
-    private static $diagramId;
-
-    private static $xml;
 
     const concreteInstance = "CONCRETE";
 
@@ -19,6 +14,12 @@ class CDProcessor
     const interfaceInstance = "INTERFACE";
 
     const staticInstance = "STATIC";
+    
+    private static $diagramId;
+    
+    private static $xml;
+    private static $classList;
+    private static $inheritanceList;
 
     public static function readClassDiagramFile($filename, $filePath)
     {
@@ -41,11 +42,14 @@ class CDProcessor
 
     private static function processClassDiagram()
     {
-        ProcessingDBService::cleanProcessingDatabase();
         $packages = self::$xml->Models->Package;
+        self::$classList = array();
+        self::$inheritanceList = array();
         foreach ($packages as $package) {
             self::identifyPackage($package, "");
         }
+        Script::printObject(self::$classList);
+        Script::printObject(self::$inheritanceList);
     }
 
     private static function identifyPackage($package, $namespace)
@@ -79,6 +83,7 @@ class CDProcessor
             $classId = ClassDiagramService::insertIntoClass($packageId, $className, self::concreteInstance);
         }
         if ($classId != - 1) {
+            self::$classList[(string)$classIdStr] = $classId;
             $methodList = $class->ModelChildren->Operation;
             $innerClassList = $class->ModelChildren->Class;
             foreach ($innerClassList as $innerClass) {
@@ -149,7 +154,7 @@ class CDProcessor
             if(isset($childClasses)){
                 foreach ($childClasses as $childClass){
                     $childId = $childClass["Id"];
-                    ProcessingDBService::insertIntoProcessingInheritance($realizationId,$parentId, $childId);
+                    array_push(self::$inheritanceList,array("parent"=>(string)$parentId,"child"=>(string)$childId));
                 }
             }
         }
