@@ -4,13 +4,13 @@
     require_once "$root/php/LocalFileManager.php";
     $method = $_POST['method'];
     if($method =="rename"){
-        CodeEditorService::rename($_POST['oldFilename'],$_POST['newFilename']);
+        CodeEditorphp::rename($_POST['oldFilename'],$_POST['newFilename']);
     }else if($method == "saveFile"){
-        CodeEditorService::saveFile($_POST['filepath'],$_POST['content']);
+        CodeEditorphp::saveFile($_POST['filepath'],$_POST['content']);
     }else if($method == "exportAll"){
-        CodeEditorService::exportAll($_POST['filepath'],$_POST['fileList']);
+        CodeEditorphp::exportAll($_POST['filepath'],$_POST['fileList']);
     }
-    class CodeEditorService{
+    class CodeEditorphp{
         public static function rename($oldName, $newName){
             //TODO Rewrite the function
             /*$root = realpath($_SERVER["DOCUMENT_ROOT"]);

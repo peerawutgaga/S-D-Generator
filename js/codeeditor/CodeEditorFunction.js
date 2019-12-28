@@ -197,3 +197,22 @@ function clearOption(){
         document.getElementById('randomOption').innerHTML = returnedData;
 	});
 }
+function showDefaultModal(){
+    defaultModal.style.display = "block";
+}
+function showMaxModal(){
+    maxModal.style.display = "block";
+}
+function showMinModal(){
+    minModal.style.display = "block";
+}
+function showRandomModal(){
+    randomModal.style.display = "block";
+}
+function insert(insertVal){
+    var val = codeEditor.value,
+    start = codeEditor.selectionStart,
+    end = codeEditor.selectionEnd;
+    codeEditor.value = val.substring(0, start) + insertVal + val.substring(end);
+    codeEditor.selectionStart = codeEditor.selectionEnd = start + 1;
+}

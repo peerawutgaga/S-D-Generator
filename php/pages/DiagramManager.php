@@ -5,26 +5,26 @@
     require_once "$root/php/LocalFileManager.php";
     if(isset($_POST['getList'])){
         if($_POST['getList']=="Sequence"){
-           echo DiagramMgrService::getCallGraphList();
+           echo DiagramManager::getCallGraphList();
         }else if($_POST['getList']=="ClassDiagram"){
-            echo DiagramMgrService::getClassDiagramList();
+            echo DiagramManager::getClassDiagramList();
         }
     }
     if(isset($_POST['delete'])&&isset($_POST['table'])){
         if($_POST['table'] == "CallGraph"){
-            echo DiagramMgrService::deleteCallGraph($_POST['delete']);
+            echo DiagramManager::deleteCallGraph($_POST['delete']);
         }else if($_POST['table'] == "ClassDiagram"){
-            echo DiagramMgrService::deleteClassDiagram($_POST['delete']);
+            echo DiagramManager::deleteClassDiagram($_POST['delete']);
         }
     }
     if(isset($_POST['rename'])&&isset($_POST['table'])){
         if($_POST['table'] == "CallGraph"){
-            echo DiagramMgrService::renameCallGraph($_POST['rename'],$_POST['newName']);
+            echo DiagramManager::renameCallGraph($_POST['rename'],$_POST['newName']);
         }else if($_POST['table'] == "ClassDiagram"){
-            echo DiagramMgrService::renameClassDiagram($_POST['rename'],$_POST['newName']);
+            echo DiagramManager::renameClassDiagram($_POST['rename'],$_POST['newName']);
         }
     }
-    class DiagramMgrService{
+    class DiagramManager{
         public static function getCallGraphList(){
             $callGraphList = CallGraphService::selectAllFromGraph();
             return json_encode($callGraphList);

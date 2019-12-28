@@ -36,9 +36,9 @@
 <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
   Faculty of Engineering, Chulalongkorn University</footer>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src = "js/CodeEditor.js"></script>
-<script src = "js/CodeGeneratorStyle.js"></script>
-<script src = "js/CodeGeneratorFunction.js"></script>
+<script src = "js/codeeditor/CodeEditorProperties.js"></script>
+<script src = "js/codeeditor/CodeEditorStyle.js"></script>
+<script src = "js/codeeditor/CodeEditorFunction.js"></script>
 <script src = "js/Random.js"></script>
 <script src = "js/GetValue.js"></script>
 </body>

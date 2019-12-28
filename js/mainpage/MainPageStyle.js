@@ -1,14 +1,3 @@
-var uploadModal = document.getElementById("uploadModal");
-var createCodeModal = document.getElementById("createCodeModal");
-var fileListModal = document.getElementById("fileListModal");
-var uploadBtn = document.getElementById("uploadBtn");
-var createCodeBtn = document.getElementById("createCodeBtn");
-var uploadClose = document.getElementsByClassName("close")[0];
-var createCodeClose= document.getElementsByClassName("close")[1];
-var fileListClose = document.getElementsByClassName("close")[2];
-var uploadSDBtn =document.getElementById("uploadSD");
-var uploadCDBtn =document.getElementById("uploadCD");
-var ClassSelect = document.getElementById("ClassSelect");
 uploadBtn.style.cursor = "pointer";
 uploadBtn.onclick = function () {
 	uploadModal.style.display = "block";
