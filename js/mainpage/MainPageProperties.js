@@ -9,3 +9,5 @@ var fileListClose = document.getElementsByClassName("close")[2];
 var uploadSDBtn =document.getElementById("uploadSD");
 var uploadCDBtn =document.getElementById("uploadCD");
 var ClassSelect = document.getElementById("ClassSelect");
+var SDSelect = document.getElementById("SDSelect");
+var CDSelect = document.getElementById("CDSelect");

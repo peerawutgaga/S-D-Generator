@@ -4,7 +4,6 @@ var fileList;
 table.onclick = highlight;
 //TODO Refactor
 function createCode(){
-	//TODO Disable PHP generator
 	var form = document.getElementById('codeProperties');
 	var sourceType;
 	var sourceLang;
@@ -13,17 +12,12 @@ function createCode(){
 	}else{
 		sourceType = 'driver';
 	}
-	if(form.elements.namedItem('sourceCodeLang')[0].checked){
-		sourceLang = 'Java';
-	}else{
-		sourceLang = 'PHP';
-	}
-	$.post('php/pages/SourceCodeGen/SourceCodeGenerator.php', { 
+	$.post('php/sourcecode/SourceCodeGenerator.php', { 
 		'graphID': SDSelect.options[SDSelect.selectedIndex].value,
 		'diagramID' : CDSelect.options[CDSelect.selectedIndex].value, 
 		'CUT' : ClassSelect.options[ClassSelect.selectedIndex].value,
 		'sourceType' : sourceType,
-		'sourceLang' : sourceLang
+		'sourceLang' : 'Java'
 	}, function(returnedData){
          if(returnedData == "stub error"){
 			alert("Cannot create stub for this class because this class does not call any methods in other classes");

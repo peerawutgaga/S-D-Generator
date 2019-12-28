@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <title>Main</title>
 <link rel="stylesheet" href="css/Main.css">
-
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
-
 <body>
 	<header>
 		<h1>Stubs and Drivers Generation Tool</h1>
@@ -88,14 +88,14 @@
 			<span class="close">&times;</span>
 			<h3>Set Code Property</h3>
 			<h4>Select Call Graph</h4>
-				<select id='SDSelect' onchange=selectSD(this.value)>
-					<option value='0' selected disabled hidden>Please Select Call Graph</option>
-				</select>
-				<h4>Select Class Diagram</h4>
-				<select id='CDSelect'>
-					<option value='0' selected disabled hidden>Please Select Class
-						Diagram</option>
-				</select>	
+			<select id='SDSelect' onchange=selectSD(this.value)>
+				<option value='0' selected disabled hidden>Please Select Call Graph</option>
+			</select>
+			<h4>Select Class Diagram</h4>
+			<select id='CDSelect'>
+				<option value='0' selected disabled hidden>Please Select Class
+					Diagram</option>
+			</select>
 		</div>
 	</div>
 	<!-- File List-->
@@ -119,10 +119,11 @@
 		of Engineering, Chulalongkorn University
 	</footer>
 </body>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script src="js/mainpage/MainPageProperties.js"></script>
 <script src="js/mainpage/MainPageStyle.js"></script>
 <script src="js/mainpage/MainPageFunction.js"></script>
 <script src="js/FileGenerator.js"></script>
+<script>refreshSDList();</script>
+<script>refreshCDList();</script>
 </html>
