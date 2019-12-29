@@ -13,7 +13,7 @@
 	</header>
 	<article>
 		<!-- Information Side Bar -->
-		<div class="description">
+		<div class="descriptionSideBar">
 			<p id="tool-info">
 				<b>Stub and Driver Generator Online Tool</b> is a tool for creating
 				stubs or drivers for class integration testing from sequence and
@@ -82,13 +82,13 @@
 			<p align="center">XML must be generated from Visual Paradigm</p>
 		</div>
 	</div>
-	<!-- Create Code Modal -->
-	<div id="createCodeModal" class="modal">
-		<div class="createCodeModal-content">
+	<!-- Diagram selection Modal -->
+	<div id="diagramSelectionModal" class="modal">
+		<div class="diagramSelectionModal-content">
 			<span class="close">&times;</span>
-			<h3>Set Code Property</h3>
+			<h3>Select Diagram</h3>
 			<h4>Select Call Graph</h4>
-			<select id='SDSelect' onchange=selectSD(this.value)>
+			<select id='SDSelect'>
 				<option value='0' selected disabled hidden>Please Select Call Graph</option>
 			</select>
 			<h4>Select Class Diagram</h4>
@@ -96,6 +96,25 @@
 				<option value='0' selected disabled hidden>Please Select Class
 					Diagram</option>
 			</select>
+			<button id="nextBtn" class="navigateButton"
+				onclick="transitToClassSelection()">Next</button>
+		</div>
+	</div>
+	<!-- Class under test selection Modal -->
+	<div id="classSelectionModal" class="modal">
+		<div class="classSelectionModal-content">
+			<span class="close">&times;</span>
+			<h3>Select Class(es) Under Test</h3>
+			<div id="classTableDiv">
+				<table id="classListTable" border=1>
+				</table>
+			</div>
+			<form id="sourceCodeTypeForm">
+				<input type="checkbox" name="stubCheckBox" value="Stub">Stub<br> <input
+					type="checkbox" name="driverCheckBox" value="Driver">Driver<br>
+			</form>
+			<button id="backBtn"class="navigateButton">Back</button>
+			<button id="createBtn" class="navigateButton" onclick="createSourceCode()">CreateCode</button>
 		</div>
 	</div>
 	<!-- File List-->
@@ -103,7 +122,7 @@
 		<div class="fileListModal-content">
 			<span class="close">&times;</span>
 			<h4>Generated Files</h4>
-			<div id="tableDiv">
+			<div id="fileTableDiv">
 				<table id="fileListTable" border=1>
 				</table>
 			</div>
@@ -123,7 +142,9 @@
 <script src="js/mainpage/MainPageProperties.js"></script>
 <script src="js/mainpage/MainPageStyle.js"></script>
 <script src="js/mainpage/MainPageFunction.js"></script>
-<script src="js/FileGenerator.js"></script>
+<script src="js/filegenerator/FileGeneratorProperties.js"></script>
+<script src="js/filegenerator/FileGeneratorStyle.js"></script>
+<script src="js/filegenerator/FileGeneratorFunction.js"></script>
 <script>refreshSDList();</script>
 <script>refreshCDList();</script>
 </html>

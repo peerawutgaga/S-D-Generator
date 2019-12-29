@@ -1,12 +1,9 @@
-var table = document.getElementById("fileListTable");
-var selected = table.getElementsByClassName('selected');
-var fileList;
-table.onclick = highlight;
+
+
 //TODO Refactor
 function createCode(){
 	var form = document.getElementById('codeProperties');
 	var sourceType;
-	var sourceLang;
 	if(form.elements.namedItem('sourceCodeType')[0].checked){
 		sourceType = 'stub';
 	}else{
@@ -40,10 +37,7 @@ function addFileList(fileList){
 	}
 	fileListModal.style.display = "block";
 }
-function highlight(e) {
-	if (selected[0]) selected[0].className = '';
-	e.target.parentNode.className = 'selected';  
-}
+
 function editCode(){
 	var selectedValue = $("tr.selected td:first" ).html();
 	if(selectedValue == null){

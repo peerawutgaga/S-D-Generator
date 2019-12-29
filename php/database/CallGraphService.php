@@ -179,7 +179,7 @@ class CallGraphService
         return $result;
     }
 
-    public static function selectObjectNodeByObjectID($objectId)
+    public static function selectFromObjectNodeByObjectID($objectId)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE objectId = :objectId");
@@ -195,7 +195,7 @@ class CallGraphService
         return $result;
     }
 
-    public static function selectMessageByFromObjectID($fromObjectId)
+    public static function selectFromMessageByFromObjectID($fromObjectId)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `fromObjectId` = :fromObjectId");
@@ -211,7 +211,7 @@ class CallGraphService
         return $result;
     }
 
-    public static function selectMessageByToObjectID($toObjectId)
+    public static function selectFromMessageByToObjectID($toObjectId)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `toObjectId` = :toObjectId");
@@ -226,7 +226,7 @@ class CallGraphService
         }
         return $result;
     }
-    public static function selectMessageByFromAndToObjectId($fromObjectId, $toObjectId){
+    public static function selectFromMessageByFromAndToObjectId($fromObjectId, $toObjectId){
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `fromObjectId` = :fromObjectId AND `toObjectId` = :toObjectId");
         $sql->bindParam(':fromObjectId', $fromObjectId);

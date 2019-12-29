@@ -1,53 +1,57 @@
-function uploadSDFile()
-{
+//Trigger submit button when sequence diagram file is uploaded
+function uploadSDFile() {
 	document.getElementById("SDSubmit").click();
 }
-function uploadCDFile()
-{
+// Trigger submit button when class diagram file is uploaded
+function uploadCDFile() {
 	document.getElementById("CDSubmit").click();
 }
-function selectSD(selected){
-	$.post('php/pages/SetCodeProperties.php', {  
-		'CUT' : selected,
-	}, function(returnedData){
-		 ClassSelect.innerHTML = returnedData;
-	});
-}
 function refreshSDList() {
-	$.ajax({
-		url : 'php/pages/DiagramSelection.php',
-		data : {
-			functionName : 'getCallGraphList'
-		},
-		type : 'post',
-		success : function(output) {
-			var sdList = JSON.parse(output);
-			sdList.forEach(function(item,index){
-				var option = document.createElement("option");
-				option.id = "sd"+item[0];
-				option.text = item[1];
-				SDSelect.add(option);
-			});
-		}
+	$.post('php/pages/DiagramSelection.php', { 
+		'functionName' : 'getCallGraphList'
+	}, function(returnedData){
+		var sdList = JSON.parse(returnedData);
+		sdList.forEach(function(sd, index) {
+			var option = document.createElement("option");
+			option.id = sd["callGraphId"];
+			option.text = sd["callGraphName"];
+			SDSelect.add(option);
+		});
 	});
 }
 function refreshCDList() {
-	$.ajax({
-		url : 'php/pages/DiagramSelection.php',
-		data : {
-			functionName : 'getClassDiagramList'
-		},
-		type : 'post',
-		success : function(output) {
-			var cdList = JSON.parse(output);
-			cdList.forEach(function(item,index){
-				var option = document.createElement("option");
-				option.id = "cd"+item[0];
-				option.text = item[1];
-				CDSelect.add(option);
-			});
-		}
+	$.post('php/pages/DiagramSelection.php', { 
+		'functionName' : 'getClassDiagramList'
+	}, function(returnedData){
+		var cdList = JSON.parse(returnedData);
+		cdList.forEach(function(cd, index) {
+			var option = document.createElement("option");
+			option.id = cd["diagramId"];
+			option.text = cd["diagramName"];
+			CDSelect.add(option);
+		});
 	});
 }
-
-
+function transitToClassSelection() {
+	selectedSD = SDSelect.options[SDSelect.selectedIndex].id;
+	selectedCD = CDSelect.options[CDSelect.selectedIndex].id;
+	diagramSelectionModal.style.display = "none";
+	selectedCount=-1;
+	getObjectList(selectedSD);
+	classSelectionModal.style.display = "block";
+}
+function getObjectList(callGraphId) {
+	$.post('php/pages/DiagramSelection.php', { 
+		'functionName' : 'getObjectListByCallGraphId',
+		'callGraphId' : callGraphId
+	}, function(returnedData){
+		var objectList = JSON.parse(returnedData);
+		classListTable.innerHTML = "";
+		objectList.forEach(function(objectNode, index) {
+			var row = classListTable.insertRow(index);
+			row.id = objectNode["objectId"];
+			var cell = row.insertCell(0);
+			cell.innerHTML = objectNode["objectName"]+":"+objectNode["baseIdentifier"];
+		});
+	});
+}
