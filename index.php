@@ -105,16 +105,24 @@
 		<div class="classSelectionModal-content">
 			<span class="close">&times;</span>
 			<h3>Select Class(es) Under Test</h3>
-			<div id="classTableDiv">
-				<table id="classListTable" border=1>
-				</table>
+			<div id="classSelectionDiv">
+				<div id="classTableDiv">
+					<table id="classListTable" border=1>
+					</table>
+				</div>
+
+				<div id="sourceCodeTypeDiv">
+					<h4>Select source code type</h4>
+					<form id="sourceCodeTypeForm">
+						<input type="checkbox" id="stubCheckBox"
+							value="Stub">Stub<br><br><input
+							type="checkbox" id="driverCheckBox" value="Driver">Driver
+					</form>
+				</div>
 			</div>
-			<form id="sourceCodeTypeForm">
-				<input type="checkbox" name="stubCheckBox" value="Stub">Stub<br> <input
-					type="checkbox" name="driverCheckBox" value="Driver">Driver<br>
-			</form>
-			<button id="backBtn"class="navigateButton">Back</button>
-			<button id="createBtn" class="navigateButton" onclick="createSourceCode()">CreateCode</button>
+			<button id="backBtn" class="navigateButton">Back</button>
+			<button id="createBtn" class="navigateButton"
+				onclick="createSourceCode()">CreateCode</button>
 		</div>
 	</div>
 	<!-- File List-->

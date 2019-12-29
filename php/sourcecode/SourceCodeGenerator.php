@@ -2,24 +2,25 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/Page/SourceCodeGen/PHPGenerator.php";
 require_once "$root/Page/SourceCodeGen/JavaGenerator.php";
-$graphID = $_POST['graphID'];
-$diagramID = $_POST['diagramID'];
-$classID = $_POST['CUT'];
-$sourceType = $_POST['sourceType'];
-$sourceLang = $_POST['sourceLang'];
-SourceCodeGenerator::initial($graphID, $diagramID, $classID, $sourceType, $sourceLang);
+if (isset($_POST['graphId']) && isset($_POST['diagramId']) && isset($_POST['classList']) && isset($_POST['sourceType']) && isset($_POST['sourceLang'])) {
+    $graphId = $_POST['graphId'];
+    $diagramId = $_POST['diagramId'];
+    $classId = $_POST['classList'];
+    $sourceType = $_POST['sourceType'];
+    $sourceLang = $_POST['sourceLang'];
+    SourceCodeGenerator::initial($graphId, $diagramId, $classId, $sourceType, $sourceLang);
+}
 
 class SourceCodeGenerator
 {
 
-    // TODO Interface change aware
     private static $file;
 
-    private static $graphID;
+    private static $graphId;
 
-    private static $diagramID;
+    private static $diagramId;
 
-    private static $classID;
+    private static $classList;
 
     private static $sourceType;
 
@@ -27,11 +28,11 @@ class SourceCodeGenerator
 
     private static $root;
 
-    public static function initial($graphID, $diagramID, $classID, $sourceType, $sourceLang)
+    public static function initial($graphID, $diagramId, $classList, $sourceType, $sourceLang)
     {
-        self::$graphID = $graphID;
-        self::$diagramID = $diagramID;
-        self::$classID = $classID;
+        self::$graphId = $graphID;
+        self::$diagramId = $diagramId;
+        self::$classList = $classList;
         self::$sourceType = $sourceType;
         self::$sourceLang = $sourceLang;
         self::$root = realpath($_SERVER["DOCUMENT_ROOT"]);
@@ -44,9 +45,9 @@ class SourceCodeGenerator
     private static function checkIfMessagesAreEmpty()
     {
         if (self::$sourceType === "stub") {
-            $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID, self::$classID);
+            $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphId, self::$classID);
         } else {
-            $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphID, self::$classID);
+            $messageList = CallGraphService::selectMessageByReceivedNodeID(self::$graphId, self::$classID);
         }
         if (empty($messageList)) {
             if (self::$sourceType === "stub") {
@@ -91,7 +92,7 @@ class SourceCodeGenerator
                 $filename = JavaGenerator::createDriver($driver);
             } else {
                 // TODO Echo warning when called. This will be disabled.
-                //$filename = PHPGenerator::createDriver($driver);
+                // $filename = PHPGenerator::createDriver($driver);
             }
             echo $filename;
         }
@@ -99,10 +100,10 @@ class SourceCodeGenerator
 
     private static function identifyStub()
     {
-        $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphID, self::$classID);
+        $messageList = CallGraphService::selectMessageBySentNodeID(self::$graphId, self::$classID);
         $stubList = array();
         foreach ($messageList as $message) {
-            $node = CallGraphService::selectNodeByNodeID(self::$graphID, $message['receivedNodeID']);
+            $node = CallGraphService::selectNodeByNodeID(self::$graphId, $message['receivedNodeID']);
             $class = ClassDiagramService::selectClassFromNodeName(self::$diagramID, $node['nodeName']);
             array_push($stubList, $class);
         }
@@ -112,7 +113,7 @@ class SourceCodeGenerator
 
     private static function identifyDriver()
     {
-        $node = CallGraphService::selectNodeByNodeID(self::$graphID, self::$classID);
+        $node = CallGraphService::selectNodeByNodeID(self::$graphId, self::$classID);
         $class = ClassDiagramService::selectClassFromNodeName(self::$diagramID, $node['nodeName']);
         return $class;
     }

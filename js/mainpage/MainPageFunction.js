@@ -33,6 +33,15 @@ function refreshCDList() {
 	});
 }
 function transitToClassSelection() {
+	console.log(SDSelect.selectedIndex);
+	if(SDSelect.selectedIndex==0){
+		alert("Please select call graph");
+		return;
+	}
+	if(CDSelect.selectedIndex==0){
+		alert("Please select class diagram");
+		return;
+	}
 	selectedSD = SDSelect.options[SDSelect.selectedIndex].id;
 	selectedCD = CDSelect.options[CDSelect.selectedIndex].id;
 	diagramSelectionModal.style.display = "none";

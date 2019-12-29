@@ -1,8 +1,9 @@
 //Table
 var fileListTable = document.getElementById("fileListTable");
 
-//Form
-var sourceCodeTypeForm = document.getElementById('sourceCodeTypeForm');
+//CheckBox
+var stubCheckBox= document.getElementById("stubCheckBox");
+var driverCheckBox= document.getElementById("driverCheckBox");
 
 //Variable
 var fileList;
