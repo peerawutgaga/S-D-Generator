@@ -13,6 +13,7 @@ if (isset($_POST['graphId']) && isset($_POST['diagramId']) && isset($_POST['clas
 
 class SourceCodeGenerator
 {
+    //Test
 
     private static $file;
 
