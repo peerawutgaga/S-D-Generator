@@ -70,10 +70,10 @@
 			<table>
 				<tbody>
 					<tr>
-						<td id="uploadSD" class="uploadButton" width="50%"><img
+						<td id="uploadSDBtn" class="uploadButton" width="50%"><img
 							src="Image/Sequence Diagram Upload.png" width="100" height="100"
 							alt="" /><br> Sequence Diagram</td>
-						<td id="uploadCD" class="uploadButton"><img
+						<td id="uploadCDBtn" class="uploadButton"><img
 							src="Image/Class Diagram Upload.png" width="100" height="100"
 							alt="" /><br> Class Diagram</td>
 					</tr>
@@ -114,9 +114,9 @@
 				<div id="sourceCodeTypeDiv">
 					<h4>Select source code type</h4>
 					<form id="sourceCodeTypeForm">
-						<input type="checkbox" id="stubCheckBox"
-							value="Stub">Stub<br><br><input
-							type="checkbox" id="driverCheckBox" value="Driver">Driver
+						<label><input type="checkbox" id="stubCheckBox"
+							value="Stub">Stub</label><br><br><label><input
+							type="checkbox" id="driverCheckBox" value="Driver">Driver</label>
 					</form>
 				</div>
 			</div>

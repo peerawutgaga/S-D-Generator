@@ -10,6 +10,9 @@ if (isset($_POST['functionName'])) {
     }else if ($_POST['functionName'] == "getObjectListByCallGraphId"&&isset($_POST['callGraphId'])) {
         DiagramSelection::getObjectListByCallGraphId($_POST['callGraphId']);
     }
+    else if ($_POST['functionName'] == "checkReferenceDiagram"&&isset($_POST['callGraphId'])) {
+        DiagramSelection::checkReferenceDiagram($_POST['callGraphId']);
+    }
 }
 
 class DiagramSelection
@@ -26,8 +29,16 @@ class DiagramSelection
         echo json_encode($diagramList);
     }
     public static function getObjectListByCallGraphId($callGraphId){
-        $objectList = CallGraphService::selectFromObjectNodeByCallGraphId($callGraphId);
+        $objectList = CallGraphService::selectFromObjectNodeByCallGraphIdAndIsNotRef($callGraphId);
         echo json_encode($objectList);
+    }
+    public static function checkReferenceDiagram($callGraphId){
+        $objectList = CallGraphService::selectFromObjectNodeByCallGraphIdWhereObjectIsRef($callGraphId);
+        if(count($objectList)==0){
+            echo false;
+        }else{
+            echo json_encode($objectList);      
+        }
     }
 }
 ?>

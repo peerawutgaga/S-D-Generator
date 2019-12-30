@@ -193,7 +193,7 @@ a {
 	float: right;
 }
 
-#uploadSD, #uploadCD {
+#uploadSDBtn, #uploadCDBtn {
 	cursor: pointer;
 }
 

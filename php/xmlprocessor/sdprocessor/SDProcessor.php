@@ -26,6 +26,8 @@ class SDProcessor
     private static $objectList;
 
     private static $messageList;
+    
+    private static $isReferred;
 
     public static function readSequenceDiagramFile($filename, $filePath)
     {
@@ -41,6 +43,10 @@ class SDProcessor
         if (self::$xml['Xml_structure'] == 'simple') {
             self::$callGraphId = CallGraphService::insertIntoCallGraph($filename, $filePath);
             self::processSequenceDiagram();
+            if(self::$isReferred){
+                Script::alert("This sequence diagram refers to other sequence diagrams. Please upload those diagrams and link them together by XML Manager");
+            }
+            
         } else {
             Script::alert("Traditional XML format does not support by the tool.");
         }
@@ -55,6 +61,7 @@ class SDProcessor
         $connectors = $diagram->Connectors;
         self::$objectList = array();
         self::$messageList = array();
+        self::$isReferred = false;
         self::identifyObjectNode($diagram, $frame);
         self::identifyMessage($messages, $connectors);
         self::identifyGuardCondition();
@@ -74,6 +81,7 @@ class SDProcessor
                 $gateIdStr = $objectNode->GateShapeUIModelIds->Value["Value"];
                 $gateModelId = $diagram->xpath("./Shapes/Gate[@Id='$gateIdStr']")[0]["Model"];
                 self::insertObjectNode($gateModelId, $objectName, self::referenceDiagramObjectType);
+                self::$isReferred = true;
             }
         }
     }

@@ -7,8 +7,8 @@ var fileListModal = document.getElementById("fileListModal");
 //Button
 var uploadBtn = document.getElementById("uploadBtn");
 var createCodeBtn = document.getElementById("createCodeBtn");
-var uploadSDBtn =document.getElementById("uploadSD");
-var uploadCDBtn =document.getElementById("uploadCD");
+var uploadSDBtn =document.getElementById("uploadSDBtn");
+var uploadCDBtn =document.getElementById("uploadCDBtn");
 var backBtn = document.getElementById("backBtn");
 
 //Close Button

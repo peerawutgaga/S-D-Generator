@@ -33,7 +33,6 @@ function refreshCDList() {
 	});
 }
 function transitToClassSelection() {
-	console.log(SDSelect.selectedIndex);
 	if(SDSelect.selectedIndex==0){
 		alert("Please select call graph");
 		return;
@@ -45,7 +44,6 @@ function transitToClassSelection() {
 	selectedSD = SDSelect.options[SDSelect.selectedIndex].id;
 	selectedCD = CDSelect.options[CDSelect.selectedIndex].id;
 	diagramSelectionModal.style.display = "none";
-	selectedCount=-1;
 	getObjectList(selectedSD);
 	classSelectionModal.style.display = "block";
 }

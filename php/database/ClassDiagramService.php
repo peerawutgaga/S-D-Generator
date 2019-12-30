@@ -4,68 +4,93 @@ require_once "$root/php/database/Database.php";
 require_once "$root/php/utilities/Logger.php";
 class ClassDiagramService
 {
+    private static function executeSelectStatement($conn, $sql)
+    {
+        try {
+            $sql->execute();
+            $result = $sql->fetchAll();
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("ClassDiagramService", $e->getMessage());
+        } finally{
+            unset($conn);
+        }
+        return $result;
+    }
+    
+    private static function executeInsertStatement($conn, $sql)
+    {
+        $lastInsertId = - 1;
+        try {
+            $sql->execute();
+            $lastInsertId = $conn->lastInsertId();
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("ClassDiagramService", $e->getMessage());
+        } finally{
+            unset($conn);
+        }
+        return $lastInsertId;
+    }
+    
+    private static function executeDeleteStatement($conn, $sql)
+    {
+        return self::executeSqlStatementWithSuccessFlag($conn, $sql);
+    }
+    
+    private static function executeUpdateStatement($conn, $sql)
+    {
+        return self::executeSqlStatementWithSuccessFlag($conn, $sql);
+    }
+    
+    private static function executeSqlStatementWithSuccessFlag($conn, $sql)
+    {
+        $result = false;
+        try {
+            $sql->execute();
+            $result = true;
+        } catch (PDOException $e) {
+            Logger::logDatabaseError("ClassDiagramService", $e->getMessage());
+        } finally{
+            unset($conn);
+        }
+        return $result;
+    }
     public static function insertIntoDiagram($diagramName, $filePath)
     {
         $conn = Database::getConnection();
-        $diagramId = - 1;
         $sql = $conn->prepare("INSERT INTO `classdiagram.diagram`(`diagramName`, `filePath`) VALUES(:diagramName, :filePath)");
         $sql->bindParam(":diagramName", $diagramName);
         $sql->bindParam(":filePath", $filePath);
-        try {
-            $sql->execute();
-            $diagramId = $conn->lastInsertId();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $diagramId = self::executeInsertStatement($conn, $sql);        
         return $diagramId;
     }
 
     public static function insertIntoPackage($diagramId, $packageName, $namespace)
     {
         $conn = Database::getConnection();
-        $packageId = - 1;
         $sql = $conn->prepare("INSERT INTO `classdiagram.package`(`diagramId`,`packageName`, `namespace`) VALUES(:diagramId, :packageName,:namespace)");
         $sql->bindParam(":diagramId", $diagramId);
         $sql->bindParam(":packageName", $packageName);
         $sql->bindParam(":namespace", $namespace);
-        try {
-            $sql->execute();
-            $packageId = $conn->lastInsertId();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $packageId = self::executeInsertStatement($conn, $sql); 
         return $packageId;
     }
 
     public static function insertIntoClass($packageId, $className, $instanceType)
     {
         $conn = Database::getConnection();
-        $classId = - 1;
         $instanceType = strtoupper($instanceType);
         $sql = $conn->prepare("INSERT INTO `classdiagram.class`(`packageId`,`className`, `instanceType`) 
                 VALUES(:packageId,:className, :instanceType)");
         $sql->bindParam(":packageId", $packageId);
         $sql->bindParam(":className", $className);
         $sql->bindParam(":instanceType", $instanceType);
-        try {
-            $sql->execute();
-            $classId = $conn->lastInsertId();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $classId = self::executeInsertStatement($conn, $sql); 
         return $classId;
     }
 
     public static function insertIntoMethod($classId, $methodName, $visibility, $returnType, $typeModifier, $instanceType, $isConstructor)
     {
         $conn = Database::getConnection();
-        $methodId = - 1;
         $visibility = strtolower($visibility);
         $instanceType = strtoupper($instanceType);
         $sql = $conn->prepare("INSERT INTO `classdiagram.method`(`classId`, `methodName`, `visibility`, `returnType`, `typeModifier`,`instanceType`, `isConstructor`) 
@@ -77,21 +102,13 @@ class ClassDiagramService
         $sql->bindParam(":typeModifier", $typeModifier);
         $sql->bindParam(":instanceType", $instanceType);
         $sql->bindParam(":isConstructor", $isConstructor);
-        try {
-            $sql->execute();
-            $methodId = $conn->lastInsertId();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $methodId = self::executeInsertStatement($conn, $sql); 
         return $methodId;
     }
 
     public static function insertIntoParam($methodId, $paramName, $dataType, $typeModifier,$seqIdx)
     {
         $conn = Database::getConnection();
-        $paramId = - 1;
         $sql = $conn->prepare("INSERT INTO `classdiagram.param`(`methodId`,`paramName`, `dataType`, `typeModifier`, `seqIdx`) 
             VALUES(:methodId,:paramName, :dataType, :typeModifier, :seqIdx)");
         $sql->bindParam(":methodId", $methodId);
@@ -99,14 +116,7 @@ class ClassDiagramService
         $sql->bindParam(":dataType", $dataType);
         $sql->bindParam(":typeModifier", $typeModifier);
         $sql->bindParam(":seqIdx", $seqIdx);
-        try {
-            $sql->execute();
-            $paramId = $conn->lastInsertId();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $paramId = self::executeInsertStatement($conn, $sql); 
         return $paramId;
     }
     public static function insertIntoInheritance($superClassId,$childClassId){
@@ -115,27 +125,14 @@ class ClassDiagramService
             VALUES(:superClassId,:childClassId)");
         $sql->bindParam(":superClassId", $superClassId);
         $sql->bindParam(":childClassId", $childClassId);
-        try {
-            $sql->execute();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        self::executeInsertStatement($conn, $sql); 
     }
     public static function selectFromDiagramByDiagramId($diagramId)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `classdiagram.diagram` WHERE `diagramId` = :diagramId");
         $sql->bindParam(':diagramId', $diagramId);
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
 
@@ -143,14 +140,7 @@ class ClassDiagramService
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `classdiagram.diagram`");
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
 
@@ -164,14 +154,7 @@ class ClassDiagramService
         $sql = $conn->prepare($statement);
         $sql->bindParam(':diagramId', $diagramId);
         $sql->bindParam(':baseIdentifier', $baseIdentifier);
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
     public static function selectMethodByClassIdAndMessageName($classId,$messageName){
@@ -181,14 +164,7 @@ class ClassDiagramService
         $sql = $conn->prepare($statement);
         $sql->bindParam(':classId', $classId);
         $sql->bindParam(':messageName', $messageName);
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
     public static function selectParamByMethodIdAndArguName($methodId,$arguName){
@@ -198,14 +174,7 @@ class ClassDiagramService
         $sql = $conn->prepare($statement);
         $sql->bindParam(':methodId', $methodId);
         $sql->bindParam(':arguName', $arguName);
-        try {
-            $sql->execute();
-            $result = $sql->fetchAll();
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
     public static function deleteFromDiagramByDiagramId($diagramId){
@@ -213,14 +182,7 @@ class ClassDiagramService
         $result = false;
         $sql = $conn->prepare("DELETE FROM `classdiagram.diagram` where diagramId = :diagramId");
         $sql->bindParam(':diagramId', $diagramId);
-        try {
-            $sql->execute();
-            $result = true;
-        } catch (PDOException $e) {
-            Logger::logDatabaseError("ClassDiagramService",$e->getMessage());
-        } finally{
-             unset($conn);
-        }
+        $result = self::executeDeleteStatement($conn, $sql);
         return $result;
     }
 }

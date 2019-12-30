@@ -5,8 +5,7 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/pages/DiagramSelection.php";
 //require_once $root."/php/database/CallGraphService.php";
 
-$result = DiagramSelection::getClassDiagramList();
-Script::printObject($result);
+DiagramSelection::checkReferenceDiagram(130);
  //SDProcessor::readSequenceDiagramFile("test", "$root/SequenceDiagrams/1576983796_getGPAX.xml");
  //SDProcessor::readSequenceDiagramFile("test", "$root/SequenceDiagrams/1577451562_payByCreditCard.xml");
  //SDProcessor::readSequenceDiagramFile("test", "$root/SequenceDiagrams/1576983827_openCourse.xml");
