@@ -27,8 +27,20 @@ class StubGenerator
         self::generateMethods($methods);
         self::closeClass();
         SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::STUB_TYPE);
-        echo self::$content;
     }
+
+    public static function addToExistFile($file, $methods)
+    {
+        self::$content = $file["filePayload"];
+        self::$content = rtrim(self::$content, "}");
+        self::generateMethods($methods);
+        self::closeClass();
+        echo self::$content;
+        SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
+    }
+
+    private static function checkIfMethodIsAlreadyExisted()
+    {}
 
     private static function declarePackage($class)
     {
@@ -52,7 +64,10 @@ class StubGenerator
                 self::generateConstructor($method);
                 continue;
             }
-            self::declareMethodHeader($method);
+            if (strpos(self::$content, $method["methodName"] . "(")) {
+                continue;
+            }
+            self::declareMethodHeader($method);          
         }
     }
 
@@ -123,11 +138,10 @@ class StubGenerator
 
     private static function generateReturnStatement($returnType, $typeModifier)
     {
-        if ($typeModifier!="") {
+        if ($typeModifier != "") {
             self::$content .= "\t\treturn null;\r\n";
         } else {
-            echo $returnType;
-            self::$content .= "\t\treturn ".\DataGenerator::getRandomData($returnType).";\r\n";
+            self::$content .= "\t\treturn " . \DataGenerator::getRandomData($returnType) . ";\r\n";
         }
     }
 
@@ -138,7 +152,7 @@ class StubGenerator
 
     private static function closeClass()
     {
-        self::$content .= "}\r\n";
+        self::$content .= "}";
     }
 }
 

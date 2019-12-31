@@ -5,7 +5,7 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 //require_once "$root/php/pages/DiagramSelection.php";
 //require_once $root."/php/database/CallGraphService.php";
 require_once $root."/php/sourcecode/SourceCodeGenerator.php";
-require_once $root."/php/utilities/DataGenerator.php";
+//require_once $root."/php/utilities/DataGenerator.php";
 //echo DataGenerator::getRandomData("double");
 SourceCodeGenerator::createCode(8, "85", "STUB", "JAVA");
 //DiagramSelection::checkReferenceDiagram(130);

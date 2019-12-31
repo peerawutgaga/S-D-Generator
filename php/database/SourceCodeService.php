@@ -80,7 +80,7 @@ class SourceCodeService
         $result = self::executeUpdateStatement($conn, $sql);
         return $result;
     }
-    public static function updateSouceCodeFileSetFilenameByFileId($filename,$fileId){
+    public static function updateSourceCodeFileSetFilenameByFileId($filename,$fileId){
         $conn = Database::getConnection();
         $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filename = :filename WHERE fileId = :fileId");
         $sql->bindParam(":filename", $filename);

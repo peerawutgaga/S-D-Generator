@@ -17,10 +17,8 @@ class JavaGenerator
 
     private static $output;
 
-
     public static function generateStubs($diagramId, $stubList)
     {
-        
         self::$diagramId = $diagramId;
         self::$output = array();
         foreach ($stubList as $stub) {
@@ -28,17 +26,16 @@ class JavaGenerator
             if (! $isSuccess) {
                 return self::$output;
             }
-        }    
+        }
         self::$output["isSuccess"] = "true";
         return self::$output;
     }
 
     private static function generateStub($stub)
     {
-        
         $objectNode = CallGraphService::selectFromObjectNodeByObjectID($stub["objectId"])[0];
         $message = $stub["message"];
-        
+
         $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $objectNode["baseIdentifier"]);
         if (count($class) < 1) {
             Logger::logInternalError("JavaGenerator", Constant::NO_CLASS_FOUND_ERROR_MSG . " - " . print_r($objectNode, true));
@@ -54,16 +51,17 @@ class JavaGenerator
             return false;
         }
         $class = $class[0]; // Make a single class from array
-        //Replace create message name with class name to call instructor
-        if($message["messageType"]==Constant::CREATE_MESSAGE_TYPE){
+                            // Replace create message name with class name to call instructor
+        if ($message["messageType"] == Constant::CREATE_MESSAGE_TYPE) {
             $message["messageName"] = $class["className"];
         }
         $filename = $class["className"] . "Stub.java";
         $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($class["classId"], $message["messageName"]);
-        if (count(SourceCodeService::selectFromSourceCodeByFilename($filename)) == 0) {
+        $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
+        if (count($file) == 0) {
             java\StubGenerator::createNewFile($filename, $class, $methods);
         } else {
-            java\StubGenerator::createNewFile($filename, $class, $methods);
+            java\StubGenerator::addToExistFile($file[0], $methods);
         }
         return true;
     }
