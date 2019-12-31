@@ -3,18 +3,11 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/ClassDiagramService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
+require_once $root . '/php/utilities/Constant.php';
 
 class CDProcessor
 {
-
-    const concreteInstance = "CONCRETE";
-
-    const abstractInstance = "ABSTRACT";
-
-    const interfaceInstance = "INTERFACE";
-
-    const staticInstance = "STATIC";
-    
+   
     private static $diagramId;
     
     private static $xml;
@@ -75,11 +68,11 @@ class CDProcessor
         $classIdStr = $class["Id"];
         $classId = - 1;
         if ($class["Abstract"] == "true") {
-            $classId = ClassDiagramService::insertIntoClass($packageId, $className, self::abstractInstance);
+            $classId = ClassDiagramService::insertIntoClass($packageId, $className, Constant::ABSTRACT_INSTANCE);
         } else if ($class->Stereotypes->Stereotype[0]["Name"] == "Interface") {
-            $classId = ClassDiagramService::insertIntoClass($packageId, $className, self::interfaceInstance);
+            $classId = ClassDiagramService::insertIntoClass($packageId, $className, Constant::INTERFACT_INSTANCE);
         } else {
-            $classId = ClassDiagramService::insertIntoClass($packageId, $className, self::concreteInstance);
+            $classId = ClassDiagramService::insertIntoClass($packageId, $className, Constant::CONCRETE_INSTANCE);
         }
         if ($classId != - 1) {
             self::$classList[(string)$classIdStr] = $classId;
@@ -103,7 +96,7 @@ class CDProcessor
             $visibility = $method["Visibility"];
             $typeModifier = $method["TypeModifier"];
             $isConstructor = 0;
-            $instanceType = self::concreteInstance;
+            $instanceType = Constant::CONCRETE_INSTANCE;
             if (isset($method->ReturnType)) {
                 if (isset($method->ReturnType->DataType)) {
                     $returnType = $method->ReturnType->DataType["Name"];
@@ -115,9 +108,9 @@ class CDProcessor
                 $isConstructor = "1";
             }
             if ($method["Abstract"] == "true") {
-                $instanceType = self::abstractInstance;
+                $instanceType = Constant::ABSTRACT_INSTANCE;
             } else if ($method["Scope"] == "classifier") {
-                $instanceType = self::staticInstance;
+                $instanceType = Constant::STATIC_INSTANCE;
             }
             $methodId = ClassDiagramService::insertIntoMethod($classId, $methodName, $visibility, $returnType, $typeModifier, $instanceType, $isConstructor);
             if ($method != - 1) {

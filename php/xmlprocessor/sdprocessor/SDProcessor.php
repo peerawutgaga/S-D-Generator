@@ -3,21 +3,10 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/CallGraphService.php';
 require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
+require_once $root . '/php/utilities/Constant.php';
 
 class SDProcessor
 {
-
-    const callingMessageType = "CALLING";
-
-    const returnMessageType = "RETURN";
-
-    const createMessageType = "CREATE";
-
-    const destroyMessageType = "DESTROY";
-
-    const actorObjectType = "ACTOR";
-
-    const referenceDiagramObjectType = "REF";
 
     private static $callGraphId;
 
@@ -76,11 +65,11 @@ class SDProcessor
                 $baseIdentifier = $frame->xpath("./ModelChildren/InteractionLifeLine[@Id='$modelId']/BaseClassifier/Class")[0]["Name"];
                 self::insertObjectNode($modelId, $objectName, $baseIdentifier);
             } else if ($objectNode->getName() == "InteractionActor") {
-                self::insertObjectNode($modelId, $objectName, self::actorObjectType);
+                self::insertObjectNode($modelId, $objectName, Constant::ACTOR_TYPE);
             } else if ($objectNode->getName() == "InteractionOccurrence") {
                 $gateIdStr = $objectNode->GateShapeUIModelIds->Value["Value"];
                 $gateModelId = $diagram->xpath("./Shapes/Gate[@Id='$gateIdStr']")[0]["Model"];
-                self::insertObjectNode($gateModelId, $objectName, self::referenceDiagramObjectType);
+                self::insertObjectNode($gateModelId, $objectName, Constant::REF_DIAGRAM_TYPE);
                 self::$isReferred = true;
             }
         }
@@ -110,7 +99,7 @@ class SDProcessor
                 CallGraphService::deleteFromGraphByCallGraphId(self::$graphID);
                 return;
             }
-            if ($messageType == "Message") {
+            if ($messageType == "Message" || $messageType == "Recursive Message") {
                 $actionType = $message->ActionType->children()[0]["Name"];
                 if ($actionType == "Call") {
                     $operationId = $message->ActionType->ActionTypeCall["Operation"];
@@ -119,7 +108,7 @@ class SDProcessor
                     } else {
                         $messageName = $message["Name"];
                     }
-                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::callingMessageType);
+                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, Constant::CALLING_MESSAGE_TYPE);
                     self::$messageList[(string) $messageIdStr] = $messageId;
                     if ($returnMessageIdStr != null) {
                         self::handleReturnMessage($messageId, $message, $operationId, $fromObjectId, $toObjectId);
@@ -131,12 +120,12 @@ class SDProcessor
                     }
                 } else if ($actionType == "Destroy") {
                     $messageName = $message["Name"];
-                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::destroyMessageType);
+                    $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, Constant::DESTROY_MESSAGE_TYPE);
                     self::$messageList[(string) $messageIdStr] = $messageId;
                 }
             } else if ($messageType == "Create Message") {
                 $messageName = $message["Name"];
-                $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, self::createMessageType);
+                $messageId = CallGraphService::insertIntoMessage($fromObjectId, $toObjectId, $messageName, Constant::CREATE_MESSAGE_TYPE);
                 self::$messageList[(string) $messageIdStr] = $messageId;
             }
         }
@@ -154,7 +143,7 @@ class SDProcessor
         } else {
             $dataType = $returnType->DataType["Name"];
         }
-        $messageId = CallGraphService::insertIntoMessage($toObjectId, $fromObjectId, $messageName, self::returnMessageType);
+        $messageId = CallGraphService::insertIntoMessage($toObjectId, $fromObjectId, $messageName, Constant::RETURN_MESSAGE_TYPE);
         CallGraphService::insertIntoReturnMessage($messageId, $dataType, $isObject, $parentMsgId);
     }
 

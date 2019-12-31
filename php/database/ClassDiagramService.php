@@ -167,13 +167,12 @@ class ClassDiagramService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
-    public static function selectParamByMethodIdAndArguName($methodId,$arguName){
+    public static function selectParamByMethodId($methodId){
         $conn = Database::getConnection();
         $statement = "SELECT * FROM `classdiagram.param`
-        WHERE methodId = :methodId AND paramName = :arguName";
+        WHERE methodId = :methodId";
         $sql = $conn->prepare($statement);
         $sql->bindParam(':methodId', $methodId);
-        $sql->bindParam(':arguName', $arguName);
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
