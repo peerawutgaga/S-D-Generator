@@ -4,7 +4,7 @@ namespace php\sourcecode\java;
 use ClassDiagramService;
 use Constant;
 use DataGenerator;
-use Script;
+//use Script;
 use SourceCodeService;
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . "/php/database/CallGraphService.php";
@@ -12,7 +12,7 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
-require_once $root . "/php/utilities/Script.php";
+//require_once $root . "/php/utilities/Script.php";
 
 class StubGenerator
 {
@@ -21,7 +21,6 @@ class StubGenerator
 
     public static function createNewFile($filename, $class, $methods)
     {
-        Script::printObject($methods);
         self::$content = ""; // Reset file content
         self::declarePackage($class);
         self::declareClassHeader($class);

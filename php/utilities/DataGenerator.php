@@ -41,7 +41,7 @@ class DataGenerator
         for ($i = 0; $i < $length; $i++) {
             $randomString .= Constant::CHAR_SET[mt_rand(0, Constant::CHAR_SET_LENGTH - 1)];
         }
-        return $randomString;
+        return '"'.$randomString.'"';
     }
     public static function getRandomInt(){
         return mt_rand();

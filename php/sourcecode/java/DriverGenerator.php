@@ -4,7 +4,7 @@ namespace php\sourcecode\java;
 use ClassDiagramService;
 use Constant;
 use DataGenerator;
-use Script;
+//use Script;
 use SourceCodeService;
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . "/php/database/CallGraphService.php";
@@ -12,7 +12,7 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
-require_once $root . "/php/utilities/Script.php";
+//require_once $root . "/php/utilities/Script.php";
 
 class DriverGenerator
 {
@@ -23,25 +23,23 @@ class DriverGenerator
 
     public static function createNewFile($filename, $fromClass, $toClass, $methods)
     {
-        \Script::printObject($methods);
         self::$content = ""; // Reset file content
         self::$declaredVariableList = array();
         self::declarePackage($fromClass);
         self::declareImports($toClass);
         self::declareClassHeader($fromClass);
-        self::generateMethods($toClass, $methods);
+        self::generateMethods($toClass, $methods, false);
         self::closeClass();
-        echo self::$content;
-        // SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
+        SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
 
     public static function addToExistFile($file, $fromClass, $toClass, $methods)
     {
         self::$content = $file["filePayload"];
         self::$content = rtrim(self::$content, "}");
-        self::generateMethods($toClass, $methods);
+        self::generateMethods($toClass, $methods, true);
         self::closeClass();
-        // SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
+        SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
     }
 
     private static function declarePackage($class)
@@ -76,7 +74,7 @@ class DriverGenerator
         self::$content .= "class " . $class["className"] . "{\r\n";
     }
 
-    private static function generateMethods($toClass, $methods)
+    private static function generateMethods($toClass, $methods, $skipExistedMethod)
     {
         foreach ($methods as $method) {
             $visibility = $method["visibility"];
@@ -87,23 +85,37 @@ class DriverGenerator
             if ($visibility == "private") {
                 continue;
             }
-            if ($isConstructor) {
-                
-                continue;
-            }
-            if (strpos(self::$content, $method["methodName"] . "(")) {
-                continue;
+            if ($skipExistedMethod) {
+                $methodName = self::convertToTestMethodName($method["methodName"]);
+                if (strpos(self::$content, $methodName . "(")) {
+                    continue;
+                }
             }
             self::declareMethodHeader($method);
-            if ($instanceType != Constant::STATIC_INSTANCE) {
-                self::declareInstance($toClass);
+            if ($isConstructor) {
+                self::generateConstructorInvocation($method);
+                self::closeMethod();
+                continue;
             }
-            self::generateInvokation($className, $method);
+            if ($instanceType != Constant::STATIC_INSTANCE) {
+                self::declareInstance($className);
+            }
+            self::generateInvocation($className, $method);
             if ($returnType != \Constant::VOID_TYPE) {
                 self::generateAssertion($returnType);
             }
             self::closeMethod();
         }
+    }
+
+    private static function generateConstructorInvocation($method)
+    {
+        $methodId = $method["methodId"];
+        $params = ClassDiagramService::selectParamByMethodId($methodId);
+        $params = DataGenerator::sortBySequenceIndex($params);
+        $inputValues = self::generateInputParamValue($params);
+        $methodName = $method["methodName"];
+        self::$content .= "\t\tnew " . $methodName . "(" . $inputValues . ");\r\n";
     }
 
     private static function convertToTestMethodName($methodName)
@@ -114,25 +126,23 @@ class DriverGenerator
 
     private static function declareMethodHeader($method)
     {
-        $visibility = $method["visibility"];
         $methodName = self::convertToTestMethodName($method["methodName"]);
-        self::$content .= "\t@Test\r\n\t" . $visibility . " " . $methodName . "(){\r\n";
-    }
-
-    private static function declareInstance($class)
-    {
-        $className = $class["className"];
-        $variableName = lcfirst($className);
-        if (isset(self::$declaredVariableList[$variableName])) {
-            $variableName .= self::$declaredVariableList[$variableName];
+        if (isset(self::$declaredVariableList[$methodName])) {
+            self::$declaredVariableList[$methodName] += 1;
+            $methodName .= self::$declaredVariableList[$methodName];
         } else {
-            self::$declaredVariableList[$variableName] = 0;
+            self::$declaredVariableList[$methodName] = 0;
         }
-        $statement = "\t\t" . $className . " " . $variableName . " = new " . $class["className"] . "();\r\n";
-        self::$content .= $statement;
+        self::$content .= "\t@Test\r\n\tpublic void " . $methodName . "(){\r\n";
     }
 
-    private static function generateInvokation($className, $method)
+    private static function declareInstance($className)
+    {
+        $variableName = lcfirst($className);
+        self::$content .= "\t\t" . $className . " " . $variableName . " = new " . $className . "();\r\n";
+    }
+
+    private static function generateInvocation($className, $method)
     {
         $methodId = $method["methodId"];
         $methodName = $method["methodName"];
@@ -147,12 +157,7 @@ class DriverGenerator
         }
         if ($returnType != \Constant::VOID_TYPE) {
             $variableName = "actualResult";
-            if (isset(self::$declaredVariableList[$variableName])) {
-                $variableName .= self::$declaredVariableList[$variableName];
-            } else {
-                self::$declaredVariableList[$variableName] = 0;
-            }
-            self::$content .= $returnType . " ".$variableName." = ";
+            self::$content .= $returnType . " " . $variableName . " = ";
         }
         if ($instanceType == Constant::STATIC_INSTANCE) {
             self::$content .= $className . "." . $methodName . "(" . $inputValues . ");\r\n";
