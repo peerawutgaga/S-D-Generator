@@ -26,7 +26,6 @@ class StubGenerator
         self::declareClassHeader($class);
         self::generateMethods($methods);
         self::closeClass();
-        echo self::$content;
         SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::STUB_TYPE);
     }
 
@@ -36,7 +35,6 @@ class StubGenerator
         self::$content = rtrim(self::$content, "}");
         self::generateMethods($methods);
         self::closeClass();
-        echo self::$content;
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
     }
 

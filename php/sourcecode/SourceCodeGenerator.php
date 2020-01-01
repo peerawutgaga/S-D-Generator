@@ -47,13 +47,13 @@ class SourceCodeGenerator
             $createMessageList = CallGraphService::selectFromMessageByFromObjectIDAndMessageType($objectId, Constant::CREATE_MESSAGE_TYPE);
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["toObjectId"]) {
+                if ($objectId != $sentMessage["toObjectId"]&&!in_array($sentMessage["toObjectId"],$objectList )) {
                     array_push($stubList, $sentMessage);
                 }
             }
             foreach ($createMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["toObjectId"]) {
+                if ($objectId != $sentMessage["toObjectId"]&&!in_array($sentMessage["toObjectId"],$objectList)) {
                     array_push($stubList, $sentMessage);
                 }
             }
@@ -70,13 +70,13 @@ class SourceCodeGenerator
             $createMessageList = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CREATE_MESSAGE_TYPE);
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["fromObjectId"]) {
+                if ($objectId != $sentMessage["fromObjectId"]&&!in_array($$sentMessage["fromObjectId"],$objectList)) {
                     array_push($driverList, $sentMessage);
                 }
             }
             foreach ($createMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["fromObjectId"]) {
+                if ($objectId != $sentMessage["fromObjectId"]&&!in_array($sentMessage["fromObjectId"],$objectList)) {
                     array_push($driverList, $sentMessage);
                 }
             }
