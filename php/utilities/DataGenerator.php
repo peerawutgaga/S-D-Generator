@@ -34,22 +34,26 @@ class DataGenerator
         return "null";
     }
 
-    private static function getRandomString()
+    public static function getRandomString()
     {
-        $length = rand(1,10);//Random length between 1-10
+        $length = mt_rand(1,10);//Random length between 1-10
         $randomString = '';
         for ($i = 0; $i < $length; $i++) {
-            $randomString .= Constant::CHAR_SET[rand(0, Constant::CHAR_SET_LENGTH - 1)];
+            $randomString .= Constant::CHAR_SET[mt_rand(0, Constant::CHAR_SET_LENGTH - 1)];
         }
         return $randomString;
     }
-    private static function getRandomInt(){
-        return rand();
+    public static function getRandomInt(){
+        return mt_rand();
     }
-    private static function getRandomDouble(){
-        return rand()/rand();
+    public static function getRandomDouble(){
+        return mt_rand() / mt_rand();
     }
-    private static function getRandomBoolean(){
+    public static function getRandomDoubleWithBound($lowerBound,$upperBound,$decimal){
+        $decimal = pow(10,$decimal);
+        return (float)(mt_rand($lowerBound*$decimal,$upperBound*$decimal))/ $decimal;
+    }
+    public static function getRandomBoolean(){
         if(rand(0,1)){
             return "true";
         }else{

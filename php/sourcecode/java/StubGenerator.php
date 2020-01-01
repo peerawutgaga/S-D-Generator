@@ -21,11 +21,13 @@ class StubGenerator
 
     public static function createNewFile($filename, $class, $methods)
     {
+        Script::printObject($methods);
         self::$content = ""; // Reset file content
         self::declarePackage($class);
         self::declareClassHeader($class);
         self::generateMethods($methods);
         self::closeClass();
+        echo self::$content;
         SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::STUB_TYPE);
     }
 
@@ -38,9 +40,6 @@ class StubGenerator
         echo self::$content;
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
     }
-
-    private static function checkIfMethodIsAlreadyExisted()
-    {}
 
     private static function declarePackage($class)
     {
@@ -67,7 +66,7 @@ class StubGenerator
             if (strpos(self::$content, $method["methodName"] . "(")) {
                 continue;
             }
-            self::declareMethodHeader($method);          
+            self::declareMethodHeader($method);
         }
     }
 
@@ -114,7 +113,7 @@ class StubGenerator
         $paramListStr = "";
         foreach ($paramList as $param) {
             $dataType = $param["dataType"];
-            if ($dataType == "string") {
+            if ($dataType == \Constant::STRING_TYPE) {
                 $dataType = "String"; // Upper first character case to match Java string declaration
             }
             $typeModifier = $param["typeModifier"];
@@ -138,10 +137,12 @@ class StubGenerator
 
     private static function generateReturnStatement($returnType, $typeModifier)
     {
-        if ($typeModifier != "") {
+        if (!empty($typeModifier)) {
             self::$content .= "\t\treturn null;\r\n";
+        } else if ($returnType == Constant::VOID_TYPE) {
+            // Do not generate return statement when return type is void
         } else {
-            self::$content .= "\t\treturn " . \DataGenerator::getRandomData($returnType) . ";\r\n";
+            self::$content .= "\t\treturn " . DataGenerator::getRandomData($returnType) . ";\r\n";
         }
     }
 

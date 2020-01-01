@@ -64,10 +64,11 @@ class Constant
 
     public const STRING_TYPE = "string";
 
+    public const VOID_TYPE = "void";
+
     // Data set
     public const CHAR_SET = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     public const CHAR_SET_LENGTH = 62;
-    
 }
 

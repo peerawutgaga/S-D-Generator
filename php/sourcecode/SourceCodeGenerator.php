@@ -27,14 +27,13 @@ class SourceCodeGenerator
         if ($sourceType == Constant::STUB_TYPE) {
             $stubList = self::identifyStub($objectList);
             if ($sourceLang == Constant::JAVA_LANG) {
+                
                 JavaGenerator::generateStubs($diagramId, $stubList);
-            } else if ($sourceLang == Constant::PHP_LANG) {
-                // Currently, PHP is not supported by the tool.
-            }
+            } 
         } else if ($sourceType == Constant::DRIVER_TYPE) {
             $driverList = self::identifyDriver($objectList);
-            if ($sourceLang == Constant::JAVA_LANG) {} else if ($sourceLang == Constant::PHP_LANG) {
-                // Currently, PHP is not supported by the tool.
+            if ($sourceLang == Constant::JAVA_LANG) {
+                JavaGenerator::generateDrivers($diagramId, $driverList);
             }
         }
     }
@@ -49,19 +48,13 @@ class SourceCodeGenerator
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
                 if ($objectId != $sentMessage["toObjectId"]) {
-                    array_push($stubList, array(
-                        "objectId" => $sentMessage["toObjectId"],
-                        "message" => $sentMessage
-                    ));
+                    array_push($stubList, $sentMessage);
                 }
             }
             foreach ($createMessageList as $sentMessage) {
                 // Check if message is not self calling message
                 if ($objectId != $sentMessage["toObjectId"]) {
-                    array_push($stubList, array(
-                        "objectId" => $sentMessage["toObjectId"],
-                        "message" => $sentMessage
-                    ));
+                    array_push($stubList, $sentMessage);
                 }
             }
         }
@@ -78,19 +71,13 @@ class SourceCodeGenerator
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
                 if ($objectId != $sentMessage["fromObjectId"]) {
-                    array_push($driverList, array(
-                        "objectId" => $sentMessage["fromObjectId"],
-                        "message" => $sentMessage
-                    ));
+                    array_push($driverList, $sentMessage);
                 }
             }
             foreach ($createMessageList as $sentMessage) {
                 // Check if message is not self calling message
                 if ($objectId != $sentMessage["fromObjectId"]) {
-                    array_push($driverList, array(
-                        "objectId" => $sentMessage["fromObjectId"],
-                        "message" => $sentMessage
-                    ));
+                    array_push($driverList, $sentMessage);
                 }
             }
         }
