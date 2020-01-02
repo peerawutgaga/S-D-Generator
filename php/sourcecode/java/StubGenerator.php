@@ -37,6 +37,15 @@ class StubGenerator
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
     }
+    private static function getExistedMethodList($methods){
+        $existedMethodList = array();
+        foreach($methods as $method){
+            if (strpos(self::$content, $method["methodName"] . "(")) {
+                array_push($existedMethodList,$method["methodName"]);
+            }
+        }
+        return $existedMethodList;
+    }
 
     private static function declarePackage($class)
     {
@@ -50,19 +59,20 @@ class StubGenerator
 
     private static function generateMethods($methods)
     {
+        $existedMethodList = self::getExistedMethodList($methods);
         foreach ($methods as $method) {
             $visibility = $method["visibility"];
             $isConstructor = $method["isConstructor"];
             if ($visibility == "private") {
                 continue;
             }
+            if (in_array($method["methodName"], $existedMethodList)) {
+                continue;
+            }
             if ($isConstructor) {
                 self::generateConstructor($method);
                 continue;
-            }
-            if (strpos(self::$content, $method["methodName"] . "(")) {
-                continue;
-            }
+            }           
             self::declareMethodHeader($method);
         }
     }

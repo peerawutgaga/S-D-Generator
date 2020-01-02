@@ -28,7 +28,7 @@ class DriverGenerator
         self::declarePackage($fromClass);
         self::declareImports($toClass);
         self::declareClassHeader($fromClass);
-        self::generateMethods($toClass, $methods, false);
+        self::generateMethods($toClass, $methods);
         self::closeClass();
         SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
@@ -37,7 +37,7 @@ class DriverGenerator
     {
         self::$content = $file["filePayload"];
         self::$content = rtrim(self::$content, "}");
-        self::generateMethods($toClass, $methods, true);
+        self::generateMethods($toClass, $methods);
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
     }
@@ -68,14 +68,23 @@ class DriverGenerator
         $importStatement = "import " . $namespace . "." . $className . ";\r\n/*--- AUTO IMPORT END HERE ---*/";
         self::$content = str_replace("/*--- AUTO IMPORT END HERE ---*/", $importStatement, self::$content);
     }
-
+    private static function getExistedMethodList($methods){
+        $existedMethodList = array();
+        foreach($methods as $method){
+            if (strpos(self::$content, $method["methodName"] . "(")) {
+                array_push($existedMethodList,$method["methodName"]);
+            }
+        }
+        return $existedMethodList;
+    }
     private static function declareClassHeader($class)
     {
         self::$content .= "class " . $class["className"] . "{\r\n";
     }
 
-    private static function generateMethods($toClass, $methods, $skipExistedMethod)
+    private static function generateMethods($toClass, $methods)
     {
+        $existedMethodList = self::getExistedMethodList($methods);
         foreach ($methods as $method) {
             $visibility = $method["visibility"];
             $instanceType = $method["instanceType"];
@@ -85,11 +94,8 @@ class DriverGenerator
             if ($visibility == "private") {
                 continue;
             }
-            if ($skipExistedMethod) {
-                $methodName = self::convertToTestMethodName($method["methodName"]);
-                if (strpos(self::$content, $methodName . "(")) {
-                    continue;
-                }
+            if (in_array($method["methodName"], $existedMethodList)) {
+                continue;
             }
             self::declareMethodHeader($method);
             if ($isConstructor) {
