@@ -114,9 +114,9 @@
 				<div id="sourceCodeTypeDiv">
 					<h4>Select source code type</h4>
 					<form id="sourceCodeTypeForm">
-						<label><input type="checkbox" id="stubCheckBox"
-							value="Stub">Stub</label><br><br><label><input
-							type="checkbox" id="driverCheckBox" value="Driver">Driver</label>
+						<input type="radio" id="stubCheckBox" name="sourceCodeTypeRadio"
+							value="Stub">Stub<br><br><input
+							type="radio" id="driverCheckBox" name="sourceCodeTypeRadio" value="Driver">Driver
 					</form>
 				</div>
 			</div>

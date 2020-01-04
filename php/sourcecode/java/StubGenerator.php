@@ -26,7 +26,7 @@ class StubGenerator
         self::declareClassHeader($class);
         self::generateMethods($methods);
         self::closeClass();
-        SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::STUB_TYPE);
+        return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::STUB_TYPE);
     }
 
     public static function addToExistFile($file, $methods)
@@ -36,6 +36,7 @@ class StubGenerator
         self::generateMethods($methods);
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
+        return $file["fileId"];
     }
     private static function getExistedMethodList($methods){
         $existedMethodList = array();

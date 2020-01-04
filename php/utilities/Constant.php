@@ -44,6 +44,8 @@ class Constant
     public const NO_CLASS_FOUND_ERROR_MSG = "Class is not found.";
 
     public const CLASS_NOT_UNIQUE_ERROR_MSG = "Class is not unique.";
+    
+    public const CODE_GENERATION_ERROR_MSG = "Internal error occured during generate source code";
 
     // Primitive Data type
     public const INT_TYPE = "int";

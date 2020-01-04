@@ -30,7 +30,7 @@ class DriverGenerator
         self::declareClassHeader($fromClass);
         self::generateMethods($toClass, $methods);
         self::closeClass();
-        SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
+        return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
 
     public static function addToExistFile($file, $fromClass, $toClass, $methods)
@@ -40,6 +40,7 @@ class DriverGenerator
         self::generateMethods($toClass, $methods);
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
+        return $file["fileId"];
     }
 
     private static function declarePackage($class)

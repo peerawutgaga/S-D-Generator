@@ -28,12 +28,14 @@ class SourceCodeGenerator
             $stubList = self::identifyStub($objectList);
             if ($sourceLang == Constant::JAVA_LANG) {
                 
-                JavaGenerator::generateStubs($diagramId, $stubList);
+                $output = JavaGenerator::generateStubs($diagramId, $stubList);
+                echo json_encode($output);
             } 
         } else if ($sourceType == Constant::DRIVER_TYPE) {
             $driverList = self::identifyDriver($objectList);
             if ($sourceLang == Constant::JAVA_LANG) {
-                JavaGenerator::generateDrivers($diagramId, $driverList);
+                $output = JavaGenerator::generateDrivers($diagramId, $driverList);
+                echo json_encode($output);
             }
         }
     }
@@ -70,7 +72,7 @@ class SourceCodeGenerator
             $createMessageList = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CREATE_MESSAGE_TYPE);
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["fromObjectId"]&&!in_array($$sentMessage["fromObjectId"],$objectList)) {
+                if ($objectId != $sentMessage["fromObjectId"]&&!in_array($sentMessage["fromObjectId"],$objectList)) {
                     array_push($driverList, $sentMessage);
                 }
             }

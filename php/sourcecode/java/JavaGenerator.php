@@ -48,7 +48,6 @@ class JavaGenerator
             self::$output = array();
             self::$output["isSuccess"] = "false";
             self::$output["errorMessage"] = Constant::CLASS_NOT_UNIQUE_ERROR_MSG;
-
             return false;
         }
         $class = $class[0]; // Make a single class from array
@@ -60,9 +59,18 @@ class JavaGenerator
         $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($class["classId"], $message["messageName"]);
         $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
         if (count($file) == 0) {
-            java\StubGenerator::createNewFile($filename, $class, $methods);
+            $fileId = java\StubGenerator::createNewFile($filename, $class, $methods);
+            if($fileId != -1){
+                self::$output[$fileId]=$filename;
+            }else{
+                self::$output = array();
+                self::$output["isSuccess"] = "false";
+                self::$output["errorMessage"] = Constant::CODE_GENERATION_ERROR_MSG;
+                return false;
+            }
         } else {
-            java\StubGenerator::addToExistFile($file[0], $methods);
+            $fileId = java\StubGenerator::addToExistFile($file[0], $methods);
+            self::$output[$fileId]=$filename;
         }
         return true;
     }
@@ -107,9 +115,18 @@ class JavaGenerator
         $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($toClass["classId"], $message["messageName"]);
         $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
         if (count($file) == 0) {
-            java\DriverGenerator::createNewFile($filename, $fromClass,$toClass, $methods);
+            $fileId = java\DriverGenerator::createNewFile($filename, $fromClass,$toClass, $methods);
+            if($fileId != -1){
+                self::$output[$fileId]=$filename;
+            }else{
+                self::$output = array();
+                self::$output["isSuccess"] = "false";
+                self::$output["errorMessage"] = Constant::CODE_GENERATION_ERROR_MSG;
+                return false;
+            }
         } else {
-            java\DriverGenerator::addToExistFile($file[0], $fromClass,$toClass,$methods);
+            $fileId = java\DriverGenerator::addToExistFile($file[0], $fromClass,$toClass,$methods);
+            self::$output[$fileId]=$filename;
         }
         return true;
     }
