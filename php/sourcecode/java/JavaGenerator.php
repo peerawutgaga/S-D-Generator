@@ -38,16 +38,10 @@ class JavaGenerator
         $message = $stub;
         $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $objectNode["baseIdentifier"]);
         if (count($class) < 1) {
-            Logger::logInternalError("JavaGenerator", Constant::NO_CLASS_FOUND_ERROR_MSG . " - " . print_r($objectNode, true));
-            self::$output = array();
-            self::$output["isSuccess"] = "false";
-            self::$output["errorMessage"] = Constant::NO_CLASS_FOUND_ERROR_MSG;
+            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $objectNode);
             return false;
         } else if (count($class) > 1) {
-            Logger::logInternalError("JavaGenerator", Constant::CLASS_NOT_UNIQUE_ERROR_MSG . " - " . print_r($class, true));
-            self::$output = array();
-            self::$output["isSuccess"] = "false";
-            self::$output["errorMessage"] = Constant::CLASS_NOT_UNIQUE_ERROR_MSG;
+            self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG, $class);
             return false;
         }
         $class = $class[0]; // Make a single class from array
@@ -63,9 +57,7 @@ class JavaGenerator
             if($fileId != -1){
                 self::$output[$fileId]=$filename;
             }else{
-                self::$output = array();
-                self::$output["isSuccess"] = "false";
-                self::$output["errorMessage"] = Constant::CODE_GENERATION_ERROR_MSG;
+                self::handleError(Constant::CODE_GENERATION_ERROR_MSG,"");
                 return false;
             }
         } else {
@@ -93,16 +85,12 @@ class JavaGenerator
         $fromClass = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $fromObjectNode["baseIdentifier"]);
         $toClass = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $toObjectNode["baseIdentifier"]);
         if (count($fromClass) < 1||count($toClass)<1) {
-            Logger::logInternalError("JavaGenerator", Constant::NO_CLASS_FOUND_ERROR_MSG . " - " . print_r($fromObjectNode, true). print_r($toObjectNode, true));
-            self::$output = array();
-            self::$output["isSuccess"] = "false";
-            self::$output["errorMessage"] = Constant::NO_CLASS_FOUND_ERROR_MSG;
+            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG,$fromObjectNode);
+            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG,$toObjectNode);
             return false;
         } else if (count($fromClass) > 1||count($toClass) > 1) {
-            Logger::logInternalError("JavaGenerator", Constant::CLASS_NOT_UNIQUE_ERROR_MSG . " - " . print_r($fromClass, true). print_r($toClass, true));
-            self::$output = array();
-            self::$output["isSuccess"] = "false";
-            self::$output["errorMessage"] = Constant::CLASS_NOT_UNIQUE_ERROR_MSG;
+            self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG,$fromClass);
+            self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG,$toClass);
             return false;
         }
         $fromClass = $fromClass[0]; // Make a single class from array
@@ -119,9 +107,7 @@ class JavaGenerator
             if($fileId != -1){
                 self::$output[$fileId]=$filename;
             }else{
-                self::$output = array();
-                self::$output["isSuccess"] = "false";
-                self::$output["errorMessage"] = Constant::CODE_GENERATION_ERROR_MSG;
+                self::handleError(Constant::CODE_GENERATION_ERROR_MSG,"");
                 return false;
             }
         } else {
@@ -129,6 +115,12 @@ class JavaGenerator
             self::$output[$fileId]=$filename;
         }
         return true;
+    }
+    private static function handleError($errorMessage,$errorPayload){
+        Logger::logInternalError("JavaGenerator", $errorMessage . " - " . print_r($errorPayload, true));
+        self::$output = array();
+        self::$output["isSuccess"] = "false";
+        self::$output["errorMessage"] = $errorMessage;
     }
 }
 ?>

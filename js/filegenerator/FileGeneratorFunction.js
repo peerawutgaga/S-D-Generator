@@ -1,5 +1,5 @@
 function createSourceCode(){
-	var graphId = SDSelect.options[SDSelect.selectedIndex].id;
+	graphId = SDSelect.options[SDSelect.selectedIndex].id;
 	diagramId = CDSelect.options[CDSelect.selectedIndex].id;
 	classList = getClassUnderTestList();
 	sourceLang = "JAVA";
@@ -70,9 +70,8 @@ function checkClassesRelation(graphId,classList){
 		'objectList':classList
 	}, function(returnedData){
 		var result = JSON.parse(returnedData);
-		console.log(result[0]["isSuccess"]);
 		if(result[0]["isSuccess"] == "success"){
-			generateSourceCode(diagramId,classList,sourceType,"JAVA");
+			generateSourceCode(graphId,diagramId,classList,sourceType,"JAVA");
 		}else if(result[0]["isSuccess"] == "warning"){
 			if(!confirm(result[0]["errorMessage"])){
 		        return;
@@ -83,7 +82,7 @@ function checkClassesRelation(graphId,classList){
 		}
 	});	
 }
-function generateSourceCode(diagramId,classList,sourceType,sourceLang){
+function generateSourceCode(graphId,diagramId,classList,sourceType,sourceLang){
 	
 	$.post('php/sourcecode/SourceCodeGenerator.php', { 
 		'diagramId' : diagramId,

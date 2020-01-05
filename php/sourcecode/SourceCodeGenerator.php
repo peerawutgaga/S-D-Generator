@@ -2,8 +2,10 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/sourcecode/java/JavaGenerator.php';
 require_once $root . '/php/database/CallGraphService.php';
+require_once $root . '/php/database/ClassDiagramService.php';
 require_once $root . '/php/utilities/Constant.php';
 require_once $root . '/php/utilities/Script.php';
+require_once $root . '/php/utilities/DataGenerator.php';
 
 if (isset($_POST['diagramId']) && isset($_POST['objectList']) && isset($_POST['sourceType']) && isset($_POST['sourceLang'])) {
     $diagramId = $_POST['diagramId'];
@@ -15,15 +17,13 @@ if (isset($_POST['diagramId']) && isset($_POST['objectList']) && isset($_POST['s
 
 class SourceCodeGenerator
 {
-
+    private static $graphId;
     private static $diagramId;
-
     private static $objectList;
+    private static $classList;
 
     public static function createCode($diagramId, $objectList, $sourceType, $sourceLang)
     {
-        self::$diagramId = $diagramId;
-        self::$objectList = $objectList;
         if ($sourceType == Constant::STUB_TYPE) {
             $stubList = self::identifyStub($objectList);
             if ($sourceLang == Constant::JAVA_LANG) {
@@ -38,7 +38,7 @@ class SourceCodeGenerator
             }
         }
     }
-
+    
     private static function identifyStub($objectListStr)
     {
         $objectList = explode(",", $objectListStr);

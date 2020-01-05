@@ -157,6 +157,13 @@ class ClassDiagramService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+    public static function selectFromClassByClassIdList($classIdList){
+        $conn = Database::getConnection();
+        $statement = "SELECT * FROM `classdiagram.class` WHERE classId in ($classIdList)";
+        $sql = $conn->prepare($statement);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
     public static function selectMethodByClassIdAndMessageName($classId,$messageName){
         $conn = Database::getConnection();
         $statement = "SELECT * FROM `classdiagram.method` 
@@ -173,6 +180,15 @@ class ClassDiagramService
         WHERE methodId = :methodId";
         $sql = $conn->prepare($statement);
         $sql->bindParam(':methodId', $methodId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
+    public static function selectChildIdFromInheritanceBySuperClassId($superClassId){
+        $conn = Database::getConnection();
+        $statement = "SELECT childClassId FROM `classdiagram.inheritance`
+        WHERE superClassId = :superClassId";
+        $sql = $conn->prepare($statement);
+        $sql->bindParam(':superClassId', $superClassId);
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
