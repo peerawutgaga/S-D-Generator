@@ -1,36 +1,20 @@
 function createSourceCode(){
-	var classList = getClassUnderTestList();
-	var diagramId = CDSelect.options[CDSelect.selectedIndex].id;
+	var graphId = SDSelect.options[SDSelect.selectedIndex].id;
+	diagramId = CDSelect.options[CDSelect.selectedIndex].id;
+	classList = getClassUnderTestList();
+	sourceLang = "JAVA";
 	if(classList.length == 0){
 		alert("Please select at least one class");
 		return;
 	}
-	
 	if(stubCheckBox.checked){
-		$.post('php/sourcecode/SourceCodeGenerator.php', { 
-			'diagramId' : diagramId,
-			'objectList':classList,
-			'sourceType':'STUB',
-			'sourceLang':'JAVA'
-		}, function(returnedData){
-			var fileList = getFileList(returnedData);
-			addFileListToTable(fileList);
-		});
-	}
-	else if(driverCheckBox.checked){
-		$.post('php/sourcecode/SourceCodeGenerator.php', { 
-			'diagramId' : diagramId,
-			'objectList':classList,
-			'sourceType':'DRIVER',
-			'sourceLang':'JAVA'
-		}, function(returnedData){
-			var fileList = getFileList(returnedData);
-			addFileListToTable(fileList);
-		});
+		sourceType = "STUB";
+	}else if(driverCheckBox.checked){
+		sourceType = "DRIVER";
 	}else{
-		alert("Please select source code type (Stub or Driver).");
-		return;
+		alert("Please select source code type either Stub or Driver.");
 	}
+	checkClassesRelation(graphId,classList);
 }
 function getClassUnderTestList(){
 	
@@ -79,7 +63,38 @@ function addFileListToTable(fileList){
 	classSelectionModal.style.display = "none";
 	fileListModal.style.display = "block";
 }
-
+function checkClassesRelation(graphId,classList){
+	$result = $.post('php/pages/DiagramSelection.php', { 
+		'functionName' : 'checkClassesRelation',
+		'callGraphId' : graphId,
+		'objectList':classList
+	}, function(returnedData){
+		var result = JSON.parse(returnedData);
+		console.log(result[0]["isSuccess"]);
+		if(result[0]["isSuccess"] == "success"){
+			generateSourceCode(diagramId,classList,sourceType,"JAVA");
+		}else if(result[0]["isSuccess"] == "warning"){
+			if(!confirm(result[0]["errorMessage"])){
+		        return;
+		    }
+			generateSourceCode(diagramId,classList,sourceType,"JAVA");
+		}else if(result[0]["isSuccess"] == "error"){
+			alert(result[0]["errorMessage"]);
+		}
+	});	
+}
+function generateSourceCode(diagramId,classList,sourceType,sourceLang){
+	
+	$.post('php/sourcecode/SourceCodeGenerator.php', { 
+		'diagramId' : diagramId,
+		'objectList':classList,
+		'sourceType':sourceType,
+		'sourceLang':sourceLang
+	}, function(returnedData){
+		var fileList = getFileList(returnedData);
+		addFileListToTable(fileList);
+	});
+}
 function editCode(){
 	/*
 	 * var selectedValue = $("tr.selected td:first" ).html(); if(selectedValue ==

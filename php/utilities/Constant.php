@@ -29,6 +29,8 @@ class Constant
     public const INTERFACT_INSTANCE = "INTERFACE";
 
     public const STATIC_INSTANCE = "STATIC";
+    
+    public const TERMINATED_NODE = "TERMINATED";
 
     // Source code type
     public const STUB_TYPE = "STUB";
@@ -46,6 +48,12 @@ class Constant
     public const CLASS_NOT_UNIQUE_ERROR_MSG = "Class is not unique.";
     
     public const CODE_GENERATION_ERROR_MSG = "Internal error occured during generate source code";
+    
+    public const UNRELATED_CLASSES_SELECTED_ERROR_MSG = "Unrelated class under test is selected: ";
+    
+    public const ALL_CLASSES_SELECTED_ERROR_MSG = "All object in call graph is selected. Please revise the selection.";
+    
+    public const GENERIC_INTERNAL_ERROR_MSG = "Unexpected internal error occured. Please contact system administrator";
 
     // Primitive Data type
     public const INT_TYPE = "int";

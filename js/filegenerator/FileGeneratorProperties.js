@@ -7,3 +7,7 @@ var driverCheckBox= document.getElementById("driverCheckBox");
 
 //Variable
 var fileList;
+var classList;
+var diagramId;
+var sourceType;
+var sourceLang;

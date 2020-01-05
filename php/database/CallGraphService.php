@@ -146,6 +146,16 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+
+    public static function selectFromObjectNodeByCallGraphId($callGraphId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID");
+        $sql->bindParam(':callGraphID', $callGraphId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
+
     public static function selectFromObjectNodeByCallGraphIdAndIsNotRef($callGraphId)
     {
         $conn = Database::getConnection();
@@ -163,7 +173,8 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
-    public static function selectFromMessageByFromObjectIDAndMessageType($fromObjectId,$messageType)
+
+    public static function selectFromMessageByFromObjectIDAndMessageType($fromObjectId, $messageType)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `fromObjectId` = :fromObjectId AND `messageType` = :messageType");
@@ -172,7 +183,8 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
-    public static function selectFromMessageByToObjectIDAndMessageType($toObjectId,$messageType)
+
+    public static function selectFromMessageByToObjectIDAndMessageType($toObjectId, $messageType)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `toObjectId` = :toObjectId AND `messageType` = :messageType");
@@ -190,7 +202,7 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
-    
+
     public static function deleteFromGraphByCallGraphId($callGraphId)
     {
         $conn = Database::getConnection();
