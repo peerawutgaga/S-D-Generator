@@ -62,7 +62,7 @@ class JavaGenerator
     {
         $classMethodList = array();
         $messageName = $message["messageName"];
-        $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(8, $baseIdentifier);
+        $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $baseIdentifier);
         if (count($class) < 1) {
             self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $baseIdentifier);
             return false;

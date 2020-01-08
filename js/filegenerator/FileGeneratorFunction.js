@@ -39,7 +39,7 @@ function getFileList(returnedData){
 		return;
 	}
 	var returnedObject = JSON.parse(returnedData);
-	if(returnedObject["isSuccess"]=="false"){
+	if(returnedObject["isSuccess"] =="false"){
 		alert("Error occured in source code generator: "+returnedObject["errorMessage"]);
 		return;
 	}

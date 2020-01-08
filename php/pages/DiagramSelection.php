@@ -64,6 +64,7 @@ class DiagramSelection
             array_push($output,array("isSuccess"=>"error","errorMessage"=>Constant::ALL_CLASSES_SELECTED_ERROR_MSG));
             return $output;
         }
+            
         foreach ($objectList as $objectId) {
             $outLinks = $graphStructure[$objectId]["outLinks"];
             $inLinks = $graphStructure[$objectId]["inLinks"];
@@ -114,7 +115,7 @@ class DiagramSelection
                 return $output;
             }
         }
-        $output["isSuccess"] = "success";
+        array_push($output,array("isSuccess"=>"success"));
         return $output;
     }
 
