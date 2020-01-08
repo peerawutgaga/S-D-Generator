@@ -157,6 +157,16 @@ class ClassDiagramService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+    public static function selectFromClassByClassId($classId){
+        $conn = Database::getConnection();
+        $statement = "SELECT p.namespace, c.classId, c.className, c.InstanceType FROM `classdiagram.package` p 
+        INNER JOIN `classdiagram.class` c on p.packageId = c.packageId
+        WHERE c.classId = :classId";
+        $sql = $conn->prepare($statement);
+        $sql->bindParam(':classId', $classId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
     public static function selectFromClassByClassIdList($classIdList){
         $conn = Database::getConnection();
         $statement = "SELECT * FROM `classdiagram.class` WHERE classId in ($classIdList)";
