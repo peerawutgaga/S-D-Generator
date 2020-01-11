@@ -116,38 +116,33 @@ class JavaGenerator
         $fromObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["fromObjectId"])[0];
         $toObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["toObjectId"])[0];
         $message = $driver;
-        $fromClass = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $fromObjectNode["baseIdentifier"]);
-        $toClass = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $toObjectNode["baseIdentifier"]);
-        if (count($fromClass) < 1 || count($toClass) < 1) {
-            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $fromObjectNode);
-            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $toObjectNode);
-            return false;
-        } else if (count($fromClass) > 1 || count($toClass) > 1) {
-            self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG, $fromClass);
-            self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG, $toClass);
+        $fromClassMethodList = self::getClassesAndMethod($fromObjectNode["baseIdentifier"], $message);
+        if ($fromClassMethodList == false) {
             return false;
         }
-        $fromClass = $fromClass[0]; // Make a single class from array
-        $toClass = $toClass[0]; // Make a single class from array
-                                // Replace create message name with class name to call instructor
-        if ($message["messageType"] == Constant::CREATE_MESSAGE_TYPE) {
-            $message["messageName"] = $toClass["className"];
+        $toClassMethodList = self::getClassesAndMethod($toObjectNode["baseIdentifier"], $message);
+        if ($fromClassMethodList == false) {
+            return false;
         }
-        $filename = $fromClass["className"] . "Driver.java";
-        $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($toClass["classId"], $message["messageName"]);
-        $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
-        if (count($file) == 0) {
-            $fileId = java\DriverGenerator::createNewFile($filename, $fromClass, $toClass, $methods);
-            if ($fileId != - 1) {
-                self::$output[$fileId] = $filename;
-            } else {
-                self::handleError(Constant::CODE_GENERATION_ERROR_MSG, "");
-                return false;
+        foreach ($fromClassMethodList as $fromClassMethod) {
+            $filename = $fromClassMethod["class"]["className"] . "Driver.java";
+            foreach ($toClassMethodList as $toClassMethod) {
+                $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
+                if (count($file) == 0) {
+                    $fileId = java\DriverGenerator::createNewFile($filename, $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    if ($fileId != - 1) {
+                        self::$output[$fileId] = $filename;
+                    } else {
+                        self::handleError(Constant::CODE_GENERATION_ERROR_MSG, "");
+                        return false;
+                    }
+                } else {
+                    $fileId = java\DriverGenerator::addToExistFile($file[0], $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    self::$output[$fileId] = $filename;
+                }
             }
-        } else {
-            $fileId = java\DriverGenerator::addToExistFile($file[0], $fromClass, $toClass, $methods);
-            self::$output[$fileId] = $filename;
         }
+
         return true;
     }
 

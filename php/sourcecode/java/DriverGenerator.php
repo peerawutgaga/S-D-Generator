@@ -92,13 +92,14 @@ class DriverGenerator
             $returnType = $method["returnType"];
             $className = $toClass["className"];
             $isConstructor = $method["isConstructor"];
+            $methodName = self::convertToTestMethodName($method["methodName"], $className);
             if ($visibility == "private") {
                 continue;
             }
-            if (in_array($method["methodName"], $existedMethodList)) {
+            if (in_array($methodName, $existedMethodList)) {
                 continue;
             }
-            self::declareMethodHeader($method);
+            self::declareMethodHeader($method,$className);
             if ($isConstructor) {
                 self::generateConstructorInvocation($method);
                 self::closeMethod();
@@ -125,15 +126,15 @@ class DriverGenerator
         self::$content .= "\t\tnew " . $methodName . "(" . $inputValues . ");\r\n";
     }
 
-    private static function convertToTestMethodName($methodName)
+    private static function convertToTestMethodName($methodName,$className)
     {
         $methodName = ucfirst($methodName); // Uppercase first character
-        return "test" . $methodName;
+        return "test" . $methodName."In".$className;
     }
 
-    private static function declareMethodHeader($method)
+    private static function declareMethodHeader($method,$className)
     {
-        $methodName = self::convertToTestMethodName($method["methodName"]);
+        $methodName = self::convertToTestMethodName($method["methodName"],$className);
         if (isset(self::$declaredVariableList[$methodName])) {
             self::$declaredVariableList[$methodName] += 1;
             $methodName .= self::$declaredVariableList[$methodName];
