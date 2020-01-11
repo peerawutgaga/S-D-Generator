@@ -26,6 +26,7 @@ function getClassUnderTestList(){
 	return classList;
 }
 function getFileList(returnedData){
+	console.log(returnedData);
 	var fileList = [];
 	if(returnedData == null || returnedData.length ==0){
 		alert("No data returned from source code generator. Error might be occured.");
@@ -64,7 +65,7 @@ function checkClassesRelation(graphId,classList){
 	}, function(returnedData){
 		var result = JSON.parse(returnedData);
 		if(result[0]["isSuccess"] == "success"){
-			generateSourceCode(graphId,diagramId,classList,"JAVA");
+			generateSourceCode(diagramId,classList,"JAVA");
 		}else if(result[0]["isSuccess"] == "warning"){
 			if(!confirm(result[0]["errorMessage"])){
 		        return;
@@ -75,7 +76,7 @@ function checkClassesRelation(graphId,classList){
 		}
 	});	
 }
-function generateSourceCode(graphId,diagramId,classList,sourceLang){
+function generateSourceCode(diagramId,classList,sourceLang){
 	
 	$.post('php/sourcecode/SourceCodeGenerator.php', { 
 		'diagramId' : diagramId,
