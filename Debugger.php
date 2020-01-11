@@ -11,11 +11,11 @@ require_once $root."/php/utilities/Script.php";
 require_once $root."/php/utilities/DataGenerator.php";
 
 //echo DataGenerator::getRandomDoubleWithBound(0,10,3);
-//SourceCodeGenerator::createCode(8, "85,87", "STUB", "JAVA");
+SourceCodeGenerator::createCode(8, "88", "JAVA");
 //$result = JavaGenerator::getClassesAndMethod("PaymentType", "pay");
 //Script::printObject($result);
 //DiagramSelection::checkReferenceDiagram(130);
-DiagramSelection::checkClassesRelation(133, "85,86,88");
+//DiagramSelection::checkClassesRelation(133, "85,86,88");
 //$childClassId = ClassDiagramService::selectChildIdFromInheritanceBySuperClassId(166);
 //$childClassId = DataGenerator::convertArrayOfArrayToSingleStringByKey($childClassId, 0);
 //Script::printObject($childClassId);

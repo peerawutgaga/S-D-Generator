@@ -109,8 +109,8 @@ a {
 	padding: 20px;
 	border: 1px solid #888;
 	border-radius: 4px;
-	width: 40%;
-	height: 45%;
+	width: 25%;
+	height: 40%;
 	overflow: auto;
 }
 
@@ -209,7 +209,7 @@ a {
 
 #classTableDiv {
 	display: table-cell;
-	width: 50%;
+	width: 25%;
 }
 
 #fileTableDiv {
@@ -219,12 +219,5 @@ a {
 
 #classTableDiv td, #fileTableDiv td {
 	padding: 1em;
-}
-
-#sourceCodeTypeDiv {
-	padding-left: 50px;
-	padding-bottom: 1em;
-	text-align: left;
-	display: block;
 }
 /* --------- ID END HERE --------- */

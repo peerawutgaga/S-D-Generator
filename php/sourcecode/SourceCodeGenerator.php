@@ -6,12 +6,11 @@ require_once $root . '/php/database/ClassDiagramService.php';
 require_once $root . '/php/utilities/Constant.php';
 require_once $root . '/php/utilities/Script.php';
 
-if (isset($_POST['diagramId']) && isset($_POST['objectList']) && isset($_POST['sourceType']) && isset($_POST['sourceLang'])) {
+if (isset($_POST['diagramId']) && isset($_POST['objectList']) && isset($_POST['sourceLang'])) {
     $diagramId = $_POST['diagramId'];
     $objectList = $_POST['objectList'];
-    $sourceType = $_POST['sourceType'];
     $sourceLang = $_POST['sourceLang'];
-    SourceCodeGenerator::createCode($diagramId, $objectList, $sourceType, $sourceLang);
+    SourceCodeGenerator::createCode($diagramId, $objectList, $sourceLang);
 }
 
 class SourceCodeGenerator
@@ -19,21 +18,23 @@ class SourceCodeGenerator
 
     private static $diagramId;
 
-    public static function createCode($diagramId, $objectList, $sourceType, $sourceLang)
+    public static function createCode($diagramId, $objectList, $sourceLang)
     {
         self::$diagramId = $diagramId;
-        if ($sourceType == Constant::STUB_TYPE) {
-            $stubList = self::identifyStub($objectList);
-            if ($sourceLang == Constant::JAVA_LANG) {
-                $output = JavaGenerator::generateStubs($diagramId, $stubList);
-                echo json_encode($output);
+        $stubList = self::identifyStub($objectList);
+        $driverList = self::identifyDriver($objectList);
+        $output = array();
+        if ($sourceLang == Constant::JAVA_LANG) {
+            $stubFile = JavaGenerator::generateStubs($diagramId, $stubList);
+            $driverFile = JavaGenerator::generateDrivers($diagramId, $driverList);
+            if($stubFile["isSuccess"]!="true"){
+                $output = $stubFile;
+            }else if($driverFile["isSuccess"]!="true"){
+                $output = $driverFile;
+            }else{
+                $output=$stubFile + $driverFile;               
             }
-        } else if ($sourceType == Constant::DRIVER_TYPE) {
-            $driverList = self::identifyDriver($objectList);
-            if ($sourceLang == Constant::JAVA_LANG) {
-                $output = JavaGenerator::generateDrivers($diagramId, $driverList);
-                echo json_encode($output);
-            }
+            echo json_encode($output);
         }
     }
 
@@ -82,6 +83,5 @@ class SourceCodeGenerator
         }
         return $driverList;
     }
-
 }
 ?>

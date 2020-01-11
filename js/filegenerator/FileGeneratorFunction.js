@@ -7,13 +7,6 @@ function createSourceCode(){
 		alert("Please select at least one class");
 		return;
 	}
-	if(stubCheckBox.checked){
-		sourceType = "STUB";
-	}else if(driverCheckBox.checked){
-		sourceType = "DRIVER";
-	}else{
-		alert("Please select source code type either Stub or Driver.");
-	}
 	checkClassesRelation(graphId,classList);
 }
 function getClassUnderTestList(){
@@ -71,23 +64,22 @@ function checkClassesRelation(graphId,classList){
 	}, function(returnedData){
 		var result = JSON.parse(returnedData);
 		if(result[0]["isSuccess"] == "success"){
-			generateSourceCode(graphId,diagramId,classList,sourceType,"JAVA");
+			generateSourceCode(graphId,diagramId,classList,"JAVA");
 		}else if(result[0]["isSuccess"] == "warning"){
 			if(!confirm(result[0]["errorMessage"])){
 		        return;
 		    }
-			generateSourceCode(diagramId,classList,sourceType,"JAVA");
+			generateSourceCode(diagramId,classList,"JAVA");
 		}else if(result[0]["isSuccess"] == "error"){
 			alert(result[0]["errorMessage"]);
 		}
 	});	
 }
-function generateSourceCode(graphId,diagramId,classList,sourceType,sourceLang){
+function generateSourceCode(graphId,diagramId,classList,sourceLang){
 	
 	$.post('php/sourcecode/SourceCodeGenerator.php', { 
 		'diagramId' : diagramId,
 		'objectList':classList,
-		'sourceType':sourceType,
 		'sourceLang':sourceLang
 	}, function(returnedData){
 		var fileList = getFileList(returnedData);

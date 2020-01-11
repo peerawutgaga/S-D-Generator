@@ -10,5 +10,4 @@ var fileList;
 var classList;
 var graphId;
 var diagramId;
-var sourceType;
 var sourceLang;

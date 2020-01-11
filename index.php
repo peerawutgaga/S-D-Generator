@@ -110,15 +110,6 @@
 					<table id="classListTable" border=1>
 					</table>
 				</div>
-
-				<div id="sourceCodeTypeDiv">
-					<h4>Select source code type</h4>
-					<form id="sourceCodeTypeForm">
-						<input type="radio" id="stubCheckBox" name="sourceCodeTypeRadio"
-							value="Stub">Stub<br><br><input
-							type="radio" id="driverCheckBox" name="sourceCodeTypeRadio" value="Driver">Driver
-					</form>
-				</div>
 			</div>
 			<button id="backBtn" class="navigateButton">Back</button>
 			<button id="createBtn" class="navigateButton"
