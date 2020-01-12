@@ -25,7 +25,7 @@ class SourceCodeGenerator
         $driverList = self::identifyDriver($objectList);
         $output = array();
         if ($sourceLang == Constant::JAVA_LANG) {
-            $stubFile = JavaGenerator::generateStubs($diagramId, $stubList);
+            $stubFile = JavaGenerator::generateStubs($diagramId, $stubList);               
             $driverFile = JavaGenerator::generateDrivers($diagramId, $driverList);
             if($stubFile["isSuccess"]!="true"){
                 $output = $stubFile;

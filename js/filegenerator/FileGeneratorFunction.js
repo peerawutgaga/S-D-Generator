@@ -26,7 +26,6 @@ function getClassUnderTestList(){
 	return classList;
 }
 function getFileList(returnedData){
-	console.log(returnedData);
 	var fileList = [];
 	if(returnedData == null || returnedData.length ==0){
 		alert("No data returned from source code generator. Error might be occured.");
@@ -88,35 +87,41 @@ function generateSourceCode(diagramId,classList,sourceLang){
 	});
 }
 function editCode(){
-	/*
-	 * var selectedValue = $("tr.selected td:first" ).html(); if(selectedValue ==
-	 * null){ alert("Please select a file"); return; } selectedValue =
-	 * selectedValue.replace(".","-"); var queryString =
-	 * "?sourcecode="+selectedValue; var win =
-	 * window.open('../CreateCode.php'+queryString); if (win) { //Browser has
-	 * allowed it to be opened win.focus(); } else { //Browser has blocked it
-	 * alert('Please allow popups for this website'); }
-	 */
+	var selectedFile = fileListTable.getElementsByClassName('selected');
+	  var queryString = "?sourcecode="+selectedFile[0].id; 
+	  var win = window.open('../CreateCode.php'+queryString); 
+	  if (win) { // Browser has allowed it to be opened
+		  win.focus(); 
+	  } else { // Browser has blocked it
+	  alert('Please allow popups for this website'); 
+  }
+	 
 }
 function exportSelected(){
-	/*
-	 * var selectedValue = $("tr.selected td:first" ).html(); if(selectedValue ==
-	 * null){ alert("Please select a file"); return; } var confirmMsg = "Export
-	 * file: "+selectedValue+"?"; if(!confirm(confirmMsg)){ return; }
-	 * selectedValue = selectedValue.replace(".","-"); var queryString =
-	 * "?sourcecode="+selectedValue;
-	 * window.location.href='../PHP/Download.php'+queryString;
-	 */
+	var selectedFile = fileListTable.getElementsByClassName('selected'); 
+	if(selectedFile.length ==0){
+		alert("Please select a file");
+		return; 
+	} 
+	var queryString = "?sourcecode="+selectedFile[0].id;
+	window.location.href='../../php/utilities/Download.php'+queryString; 
 }
 function exportAll(){
-	/*
-	 * var confirmMsg = "Export all generated files?"; if(!confirm(confirmMsg)){
-	 * return; } var files = fileList.split(","); if(files.length == 1){ var
-	 * file = files[0].replace(".","-"); var queryString = "?sourcecode="+file;
-	 * window.location.href='../php/Download.php'+queryString; return; }
-	 * $.post('php/pages/CodeEditorService.php', { 'method': "exportAll",
-	 * 'filepath' : fileList, }, function(returnedData){ var queryString =
-	 * "?sourcecode=Source_Code_Files-zip";
-	 * window.location.href='..php/Download.php'+queryString; });
-	 */
+	var fileList = fileListTable.getElementsByTagName("tr");
+	var fileListStr = "";
+	for(var i=0;i<fileList.length;i++){
+		fileListStr += fileList[i].id+",";
+	}
+	fileListStr = fileListStr.substring(0, fileListStr.length - 1);
+	$.post('php/utilities/LocalFileManager.php', { 
+		'function' : 'zip',
+		'fileList':fileListStr
+	}, function(returnedData){
+		console.log(returnedData);
+		if(returnedData == "success"){
+			window.location.href='../../php/utilities/Download.php?sourcecode=zip'; 
+		}else{
+			alert("Error while exporting file");
+		}
+	});
 }

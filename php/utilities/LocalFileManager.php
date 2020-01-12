@@ -1,45 +1,94 @@
 <?php
-    class LocalFileManager{
-        public static function delete($filepath){
-            return unlink($filepath);
-        }
-        public static function copy($source,$dest){
-            return copy($source,$dest);
-        }
-        public static function prepareDownload($file){
-            $root = realpath($_SERVER["DOCUMENT_ROOT"])."/Source Code Files/";
-            $idx = strrpos($file,"-",-1);
-            $file = substr_replace($file,".",$idx,1);
-            self::copy($root.$file.".txt",$root.$file);
-            return $root.$file;
-        }
-        public static function zip($fileList){
-            $root = realpath($_SERVER["DOCUMENT_ROOT"])."/Source Code Files/";
-            if(!is_dir($root.'/tmp')){
-                mkdir($root.'/tmp');
-            }
-            $zip = new ZipArchive;
-            $filename = "$root/tmp/Source_Code_Files.zip";
-            if ($zip->open($filename, ZipArchive::CREATE)!==TRUE) {
-                echo "failed";
-                return;
-            }
-            $fileList = explode(",",$fileList);
-            foreach($fileList as $file){
-                $source = $root.$file.".txt";
-                $desc = $root."/tmp/".$file;
-                self::copy($source,$desc);
-                $zip->addFile($desc,$file);
-            }
-            $zip->close();
-            self::copy($filename,$root."Source_Code_Files.zip");
-            //clear tmp file
-            foreach($fileList as $file){
-                $desc = $root."/tmp/".$file;
-                self::delete($desc);
-            }
-            self::delete($filename);
-            rmdir($root.'/tmp');
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once $root . "/php/database/SourceCodeService.php";
+require_once $root . "/php/utilities/Logger.php";
+if (isset($_POST['function']) && isset($_POST['fileList'])) {
+    if ($_POST['function'] == "zip") {
+        LocalFileManager::zip($_POST['fileList']);
+    }
+}
+
+class LocalFileManager
+{
+
+    public static function delete($filePath)
+    {
+        $result = false;
+        try{
+            $result = unlink($filePath);
+        }catch(Exception $e){
+            $result = false;
+            Logger::logInternalError("LocalFileManager", $e->getMessage());
+        }finally{
+            return $result;
         }
     }
+
+    public static function copy($source, $dest)
+    {
+        // TODO Rewrite
+        // return copy($source, $dest);
+    }
+
+    public static function prepareFile($fileId)
+    {
+        $file = SourceCodeService::selectFromSourceCodeByFileId($fileId)[0];
+        $filePath = self::createFile($file["filename"], $file["filePayload"]);
+        return $filePath;
+    }
+
+    private static function createFile($filename, $filePayload)
+    {
+        $outputPath = realpath($_SERVER["DOCUMENT_ROOT"]) . "/DownloadTemp/";
+        if (! is_dir($outputPath)) {
+            mkdir($outputPath);
+        }
+        $filePath = $outputPath . $filename;
+        $file = fopen($filePath, "w");
+        fwrite($file, $filePayload);
+        fclose($file);
+        return $filePath;
+    }
+
+    private static function getFilenameFromFilePath($filePath)
+    {
+        $startIdx = strripos($filePath, "/") + 1;
+        $endIdx = strlen($filePath);
+        return substr($filePath, $startIdx, $endIdx);
+    }
+
+    public static function zip($fileList)
+    {
+        $outputPath = realpath($_SERVER["DOCUMENT_ROOT"]) . "/DownloadTemp/";
+        try {
+            if (! is_dir($outputPath)) {
+                mkdir($outputPath);
+            }
+            $zip = new ZipArchive();
+            $zipFilename = $outputPath . "Source_Code_Files.zip";
+            if ($zip->open($zipFilename, ZipArchive::CREATE) !== TRUE) {
+                echo "fail";
+                return;
+            }
+            $fileList = explode(",", $fileList);
+            $filePathList = array();
+            foreach ($fileList as $fileId) {
+                $filePath = self::prepareFile($fileId);
+                $zip->addFile($filePath,self::getFilenameFromFilePath($filePath));
+                array_push($filePathList,$filePath);
+            }
+            $zip->close();
+            self::cleanUpTempFile($filePathList);
+            echo "success";
+        } catch (Exception $e) {
+            Logger::logInternalError("LocalFileManager", $e->getMessage());
+            echo "fail";
+        }
+    }
+    private static function cleanUpTempFile($filePathList){
+        foreach($filePathList as $filePath){
+            self::delete($filePath);
+        }
+    }
+}
 ?>

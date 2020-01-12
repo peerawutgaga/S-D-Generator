@@ -34,9 +34,9 @@ class Constant
 
     // Source code type
     public const STUB_TYPE = "STUB";
-
+    
     public const DRIVER_TYPE = "DRIVER";
-
+    
     // Source code language
     public const JAVA_LANG = "JAVA";
 

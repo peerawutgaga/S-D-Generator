@@ -1,49 +1,44 @@
 <?php
-    $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-    require_once "$root/php/database/SourceCodeService.php";
-    require_once "$root/php/LocalFileManager.php";
-    $method = $_POST['method'];
-    if($method =="rename"){
-        CodeEditorphp::rename($_POST['oldFilename'],$_POST['newFilename']);
-    }else if($method == "saveFile"){
-        CodeEditorphp::saveFile($_POST['filepath'],$_POST['content']);
-    }else if($method == "exportAll"){
-        CodeEditorphp::exportAll($_POST['filepath'],$_POST['fileList']);
+$root = realpath($_SERVER["DOCUMENT_ROOT"]);
+require_once "$root/php/database/SourceCodeService.php";
+require_once "$root/php/utilities/LocalFileManager.php";
+if (isset($_POST['function'])) {
+    if ($_POST['function'] == "openFile" && isset($_POST['fileId'])) {
+        CodeEditor::openFile($_POST['fileId']);
     }
-    class CodeEditorphp{
-        public static function rename($oldName, $newName){
-            //TODO Rewrite the function
-            /*$root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $fullOldName = $root."/Source Code Files/".$oldName;
-            $fullNewName = $root."/Source Code Files/".$newName;
-            $newPath = "../Source Code Files/".$newName.".txt";
-            if(SourceCodeService::selectFromFileTableByFileName($newName)!=null){
-                echo "Exist";
-                return;
-            }
-            $success = SourceCodeService::renameFile($oldName, $newName,$newPath);
-            if($success){
-                if(rename($fullOldName.".txt",$fullNewName.".txt")){
-                    $idx = strrpos($fullOldName,".",-1);
-                    $fullOldName = substr_replace($fullOldName,"-",$idx,1);
-                    $idx = strrpos($newName,".",-1);
-                    echo substr_replace($newName,"-",$idx,1);
-                    return;
-                }
-            }
-            echo "failed";*/
-        }
-        public static function saveFile($filepath, $content){
-            //TODO Rewrite the function
-           /* $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-            $filepath = $root.$filepath;
-            echo $filepath;
-            $file = fopen($filepath,"w");
-            fwrite($file,$content);
-            fclose($file);*/
-        }
-        public static function exportAll($fileList){
-            LocalFileManager::zip($fileList);
+    else if ($_POST['function'] == "rename" && isset($_POST['fileId']) && isset($_POST['newFilename'])) {
+        CodeEditor::rename($_POST['fileId'],$_POST['newFilename']);
+    }
+    else if ($_POST['function'] == "saveFile" && isset($_POST['fileId']) && isset($_POST['filePayload'])) {
+        CodeEditor::saveFile($_POST['fileId'], $_POST['filePayload']);
+    }
+}
+
+class CodeEditor
+{
+
+    public static function openFile($fileId)
+    {
+        $file = SourceCodeService::selectFromSourceCodeByFileId($fileId);
+        echo json_encode($file);
+    }
+
+    public static function rename($fileId, $newFilename)
+    {
+        $isSuccess = SourceCodeService::updateSourceCodeFileSetFilenameByFileId($newFilename, $fileId);
+        if($isSuccess){
+            echo "success";
+        }else{
+            echo "failed";
         }
     }
+    public static function saveFile($fileId,$filePayload){
+        $isSuccess = SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId($filePayload, $fileId);
+        if($isSuccess){
+            echo "success";
+        }else{
+            echo "failed";
+        }
+    }
+}
 ?>

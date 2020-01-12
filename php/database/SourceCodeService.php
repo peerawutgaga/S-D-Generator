@@ -66,6 +66,12 @@ class SourceCodeService
         $fileId = self::executeInsertStatement($conn, $sql);
         return $fileId;
     }
+    public static function selectFromSourceCodeByFileId($fileId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `code.sourcecodefile` WHERE `fileId` = :fileId");
+        $sql->bindParam(":fileId", $fileId);
+        return self::executeSelectStatement($conn, $sql);
+    }
     public static function selectFromSourceCodeByFilename($filename){
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `code.sourcecodefile` WHERE `filename` = :filename");

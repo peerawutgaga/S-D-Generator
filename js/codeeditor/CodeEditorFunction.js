@@ -1,163 +1,81 @@
-function recordFileInfo(filename){
-    var idx = filename.lastIndexOf("-");
-    fileExtension = filename.substring(idx+1);
-    oldFilename = filename.substring(0,idx);
-}
-function initialDefaultModal(){
-    if(fileExtension == "php"){
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "php",
-            'modal': "default",
-        }, function(returnedData){
-           document.getElementById("defaultDataTypeSelect").innerHTML = returnedData;
-        });
-    }else{
-        $.post('Page/InsertValueModal.php', { 
-            'language': "java",
-            'modal': "default",
-        }, function(returnedData){
-            document.getElementById("defaultDataTypeSelect").innerHTML = returnedData;
-        });
-    }
-}
-function initialMaxModal(){
-    if(fileExtension == "php"){
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "php",
-            'modal': "max",
-        }, function(returnedData){
-           document.getElementById("maxDataTypeSelect").innerHTML = returnedData;
-        });
-    }else{
-        $.post('Page/InsertValueModal.php', { 
-            'language': "java",
-            'modal': "max",
-        }, function(returnedData){
-            document.getElementById("maxDataTypeSelect").innerHTML = returnedData;
-        });
-    }
-}
-function initialMinModal(){
-    if(fileExtension == "php"){
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "php",
-            'modal': "min",
-        }, function(returnedData){
-           document.getElementById("minDataTypeSelect").innerHTML = returnedData;
-        });
-    }else{
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "java",
-            'modal': "min",
-        }, function(returnedData){
-            document.getElementById("minDataTypeSelect").innerHTML = returnedData;
-        });
-    }
-}
-function initialRandomModal(){
-    if(fileExtension == "php"){
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "php",
-            'modal': "random",
-        }, function(returnedData){
-           document.getElementById("randomDataTypeSelect").innerHTML = returnedData;
-        });
-    }else{
-        $.post('php/pages/InsertValueModal.php', { 
-            'language': "java",
-            'modal': "random",
-        }, function(returnedData){
-            document.getElementById("randomDataTypeSelect").innerHTML = returnedData;
-        });
-    }
-}
-function openFile(){
-	//TODO rewrite the function
-   /* var filename = oldFilename+"."+fileExtension;
-    filepath = "../Source Code Files/"+filename+".txt";
-    var client = new XMLHttpRequest();
-    client.open('GET', filepath);
-    client.onreadystatechange = function() {
-        if(client.readyState === 4)
-        {
-            if(client.status === 200 || client.status == 0)
-            {
-                var allText = client.responseText;
-                filenameArea.value = filename;
-                document.getElementById("codeEditor").value = allText;
-            }
-        }
-    }
-    client.send();*/
+function openFile(fileId){
+	$.post('php/pages/CodeEditor.php', { 
+		'function': "openFile",
+        'fileId' : fileId 
+	}, function(returnedData){
+		var fileInfo = JSON.parse(returnedData);
+		currentFileId = fileInfo[0]["fileId"];
+		currentFilename = fileInfo[0]["filename"];
+		currentExtension = currentFilename.substring(currentFilename.lastIndexOf(".")+1);
+		filenameTextArea.value = fileInfo[0]["filename"];
+		codeTextArea.value = fileInfo[0]["filePayload"]
+	});
 }
 function rename(){
-	//TODO Rewrite the function
-    /*var currentFilename = filenameArea.value;
-    var confirmMsg = "Rename from "+oldFilename+"."+fileExtension+" to "+currentFilename;
+    var newFilename = filenameTextArea.value;
+    var confirmMsg = "Rename from "+currentFilename+" to "+newFilename;
     if(!confirm(confirmMsg)){
         return;
     }
-    var idx = currentFilename.lastIndexOf(".");
-    var newFilename = currentFilename.substring(0,idx);
-    var currentExtension = currentFilename.substring(idx+1);
-    if(currentExtension != fileExtension){
+    var newExtension = newFilename.substring(newFilename.lastIndexOf(".")+1);//Get Extension
+    if(newExtension != currentExtension){
         alert("Cannot change file extension");
         return;
     }
-    if(newFilename == oldFilename){
+    if(newFilename == currentFilename){
         alert("Nothing changed");
         return;
     }
-    if(newFilename == ""){
+    if(currentFilename == ""){
         alert("Filename cannot be empty");
         return;
     }
-    $.post('php/pages/CodeEditorService.php', { 
-		'method': "rename",
-        'oldFilename' : oldFilename+"."+fileExtension, 
-        'newFilename' : currentFilename,
+    $.post('php/pages/CodeEditor.php', { 
+		'function': "rename",
+        'fileId' : currentFileId, 
+        'newFilename' : newFilename,
 	}, function(returnedData){
-        if(returnedData == "failed"){
-             alert("Rename failed");
-        }else if(returnedData =="Exist"){
-            alert("Filename: "+currentFilename+" is exists.");
+        if(returnedData == "success"){
+        	alert("Rename Succeeded");
+            refreshCreatCodePage();            
         }else{
-            alert("Rename Succeeded");
-            refreshCreatCodePage(returnedData);
-         }
-	});*/
+        	alert("Rename failed");
+        }
+	});
 }
-function refreshCreatCodePage(sourceCodePath){
-	var queryString = "?sourcecode="+sourceCodePath; 
+
+function refreshCreatCodePage(){
+	var queryString = "?sourcecode="+currentFileId; 
 	window.location.href='../CreateCode.php'+queryString;
 }
 function saveChange(){
-	//TODO rewrite the function
-    /*if(!confirm("Save Change ?")){
+    if(!confirm("Save Change ?")){
         return;
     }
-    var filepath = "/Source Code Files/"+oldFilename+"."+fileExtension+".txt";
-    var content = document.getElementById("codeEditor").value;
-    $.post('Page/CodeEditorService.php', { 
-		'method': "saveFile",
-        'filepath' : filepath, 
-        'content' : content,
+    var filePayload = codeTextArea.value;
+    $.post('php/pages/CodeEditor.php', { 
+		'function': "saveFile",
+        'fileId' : currentFileId, 
+        'filePayload' : filePayload,
 	}, function(returnedData){
-        alert("Saved");
-	});*/
+		if(returnedData == "success"){
+        	alert("Saved");
+            refreshCreatCodePage();            
+        }else{
+        	alert("Save failed");
+        }
+	});
 }
 function exportFile(){
-	//TODO Rewrite the function
-   /* var confirmMsg = "Export file: "+oldFilename+"."+fileExtension+"?";
+   var confirmMsg = "Export file: "+currentFilename+"?";
     if(!confirm(confirmMsg)){
         return;
     }
-    var filepath = oldFilename+"-"+fileExtension;
-    var queryString = "?sourcecode="+filepath; 
-	window.location.href='../php/Download.php'+queryString;*/
+    var queryString = "?sourcecode="+currentFileId; 
+	window.location.href='../php/utilities/Download.php'+queryString;
 }
 
-
+/*
 function showOption(value){
     if(value == "byte" || value == "short" || value == "int"||value == "long"){
         showRangeOption();
@@ -168,34 +86,6 @@ function showOption(value){
     }else{
         clearOption();
     }
-}
-function showLengthOption(){
-    $.post('php/pages/InsertValueModal.php', { 
-		'option': "length",
-	}, function(returnedData){
-        document.getElementById('randomOption').innerHTML = returnedData;
-	});
-}
-function showRangeOption(){
-    $.post('php/pages/InsertValueModal.php', { 
-		'option': "range",
-	}, function(returnedData){
-        document.getElementById('randomOption').innerHTML = returnedData;
-	});
-}
-function showBothOption(){
-    $.post('php/pages/InsertValueModal.php', { 
-		'option': "both",
-	}, function(returnedData){
-        document.getElementById('randomOption').innerHTML = returnedData;
-	});
-}
-function clearOption(){
-    $.post('php/pages/InsertValueModal.php', { 
-		'option': "clear",
-	}, function(returnedData){
-        document.getElementById('randomOption').innerHTML = returnedData;
-	});
 }
 function showDefaultModal(){
     defaultModal.style.display = "block";
@@ -209,10 +99,11 @@ function showMinModal(){
 function showRandomModal(){
     randomModal.style.display = "block";
 }
-function insert(insertVal){
-    var val = codeEditor.value,
-    start = codeEditor.selectionStart,
-    end = codeEditor.selectionEnd;
-    codeEditor.value = val.substring(0, start) + insertVal + val.substring(end);
-    codeEditor.selectionStart = codeEditor.selectionEnd = start + 1;
+*/
+function insertCharacterToCodeEditor(insertValue){
+    var currentValue = codeTextArea.value,
+    start = codeTextArea.selectionStart,
+    end = codeTextArea.selectionEnd;
+    codeTextArea.value = currentValue.substring(0, start) + insertValue + currentValue.substring(end);
+    codeTextArea.selectionStart = codeTextArea.selectionEnd = start + 1;
 }
