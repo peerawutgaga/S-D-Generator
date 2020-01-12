@@ -69,11 +69,12 @@ class DriverGenerator
         $importStatement = "import " . $namespace . "." . $className . ";\r\n/*--- AUTO IMPORT END HERE ---*/";
         self::$content = str_replace("/*--- AUTO IMPORT END HERE ---*/", $importStatement, self::$content);
     }
-    private static function getExistedMethodList($methods){
+    private static function getExistedMethodList($methods,$className){
         $existedMethodList = array();
         foreach($methods as $method){
-            if (strpos(self::$content, $method["methodName"] . "(")) {
-                array_push($existedMethodList,$method["methodName"]);
+            $methodName = self::convertToTestMethodName($method["methodName"], $className);
+            if (strpos(self::$content, $methodName . "(")) {
+                array_push($existedMethodList,$methodName);
             }
         }
         return $existedMethodList;
@@ -85,12 +86,12 @@ class DriverGenerator
 
     private static function generateMethods($toClass, $methods)
     {
-        $existedMethodList = self::getExistedMethodList($methods);
+        $className = $toClass["className"];
+        $existedMethodList = self::getExistedMethodList($methods,$className);
         foreach ($methods as $method) {
             $visibility = $method["visibility"];
             $instanceType = $method["instanceType"];
             $returnType = $method["returnType"];
-            $className = $toClass["className"];
             $isConstructor = $method["isConstructor"];
             $methodName = self::convertToTestMethodName($method["methodName"], $className);
             if ($visibility == "private") {
