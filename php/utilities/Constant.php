@@ -6,8 +6,6 @@ class Constant
     // Log level
     public const ERROR_CODE = "ERROR";
 
-    public const INFO_CODE = "INFO";
-
     // Message Type
     public const CALLING_MESSAGE_TYPE = "CALLING";
 
@@ -21,6 +19,8 @@ class Constant
     public const ACTOR_TYPE = "ACTOR";
 
     public const REF_DIAGRAM_TYPE = "REF";
+    
+    public const GATE_TYPE = "GATE";
 
     public const CONCRETE_INSTANCE = "CONCRETE";
 

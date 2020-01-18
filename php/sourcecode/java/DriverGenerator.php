@@ -34,10 +34,7 @@ class DriverGenerator
         self::declareClassHeader($fromClass);
         self::generateMethods($toClass, $methods);
         self::closeClass();
-        echo "<pre>";
-        echo self::$content;
-        echo "</pre>";
-        //return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
+        return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
 
     public static function addToExistFile($messageId, $file, $fromClass, $toClass, $methods)

@@ -71,6 +71,8 @@ class SDProcessor
                 $gateModelId = $diagram->xpath("./Shapes/Gate[@Id='$gateIdStr']")[0]["Model"];
                 self::insertObjectNode($gateModelId, $objectName, Constant::REF_DIAGRAM_TYPE);
                 self::$isReferred = true;
+            } else if($objectNode->getName()=="Gate"){
+                self::insertObjectNode($modelId, $objectName, Constant::GATE_TYPE);
             }
         }
     }
