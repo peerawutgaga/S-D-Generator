@@ -11,9 +11,10 @@ require_once $root."/php/sourcecode/java/JavaGenerator.php";
 require_once $root."/php/utilities/Script.php";
 require_once $root."/php/utilities/DataGenerator.php";
 require_once $root."/php/utilities/LocalFileManager.php";
+require_once $root."/php/sourcecode/common/GuardConditionProcessor.php";
 
-//echo DataGenerator::getRandomDoubleWithBound(0,10,3);
-//SourceCodeGenerator::createCode(8, "93", "JAVA");
+//echo DataGenerator::getRandomDoubleWithBound(100.01,INt,2);
+SourceCodeGenerator::createCode(8, "100", "JAVA");
 //$result = JavaGenerator::getClassesAndMethod("PaymentType", "pay");
 //Script::printObject($result);
 //DiagramSelection::checkReferenceDiagram(130);
@@ -26,5 +27,8 @@ require_once $root."/php/utilities/LocalFileManager.php";
  //SDProcessor::readSequenceDiagramFile("test", "$root/SequenceDiagrams/1576983827_openCourse.xml");
  //CDProcessor::readClassDiagramFile("test", "$root/ClassDiagrams/1577199249_register_system.xml");
 // LocalFileManager::zip("107,108,109,110");
-CodeEditor::openFile(115);
+//CodeEditor::openFile(115);
+//GuardConditionProcessor::parseGuardConditionString("score >= 0");
+//echo DataGenerator::getRandomIntWithBound(0, 10);
+
 ?>

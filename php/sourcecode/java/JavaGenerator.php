@@ -34,7 +34,7 @@ class JavaGenerator
     private static function generateStub($stub)
     {
         $objectNode = CallGraphService::selectFromObjectNodeByObjectID($stub["toObjectId"])[0];
-        $message = $stub;
+        $message = $stub;//Rename variable to prevent confusing.
         $classMethodList = self::getClassesAndMethod($objectNode["baseIdentifier"], $message);
         if ($classMethodList == false) {
             return false;
@@ -115,7 +115,7 @@ class JavaGenerator
     {
         $fromObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["fromObjectId"])[0];
         $toObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["toObjectId"])[0];
-        $message = $driver;
+        $message = $driver; //Rename variable to prevent confusing.
         $fromClassMethodList = self::getClassesAndMethod($fromObjectNode["baseIdentifier"], $message);
         if ($fromClassMethodList == false) {
             return false;
@@ -129,7 +129,7 @@ class JavaGenerator
             foreach ($toClassMethodList as $toClassMethod) {
                 $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
                 if (count($file) == 0) {
-                    $fileId = java\DriverGenerator::createNewFile($filename, $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    $fileId = java\DriverGenerator::createNewFile($message["messageId"],$filename, $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
                     if ($fileId != - 1) {
                         self::$output[$fileId] = $filename;
                     } else {
@@ -137,7 +137,7 @@ class JavaGenerator
                         return false;
                     }
                 } else {
-                    $fileId = java\DriverGenerator::addToExistFile($file[0], $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    $fileId = java\DriverGenerator::addToExistFile($message["messageId"],$file[0], $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
                     self::$output[$fileId] = $filename;
                 }
             }

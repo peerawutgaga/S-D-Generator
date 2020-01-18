@@ -31,6 +31,24 @@ class DataGenerator
         }
         return $outString;
     }
+    public static function removeLastComma($string){
+        $lastCharacter = substr($string, - 1);
+        if ($lastCharacter == ",") {
+            $output = substr($string, 0, - 1);
+        }else{
+            $output = $string;
+        }
+        return $output;
+    }
+    public static function getDecimalDigit($decimal){
+       $dotPos = strpos($decimal, ".");
+       if($dotPos == -1){
+           return 0;
+       }
+       $strlength = strlen($decimal);
+       return $strlength-$dotPos-1;
+       
+    }
 
     public static function getRandomData($returnType)
     {
@@ -45,6 +63,8 @@ class DataGenerator
         }
         return "null";
     }
+    
+    
 
     public static function getRandomString()
     {
@@ -59,6 +79,9 @@ class DataGenerator
     public static function getRandomInt()
     {
         return mt_rand();
+    }
+    public static function getRandomIntWithBound($lowerBound, $upperBound){
+        return mt_rand($lowerBound,$upperBound);
     }
 
     public static function getRandomDouble()

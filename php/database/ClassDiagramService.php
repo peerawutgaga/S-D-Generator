@@ -1,7 +1,7 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-require_once "$root/php/database/Database.php";
-require_once "$root/php/utilities/Logger.php";
+require_once $root . "/php/database/Database.php";
+require_once $root . "/php/utilities/Logger.php";
 class ClassDiagramService
 {
     private static function executeSelectStatement($conn, $sql)

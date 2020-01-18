@@ -1,7 +1,7 @@
  <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
-require_once "$root/php/database/Database.php";
-require_once "$root/php/utilities/Logger.php";
+require_once $root . "/php/database/Database.php";
+require_once $root . "/php/utilities/Logger.php";
 
 class CallGraphService
 {
@@ -199,6 +199,13 @@ class CallGraphService
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND baseIdentifier='REF'");
         $sql->bindParam(':callGraphID', $callGraphId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
+    public static function selectFromGuardConditionByMessageId($messageId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.guardcondition` WHERE messageId = :messageId");
+        $sql->bindParam(':messageId', $messageId);
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }

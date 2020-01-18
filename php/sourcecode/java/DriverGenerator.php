@@ -4,7 +4,7 @@ namespace php\sourcecode\java;
 use ClassDiagramService;
 use Constant;
 use DataGenerator;
-//use Script;
+// use Script;
 use SourceCodeService;
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . "/php/database/CallGraphService.php";
@@ -12,8 +12,9 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
-//require_once $root . "/php/utilities/Script.php";
+require_once $root . "/php/sourcecode/common/GuardConditionProcessor.php";
 
+ require_once $root . "/php/utilities/Script.php";
 class DriverGenerator
 {
 
@@ -21,22 +22,29 @@ class DriverGenerator
 
     private static $declaredVariableList;
 
-    public static function createNewFile($filename, $fromClass, $toClass, $methods)
+    private static $messageId;
+
+    public static function createNewFile($messageId, $filename, $fromClass, $toClass, $methods)
     {
         self::$content = ""; // Reset file content
+        self::$messageId = $messageId;
         self::$declaredVariableList = array();
         self::declarePackage($fromClass);
         self::declareImports($toClass);
         self::declareClassHeader($fromClass);
         self::generateMethods($toClass, $methods);
         self::closeClass();
-        return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
+        echo "<pre>";
+        echo self::$content;
+        echo "</pre>";
+        //return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
 
-    public static function addToExistFile($file, $fromClass, $toClass, $methods)
+    public static function addToExistFile($messageId, $file, $fromClass, $toClass, $methods)
     {
         self::$content = $file["filePayload"];
         self::$content = rtrim(self::$content, "}");
+        self::$messageId = $messageId;
         self::generateMethods($toClass, $methods);
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
@@ -69,16 +77,19 @@ class DriverGenerator
         $importStatement = "import " . $namespace . "." . $className . ";\r\n/*--- AUTO IMPORT END HERE ---*/";
         self::$content = str_replace("/*--- AUTO IMPORT END HERE ---*/", $importStatement, self::$content);
     }
-    private static function getExistedMethodList($methods,$className){
+
+    private static function getExistedMethodList($methods, $className)
+    {
         $existedMethodList = array();
-        foreach($methods as $method){
+        foreach ($methods as $method) {
             $methodName = self::convertToTestMethodName($method["methodName"], $className);
             if (strpos(self::$content, $methodName . "(")) {
-                array_push($existedMethodList,$methodName);
+                array_push($existedMethodList, $methodName);
             }
         }
         return $existedMethodList;
     }
+
     private static function declareClassHeader($class)
     {
         self::$content .= "class " . $class["className"] . "{\r\n";
@@ -87,7 +98,7 @@ class DriverGenerator
     private static function generateMethods($toClass, $methods)
     {
         $className = $toClass["className"];
-        $existedMethodList = self::getExistedMethodList($methods,$className);
+        $existedMethodList = self::getExistedMethodList($methods, $className);
         foreach ($methods as $method) {
             $visibility = $method["visibility"];
             $instanceType = $method["instanceType"];
@@ -100,7 +111,7 @@ class DriverGenerator
             if (in_array($methodName, $existedMethodList)) {
                 continue;
             }
-            self::declareMethodHeader($method,$className);
+            self::declareMethodHeader($method, $className);
             if ($isConstructor) {
                 self::generateConstructorInvocation($method);
                 self::closeMethod();
@@ -119,23 +130,20 @@ class DriverGenerator
 
     private static function generateConstructorInvocation($method)
     {
-        $methodId = $method["methodId"];
-        $params = ClassDiagramService::selectParamByMethodId($methodId);
-        $params = DataGenerator::sortBySequenceIndex($params);
-        $inputValues = self::generateInputParamValue($params);
+        $inputValues = self::getInputValue($method["methodId"]);
         $methodName = $method["methodName"];
         self::$content .= "\t\tnew " . $methodName . "(" . $inputValues . ");\r\n";
     }
 
-    private static function convertToTestMethodName($methodName,$className)
+    private static function convertToTestMethodName($methodName, $className)
     {
         $methodName = ucfirst($methodName); // Uppercase first character
-        return "test" . $methodName."In".$className;
+        return "test" . $methodName . "In" . $className;
     }
 
-    private static function declareMethodHeader($method,$className)
+    private static function declareMethodHeader($method, $className)
     {
-        $methodName = self::convertToTestMethodName($method["methodName"],$className);
+        $methodName = self::convertToTestMethodName($method["methodName"], $className);
         if (isset(self::$declaredVariableList[$methodName])) {
             self::$declaredVariableList[$methodName] += 1;
             $methodName .= self::$declaredVariableList[$methodName];
@@ -157,9 +165,7 @@ class DriverGenerator
         $methodName = $method["methodName"];
         $instanceType = $method["instanceType"];
         $returnType = $method["returnType"];
-        $params = ClassDiagramService::selectParamByMethodId($methodId);
-        $params = DataGenerator::sortBySequenceIndex($params);
-        $inputValues = self::generateInputParamValue($params);
+        $inputValues = self::getInputValue($methodId);
         self::$content .= "\t\t";
         if ($returnType == \Constant::STRING_TYPE) {
             $returnType = "String"; // Upper first character case to match Java string declaration
@@ -186,23 +192,38 @@ class DriverGenerator
         }
     }
 
-    private static function generateInputParamValue($paramList)
+    private static function getInputValue($methodId)
+    {
+        $params = ClassDiagramService::selectParamByMethodId($methodId);
+        if (count($params) == 0) {
+            return "";
+        }
+        $params = DataGenerator::sortBySequenceIndex($params);
+        $guardCondition = \CallGraphService::selectFromGuardConditionByMessageId(self::$messageId)[0];
+        $inputValues = self::generateInputParamValue($params, $guardCondition["statement"]);
+        return $inputValues;
+    }
+
+    private static function generateInputParamValue($paramList, $guardConditionStr)
     {
         $paramListStr = "";
+        $guardCondition = \GuardConditionProcessor::parseGuardConditionString($guardConditionStr);
         foreach ($paramList as $param) {
             $dataType = $param["dataType"];
             $typeModifier = $param["typeModifier"];
             if (empty($typeModifier)) {
-                $inputValue = DataGenerator::getRandomData($dataType);
+                
+                if ($guardCondition["variable"] == $param["paramName"]) {
+                    $inputValue = \GuardConditionProcessor::getValueByCondition($param, $guardCondition);
+                } else {
+                    $inputValue = DataGenerator::getRandomData($dataType);
+                }
             } else {
                 $inputValue = "null";
             }
             $paramListStr .= $inputValue . ",";
         }
-        $lastCharacter = substr($paramListStr, - 1);
-        if ($lastCharacter == ",") {
-            $paramListStr = substr($paramListStr, 0, - 1);
-        }
+        $paramListStr = \DataGenerator::removeLastComma($paramListStr);
         return $paramListStr;
     }
 
