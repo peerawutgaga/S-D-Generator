@@ -57,7 +57,7 @@ function addFileListToTable(fileList){
 	fileListModal.style.display = "block";
 }
 function checkClassesRelation(graphId,classList){
-	$result = $.post('php/pages/DiagramSelection.php', { 
+	$result = $.post('php/pages/DiagramSelectionPage.php', { 
 		'functionName' : 'checkClassesRelation',
 		'callGraphId' : graphId,
 		'objectList':classList

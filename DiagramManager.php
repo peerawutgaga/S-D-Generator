@@ -53,6 +53,8 @@
     <footer>2018 Copyright &copy; Department of Computer Engineering
         <br/> Faculty of Engineering, Chulalongkorn University</footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/DiagramManager.js"></script>
+    <script src="js/diagrammanager/DiagramManagerProperties.js"></script>
+    <script src="js/diagrammanager/DiagramManagerFunction.js"></script>
+    <script src="js/diagrammanager/DiagramManagerStyle.js"></script>
 </body>
 </html>

@@ -4,17 +4,17 @@ require_once "$root/php/database/SourceCodeService.php";
 require_once "$root/php/utilities/LocalFileManager.php";
 if (isset($_POST['function'])) {
     if ($_POST['function'] == "openFile" && isset($_POST['fileId'])) {
-        CodeEditor::openFile($_POST['fileId']);
+        CodeEditorPage::openFile($_POST['fileId']);
     }
     else if ($_POST['function'] == "rename" && isset($_POST['fileId']) && isset($_POST['newFilename'])) {
-        CodeEditor::rename($_POST['fileId'],$_POST['newFilename']);
+        CodeEditorPage::rename($_POST['fileId'],$_POST['newFilename']);
     }
     else if ($_POST['function'] == "saveFile" && isset($_POST['fileId']) && isset($_POST['filePayload'])) {
-        CodeEditor::saveFile($_POST['fileId'], $_POST['filePayload']);
+        CodeEditorPage::saveFile($_POST['fileId'], $_POST['filePayload']);
     }
 }
 
-class CodeEditor
+class CodeEditorPage
 {
 
     public static function openFile($fileId)

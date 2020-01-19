@@ -4,16 +4,16 @@
      require_once "$root/php/LocalFileManager.php";
      $method = $_POST['method'];
      if($method == "getList"){
-        echo SourceCodeManager::getSourceCodeList();
+        echo SourceCodeManagerPage::getSourceCodeList();
     }
     else if($method == "delete"){
-        echo SourceCodeManager::deleteFile($_POST['file']);
+        echo SourceCodeManagerPage::deleteFile($_POST['file']);
     }else if($method == "rename"){
-        echo SourceCodeManager::renameFile($_POST['oldname'],$_POST['newname']);
+        echo SourceCodeManagerPage::renameFile($_POST['oldname'],$_POST['newname']);
     }else if($method == "duplicate"){
-        echo SourceCodeManager::duplicateFile($_POST['file']);
+        echo SourceCodeManagerPage::duplicateFile($_POST['file']);
     }
-     class SourceCodeManager{
+     class SourceCodeManagerPage{
          public static function getSourceCodeList(){
             $fileList = SourceCodeService::selectAllFromFileTable();
             return json_encode($fileList);

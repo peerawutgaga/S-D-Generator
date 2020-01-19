@@ -1,5 +1,5 @@
 function openFile(fileId){
-	$.post('php/pages/CodeEditor.php', { 
+	$.post('php/pages/CodeEditorPage.php', { 
 		'function': "openFile",
         'fileId' : fileId 
 	}, function(returnedData){
@@ -30,7 +30,7 @@ function rename(){
         alert("Filename cannot be empty");
         return;
     }
-    $.post('php/pages/CodeEditor.php', { 
+    $.post('php/pages/CodeEditorPage.php', { 
 		'function': "rename",
         'fileId' : currentFileId, 
         'newFilename' : newFilename,
@@ -53,7 +53,7 @@ function saveChange(){
         return;
     }
     var filePayload = codeTextArea.value;
-    $.post('php/pages/CodeEditor.php', { 
+    $.post('php/pages/CodeEditorPage.php', { 
 		'function': "saveFile",
         'fileId' : currentFileId, 
         'filePayload' : filePayload,

@@ -7,7 +7,7 @@ function uploadCDFile() {
 	document.getElementById("CDSubmit").click();
 }
 function refreshSDList() {
-	$.post('php/pages/DiagramSelection.php', { 
+	$.post('php/pages/DiagramSelectionPage.php', { 
 		'functionName' : 'getCallGraphList'
 	}, function(returnedData){
 		var sdList = JSON.parse(returnedData);
@@ -20,7 +20,7 @@ function refreshSDList() {
 	});
 }
 function refreshCDList() {
-	$.post('php/pages/DiagramSelection.php', { 
+	$.post('php/pages/DiagramSelectionPage.php', { 
 		'functionName' : 'getClassDiagramList'
 	}, function(returnedData){
 		var cdList = JSON.parse(returnedData);
@@ -48,7 +48,7 @@ function transitToClassSelection() {
 	classSelectionModal.style.display = "block";
 }
 function getObjectList(callGraphId) {
-	$.post('php/pages/DiagramSelection.php', { 
+	$.post('php/pages/DiagramSelectionPage.php', { 
 		'functionName' : 'getObjectListByCallGraphId',
 		'callGraphId' : callGraphId
 	}, function(returnedData){

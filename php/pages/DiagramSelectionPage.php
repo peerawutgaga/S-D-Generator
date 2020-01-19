@@ -5,19 +5,19 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/utilities/Constant.php";
 if (isset($_POST['functionName'])) {
     if ($_POST['functionName'] == "getCallGraphList") {
-        DiagramSelection::getCallGraphList();
+        DiagramSelectionPage::getCallGraphList();
     } else if ($_POST['functionName'] == "getClassDiagramList") {
-        DiagramSelection::getClassDiagramList();
+        DiagramSelectionPage::getClassDiagramList();
     } else if ($_POST['functionName'] == "getObjectListByCallGraphId" && isset($_POST['callGraphId'])) {
-        DiagramSelection::getObjectListByCallGraphId($_POST['callGraphId']);
+        DiagramSelectionPage::getObjectListByCallGraphId($_POST['callGraphId']);
     } else if ($_POST['functionName'] == "checkReferenceDiagram" && isset($_POST['callGraphId'])) {
-        DiagramSelection::checkReferenceDiagram($_POST['callGraphId']);
+        DiagramSelectionPage::checkReferenceDiagram($_POST['callGraphId']);
     } else if ($_POST['functionName'] == "checkClassesRelation" && isset($_POST['callGraphId']) && isset($_POST['objectList'])) {
-        DiagramSelection::checkClassesRelation($_POST['callGraphId'], $_POST['objectList']);
+        DiagramSelectionPage::checkClassesRelation($_POST['callGraphId'], $_POST['objectList']);
     }
 }
 
-class DiagramSelection
+class DiagramSelectionPage
 {
 
     public static function getCallGraphList()

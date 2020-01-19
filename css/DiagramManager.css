@@ -1,4 +1,5 @@
 @charset "UTF-8";
+/* --------- TAG START HERE ---------*/
 body{
 	min-height: 100%;
 	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -14,6 +15,45 @@ article{
 	width: 100%;
 	height: 100%;
 }
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+table{
+	border: 1px solid gray;
+	width: 100%;
+	height: 100%;
+}
+th{
+	border: 1px solid gray;
+	text-align: center;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+}
+td{
+	border: 1px solid gray;
+	padding-top: 1em;
+	padding-bottom: 1em;
+	padding-left:1em;
+}
+table tr:hover{
+    background-color: #ddd;
+    cursor: pointer;
+}
+img{
+	padding-right: 8px;
+	vertical-align: middle;
+	width: 20px;
+	height:20px;
+}
+/* --------- TAG END HERE --------- */
+/*--------- CLASS START HERE --------- */
 /* Style the tab */
 .tab {
     overflow: hidden;
@@ -55,41 +95,7 @@ article{
 	-webkit-animation: fadeEffect 1s;
     animation: fadeEffect 1s;
 }
-/* Fade in tabs */
-@-webkit-keyframes fadeEffect {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
 
-@keyframes fadeEffect {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
-table{
-	border: 1px solid gray;
-	width: 100%;
-	height: 100%;
-}
-th{
-	border: 1px solid gray;
-	text-align: center;
-	padding-top: 0.5em;
-	padding-bottom: 0.5em;
-}
-td{
-	border: 1px solid gray;
-	padding-top: 1em;
-	padding-bottom: 1em;
-	padding-left:1em;
-}
-table tr:hover{
-    background-color: #ddd;
-    cursor: pointer;
-}
-#fileMgr{
-	width: 100%;
-	padding: 1em;
-}
 .commandBtn{
 	background-color: white;
 	border: 2px solid gray;
@@ -104,12 +110,7 @@ table tr:hover{
 	cursor: pointer;
 }
 .commandBtn:hover {background-color: #e7e7e7;}
-img{
-	padding-right: 8px;
-	vertical-align: middle;
-	width: 20px;
-	height:20px;
-}
+
 .selected {
     background-color: hotpink;
     color: #000;
@@ -150,6 +151,8 @@ img{
     height: 30%;
     overflow: auto;
 }
+/* --------- CLASS END HERE --------- */
+/*--------- ID START HERE ---------*/
 #renameConfirm{
     background-color: white;
 	border: 2px solid gray;
@@ -172,3 +175,8 @@ img{
 	border-radius: 4px;
 	font-size: medium;
 }
+#fileMgr{
+	width: 100%;
+	padding: 1em;
+}
+/* --------- ID END HERE --------- */
