@@ -10,16 +10,14 @@ function createSourceCode(){
 	checkClassesRelation(graphId,classList);
 }
 function getClassUnderTestList(){
-	
-	var rows =  $(".selected").map(function() {
-	    return this.outerHTML;
-	}).get();
+	var classListTable = document.getElementById("classListTable");
+	var rows = classListTable.rows;
 	var classList = "";
 	for(var i=0;i<rows.length;i++){
-		// Split <tr id="xx"><td>...</td></tr> by \" and get the second value
-		// which is id.
-		var classId = rows[i].split('"')[1];
-		classList += classId + ",";
+		if(rows[i].className == "selected"){
+			var classId = rows[i].id;
+			classList += classId + ",";
+		}	
 	}
 	classList = classList.substring(0, classList.length - 1);// Remove last
 																// comma
@@ -83,7 +81,7 @@ function generateSourceCode(diagramId,classList,sourceLang){
 		'sourceLang':sourceLang
 	}, function(returnedData){
 		var fileList = getFileList(returnedData);
-		addFileListToTable(fileList);
+		addFileListToTable(fileList);	
 	});
 }
 function editCode(){
