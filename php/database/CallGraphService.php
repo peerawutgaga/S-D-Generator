@@ -138,6 +138,18 @@ class CallGraphService
         $guardCondId = self::executeInsertStatement($conn, $sql);
         return $guardCondId;
     }
+    
+    public static function insertIntoReferenceDiagram($objectId,$sourceId, $destinationId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("INSERT INTO `callgraph.referencediagram`(`refObjectId`,`sourceId`,`destinationId`)
+        VALUES(:refObjectId,:sourceId,:destinationId)");
+        $sql->bindParam(":refObjectId", $objectId);
+        $sql->bindParam(":sourceId", $sourceId);
+        $sql->bindParam(":destinationId", $destinationId);
+        $guardCondId = self::executeInsertStatement($conn, $sql);
+        return $guardCondId;
+    }
 
     public static function selectAllFromGraph()
     {
@@ -160,6 +172,14 @@ class CallGraphService
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND baseIdentifier!='REF'");
+        $sql->bindParam(':callGraphID', $callGraphId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
+    public static function selectFromObjectNodeByCallGraphIdAndIsRef($callGraphId)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND baseIdentifier ='REF'");
         $sql->bindParam(':callGraphID', $callGraphId);
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
@@ -209,12 +229,27 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+    public static function selectFromReferenceDiagramByObjectId($objectId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.referencediagram` WHERE refObjectId = :objectId");
+        $sql->bindParam(':objectId', $objectId);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
 
     public static function deleteFromGraphByCallGraphId($callGraphId)
     {
         $conn = Database::getConnection();
         $sql = $conn->prepare("DELETE FROM `callgraph.graph` WHERE `callGraphId` = :callGraphId");
         $sql->bindParam(":callGraphId", $callGraphId);
+        $result = self::executeDeleteStatement($conn, $sql);
+        return $result;
+    }
+    
+    public static function deleteFromObjectNodeByObjectId($objectId){
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("DELETE FROM `callgraph.objectNode` WHERE `objectId` = :objectId");
+        $sql->bindParam(":objectId", $objectId);
         $result = self::executeDeleteStatement($conn, $sql);
         return $result;
     }
@@ -226,6 +261,16 @@ class CallGraphService
         $sql = $conn->prepare("UPDATE `callgraph.graph` SET callGraphName = :callGraphName WHERE callGraphId = :callGraphId");
         $sql->bindParam(":callGraphId", $callGraphId);
         $sql->bindParam(":callGraphName", $callGraphName);
+        $result = self::executeUpdateStatement($conn, $sql);
+        return $result;
+    }
+    public static function updateRefDiagramSetDestinationGraphIdByObjectId($destinationGraphId,$objectId)
+    {
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("UPDATE `callgraph.referencediagram` SET destinationId = :destinationId WHERE refObjectId = :refObjectId");
+        $sql->bindParam(":destinationId", $destinationGraphId);
+        $sql->bindParam(":refObjectId", $objectId);
         $result = self::executeUpdateStatement($conn, $sql);
         return $result;
     }

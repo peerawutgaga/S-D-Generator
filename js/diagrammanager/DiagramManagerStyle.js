@@ -2,6 +2,9 @@ window.onclick = function(event) {
 	if (event.target == renameModal) {
 		renameModal.style.display = "none";
 	}
+	if (event.target == linkingModal) {
+		linkingModal.style.display = "none";
+	}
 };
 callGraphTable.onclick = function(e) {
 	var selectedDiagram = callGraphTable.getElementsByClassName('selected');
@@ -40,6 +43,9 @@ classDiagramTable.onclick = function(e) {
 // Get the element with id="defaultOpen" and click on it
 document.getElementById("SDContent").click();
 
-closeModalBtn.onclick = function() {
+closeRenameModalBtn.onclick = function() {
 	renameModal.style.display = "none";
+};
+closeLinkingModalBtn.onclick = function() {
+	linkingModal.style.display = "none";
 };

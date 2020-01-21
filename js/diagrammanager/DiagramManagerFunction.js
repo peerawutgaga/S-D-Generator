@@ -12,8 +12,10 @@ function openTable(evt, tableName) {
 		tablinks[i].className = tablinks[i].className.replace(" active", "");
 	}
 	if (tableName == "CallGraph") {
+		linkBtn.disabled = false;
 		getCallGraphList();
-	} else {
+	} else if (tableName == "ClassDiagram") {
+		linkBtn.disabled = true;
 		getClassDiagramList();
 	}
 	// Show the current tab, and add an "active" class to the button that opened
@@ -67,8 +69,7 @@ function getClassDiagramList() {
 						classDiagramTable.innerHTML += '<thead><tr id="diagramHeader"><th>Item</th><th>File Name</th><th>Create Date</th></tr></thead>';
 					});
 }
-
-function deleteDiagram() {
+function getSelectedFile() {
 	var selectedFile;
 	if (currentTable == "CallGraph") {
 		selectedFile = callGraphTable.getElementsByClassName('selected');
@@ -77,16 +78,23 @@ function deleteDiagram() {
 	}
 	if (selectedFile.length == 0) {
 		alert("Please select a graph or a diagram");
+		return null;
+	}
+	return selectedFile[0];
+}
+function deleteDiagram() {
+	var selectedFile = getSelectedFile();
+	if (selectedFile == null) {
 		return;
 	}
-	var confirmMsg = "Delete " + selectedFile[0].cells[1].innerHTML + "?";
+	var confirmMsg = "Delete " + selectedFile.cells[1].innerHTML + "?";
 	if (!confirm(confirmMsg)) {
 		return;
 	}
 	if (currentTable == "CallGraph") {
-		deleteCallGraph(selectedFile[0].id);
+		deleteCallGraph(selectedFile.id);
 	} else if (currentTable == "ClassDiagram") {
-		deleteClassDiagram(selectedFile[0].id);
+		deleteClassDiagram(selectedFile.id);
 	}
 
 }
@@ -116,33 +124,94 @@ function deleteClassDiagram(diagramId) {
 		}
 	});
 }
-/*
+function refreshPage() {
+	if (currentTable == "CallGraph") {
+		document.getElementById("SDContent").click();
+	} else {
+		document.getElementById("CDContent").click();
+	}
+}
 function showRenameDialog() {
-	var selectedValue = $("tr.selected td:eq(1)").html();
-	if (selectedValue == null) {
-		alert("Please select a file");
+	var selectedFile = getSelectedFile();
+	if (selectedFile == null) {
 		return;
 	}
-	document.getElementById("filename").value = "";
 	renameModal.style.display = "block";
 }
-*/
-function refreshPage() {
-	if (currentTable == "ClassDiagramTable") {
-		document.getElementById("CDContent").click();
-	} else {
-		document.getElementById("SDContent").click();
-	}
+function rename() {
+	// TODO rename diagram in the database
 }
-/*
- * function rename(){ var selectedValue = $("tr.selected td:eq(1)" ).html(); var
- * newFilename = document.getElementById("filename").value; if(newFilename ==
- * ""){ alert("New filename cannot be blanked."); } var confirmMsg = "Rename
- * from "+selectedValue+" to "+newFilename+".xml"; if(!confirm(confirmMsg)){
- * return; } $.post('php/pages/DiagramManagerPage.php',{ 'rename':
- * selectedValue, 'table':currentTable, 'newName':newFilename + ".xml",
- * },function (returnedData){ if(returnedData == "Exist"){ alert("Filename
- * "+newFilename+" is already existed."); }else if(returnedData == "success"){
- * renameModal.style.display = "none"; alert("Renamed"); refreshPage(); }else{
- * alert("Rename fail"); } }); }
- */
+
+function showLinkingDialog() {
+	var selectedFile = callGraphTable.getElementsByClassName('selected')[0];
+	if (selectedFile.length == 0) {
+		alert("Please select a graph or a diagram");
+		return;
+	}
+	resetCallGraphSelector();
+	$.post('php/pages/DiagramManagerPage.php', {
+		'functionName' : 'getCallGraphList'
+	}, function(returnedData) {
+		var sdList = JSON.parse(returnedData);
+
+		sdList.forEach(function(sd, index) {
+			var option = document.createElement("option");
+			option.id = sd["callGraphId"];
+			option.text = sd["callGraphName"];
+			callGraphSelector.add(option);
+		});
+	});
+	$.post('php/pages/DiagramManagerPage.php', {
+		'functionName' : 'getReferenceObjectList',
+		'callGraphId' : selectedFile.id
+	}, function(returnedData) {
+		if (returnedData.trim() == "NONE") {
+			alert("The selected call graph does not refer to other diagrams");
+		} else {
+			var refObjList = JSON.parse(returnedData);
+			refObjList.forEach(function(refObj, index) {
+				var option = document.createElement("option");
+				option.id = refObj["objectId"];
+				option.text = refObj["objectName"];
+				refObjectSelector.add(option);
+			});
+			linkingModal.style.display = "block";
+		}
+	});
+}
+function resetCallGraphSelector() {
+	var defaultOption = '<option value="0" selected disabled hidden>Please Select Destination Call Graph</option>';
+	document.getElementById('callGraphSelector').innerHTML = defaultOption;
+	document.getElementById('referenceSelector').innerHTML = defaultOption;
+}
+function linkDiagram() {
+	// Get current selector stage
+	callGraphSelector = document.getElementById('callGraphSelector');
+	refObjectSelector = document.getElementById('referenceSelector');
+	var sourceCallGraphId = callGraphTable.getElementsByClassName('selected')[0].id;
+	var destinationCallGraphId = callGraphSelector.options[callGraphSelector.selectedIndex].id;
+	var refObjectId = refObjectSelector.options[refObjectSelector.selectedIndex].id;
+	$
+			.post(
+					'php/pages/DiagramManagerPage.php',
+					{
+						'functionName' : 'connectReferenceDiagram',
+						'sourceCallGraphId' : sourceCallGraphId,
+						'destinationCallGraphId' : destinationCallGraphId,
+						'referenceObjectId' : refObjectId
+					},
+					function(returnedData) {
+						if (returnedData.trim() == "INSERT") {
+							var message =  "Linked with "
+									+ callGraphSelector.options[callGraphSelector.selectedIndex].value;
+							alert(message);
+						} else if (returnedData.trim() == "UPDATE") {
+							var message = "The linked destination graph with "
+									+ refObjectSelector.options[refObjectSelector.selectedIndex].value
+									+ " object has been changed to "
+									+ callGraphSelector.options[callGraphSelector.selectedIndex].value;
+							alert(message);
+						}
+						linkingModal.style.display = "none";
+					});
+}

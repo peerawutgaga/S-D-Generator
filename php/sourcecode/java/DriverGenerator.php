@@ -14,7 +14,8 @@ require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
 require_once $root . "/php/sourcecode/common/GuardConditionProcessor.php";
 
- require_once $root . "/php/utilities/Script.php";
+require_once $root . "/php/utilities/Script.php";
+
 class DriverGenerator
 {
 
@@ -29,15 +30,19 @@ class DriverGenerator
         self::$content = ""; // Reset file content
         self::$messageId = $messageId;
         self::$declaredVariableList = array();
-        self::declarePackage($fromClass);
-        self::declareImports($toClass);
-        self::declareClassHeader($fromClass);
-        self::generateMethods($toClass, $methods);
-        self::closeClass();
+        if ($fromClass == \Constant::ACTOR_TYPE) {
+            self::createActorDriver($filename,$toClass,$methods);
+        } else {
+            self::declarePackage($fromClass);
+            self::declareImports($toClass);
+            self::declareClassHeader($fromClass);
+            self::generateMethods($toClass, $methods);
+            self::closeClass();
+        }
         return SourceCodeService::insertIntoSourceCodeFile($filename, self::$content, Constant::JAVA_LANG, Constant::DRIVER_TYPE);
     }
 
-    public static function addToExistFile($messageId, $file, $fromClass, $toClass, $methods)
+    public static function addToExistFile($messageId, $file, $toClass, $methods)
     {
         self::$content = $file["filePayload"];
         self::$content = rtrim(self::$content, "}");
@@ -209,7 +214,7 @@ class DriverGenerator
             $dataType = $param["dataType"];
             $typeModifier = $param["typeModifier"];
             if (empty($typeModifier)) {
-                
+
                 if ($guardCondition["variable"] == $param["paramName"]) {
                     $inputValue = \GuardConditionProcessor::getValueByCondition($param, $guardCondition);
                 } else {
@@ -232,6 +237,15 @@ class DriverGenerator
     private static function closeClass()
     {
         self::$content .= "}";
+    }
+
+    private static function createActorDriver($filename,$toClass,$methods)
+    {
+        self::$content .= "package driver.actor;\r\n";//Declare package header
+        self::declareImports($toClass);
+        self::$content .= "class Actor{\r\n";//Declare class header
+        self::generateMethods($toClass, $methods);
+        self::closeClass();
     }
 }
 

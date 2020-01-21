@@ -34,7 +34,7 @@ class JavaGenerator
     private static function generateStub($stub)
     {
         $objectNode = CallGraphService::selectFromObjectNodeByObjectID($stub["toObjectId"])[0];
-        $message = $stub;//Rename variable to prevent confusing.
+        $message = $stub; // Rename variable to prevent confusing.
         $classMethodList = self::getClassesAndMethod($objectNode["baseIdentifier"], $message);
         if ($classMethodList == false) {
             return false;
@@ -62,6 +62,9 @@ class JavaGenerator
     {
         $classMethodList = array();
         $messageName = $message["messageName"];
+        if ($baseIdentifier == Constant::REF_DIAGRAM_TYPE) {
+            $baseIdentifier = self::processReferenceDiagram($message);
+        }
         $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $baseIdentifier);
         if (count($class) < 1) {
             self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $baseIdentifier);
@@ -115,13 +118,17 @@ class JavaGenerator
     {
         $fromObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["fromObjectId"])[0];
         $toObjectNode = CallGraphService::selectFromObjectNodeByObjectID($driver["toObjectId"])[0];
-        $message = $driver; //Rename variable to prevent confusing.
+        $message = $driver; // Rename variable to prevent confusing.
+        if ($fromObjectNode["baseIdentifier"] == Constant::ACTOR_TYPE) {
+            return self::processActorObject($toObjectNode, $message);
+        }
         $fromClassMethodList = self::getClassesAndMethod($fromObjectNode["baseIdentifier"], $message);
         if ($fromClassMethodList == false) {
             return false;
         }
+
         $toClassMethodList = self::getClassesAndMethod($toObjectNode["baseIdentifier"], $message);
-        if ($fromClassMethodList == false) {
+        if ($toClassMethodList == false) {
             return false;
         }
         foreach ($fromClassMethodList as $fromClassMethod) {
@@ -129,7 +136,7 @@ class JavaGenerator
             foreach ($toClassMethodList as $toClassMethod) {
                 $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
                 if (count($file) == 0) {
-                    $fileId = java\DriverGenerator::createNewFile($message["messageId"],$filename, $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    $fileId = java\DriverGenerator::createNewFile($message["messageId"], $filename, $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
                     if ($fileId != - 1) {
                         self::$output[$fileId] = $filename;
                     } else {
@@ -137,7 +144,7 @@ class JavaGenerator
                         return false;
                     }
                 } else {
-                    $fileId = java\DriverGenerator::addToExistFile($message["messageId"],$file[0], $fromClassMethod["class"], $toClassMethod["class"], $toClassMethod["methods"]);
+                    $fileId = java\DriverGenerator::addToExistFile($message["messageId"], $file[0], $toClassMethod["class"], $toClassMethod["methods"]);
                     self::$output[$fileId] = $filename;
                 }
             }
@@ -146,12 +153,87 @@ class JavaGenerator
         return true;
     }
 
+    private static function processActorObject($toObjectNode, $message)
+    {
+        $toClassMethodList = self::getClassesAndMethod($toObjectNode["baseIdentifier"], $message);
+        if ($toClassMethodList == false) {
+            return false;
+        }
+        $filename = "ActorDriver.java";
+        foreach ($toClassMethodList as $toClassMethod) {
+            $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
+            if (count($file) == 0) {
+                $fileId = java\DriverGenerator::createNewFile($message["messageId"], $filename, Constant::ACTOR_TYPE, $toClassMethod["class"], $toClassMethod["methods"]);
+                if ($fileId != - 1) {
+                    self::$output[$fileId] = $filename;
+                } else {
+                    self::handleError(Constant::CODE_GENERATION_ERROR_MSG, "");
+                    return false;
+                }
+            } else {
+                $fileId = java\DriverGenerator::addToExistFile($message["messageId"], $file[0],  $toClassMethod["class"], $toClassMethod["methods"]);
+                self::$output[$fileId] = $filename;
+            }
+        }
+        return true;
+    }
+
     private static function handleError($errorMessage, $errorPayload)
     {
         Logger::logInternalError("JavaGenerator", $errorMessage . " - " . print_r($errorPayload, true));
         self::$output = array();
         self::$output["isSuccess"] = "false";
+
         self::$output["errorMessage"] = $errorMessage;
+    }
+
+    private static function processReferenceDiagram($message)
+    {
+        $destinationGraphId = CallGraphService::selectFromReferenceDiagramByObjectId($message["toObjectId"])[0]["destinationId"];
+        if (! isset($destinationGraphId) || $destinationGraphId == "") {
+            self::handleError(Constant::NO_REFERENCE_DIAGRAM_ERROR_MSG, $message);
+            return false;
+        }
+        $rootObjects = self::getRootObjectInCallGraph($destinationGraphId);
+        if (count($rootObjects) == 0) {
+            self::handleError(Constant::REF_DIAGRAM_MISFORMAT_ERROR_MSG, $destinationGraphId);
+            return false;
+        } else if (count($rootObjects) == 1) {
+            return $rootObjects[0];
+        } else {
+            return self::justifyLinkedObject($rootObjects, $message);
+        }
+    }
+
+    private static function getRootObjectInCallGraph($graphId)
+    {
+        $rootObjects = array();
+        $objectList = CallGraphService::selectFromObjectNodeByCallGraphId($graphId);
+        foreach ($objectList as $objectNode) {
+            $objectId = $objectNode["objectId"];
+            $baseIdentifier = $objectNode["baseIdentifier"];
+            $inMessages = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CALLING_MESSAGE_TYPE);
+            if (count($inMessages) == 0 && $baseIdentifier != Constant::ACTOR_TYPE) {
+                array_push($rootObjects, $baseIdentifier);
+            }
+        }
+        return $rootObjects;
+    }
+
+    private static function justifyLinkedObject($rootObjects, $message)
+    {
+        $messageName = $message["messageName"];
+        foreach ($rootObjects as $rootObject) {
+            $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $rootObject)[0];
+            if ($message["messageType"] == Constant::CREATE_MESSAGE_TYPE) {
+                $messageName = $class["className"];
+            }
+            $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($class["classId"], $messageName);
+            if (count($methods) > 0) {
+                return $rootObject;
+            }
+        }
+        return false;
     }
 }
 ?>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 27, 2019 at 01:28 PM
+-- Generation Time: Jan 20, 2020 at 02:12 PM
 -- Server version: 5.6.34-log
 -- PHP Version: 7.1.5
 
@@ -37,18 +37,6 @@ CREATE TABLE `callgraph.argument` (
   `isObject` tinyint(4) NOT NULL COMMENT 'Indicate whether data type is object.',
   `paramId` int(10) DEFAULT NULL COMMENT 'Reference parameter Id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='This table records arguments of each message';
-
--- --------------------------------------------------------
-
---
--- Table structure for table `callgraph.gateobject`
---
-
-CREATE TABLE `callgraph.gateobject` (
-  `objectId` int(10) NOT NULL COMMENT 'Object Id, This field refers to object Id in object table',
-  `callGraphId` int(10) NOT NULL DEFAULT '0' COMMENT 'Reference call graph Id',
-  `gateMsgId` int(10) NOT NULL DEFAULT '0' COMMENT 'Gate invoking message Id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='This table records gate objects to other call graph';
 
 -- --------------------------------------------------------
 
@@ -104,6 +92,18 @@ CREATE TABLE `callgraph.objectnode` (
   `classId` int(10) DEFAULT NULL COMMENT 'Reference class Id',
   `baseIdentifier` varchar(255) COLLATE utf8_bin NOT NULL COMMENT 'Base identifier object name'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='This table records object nodes in each call graph';
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `callgraph.referencediagram`
+--
+
+CREATE TABLE `callgraph.referencediagram` (
+  `refObjectId` int(11) NOT NULL COMMENT 'Reference Object Id',
+  `sourceId` int(11) NOT NULL COMMENT 'Source call graph Id',
+  `destinationId` int(11) NOT NULL COMMENT 'Destination call graph Id'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='This table records call graph reference mapping.';
 
 -- --------------------------------------------------------
 
@@ -245,14 +245,6 @@ ALTER TABLE `callgraph.argument`
   ADD KEY `ArguParamFK` (`paramId`);
 
 --
--- Indexes for table `callgraph.gateobject`
---
-ALTER TABLE `callgraph.gateobject`
-  ADD PRIMARY KEY (`objectId`),
-  ADD KEY `GateObjObjectFK` (`gateMsgId`),
-  ADD KEY `GateObjCallGraphFK` (`callGraphId`);
-
---
 -- Indexes for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
@@ -281,6 +273,14 @@ ALTER TABLE `callgraph.objectnode`
   ADD PRIMARY KEY (`objectId`),
   ADD KEY `ObjectNodeCallGraphFK` (`callGraphId`),
   ADD KEY `ObjectClassFK` (`classId`);
+
+--
+-- Indexes for table `callgraph.referencediagram`
+--
+ALTER TABLE `callgraph.referencediagram`
+  ADD PRIMARY KEY (`refObjectId`),
+  ADD KEY `SourceGraphFK` (`sourceId`),
+  ADD KEY `DestinationGraphFK` (`destinationId`);
 
 --
 -- Indexes for table `callgraph.returnmessage`
@@ -349,67 +349,67 @@ ALTER TABLE `logging.event`
 -- AUTO_INCREMENT for table `callgraph.argument`
 --
 ALTER TABLE `callgraph.argument`
-  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=47;
+  MODIFY `arguId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Argument Id. This field is meaningless running number', AUTO_INCREMENT=94;
 --
 -- AUTO_INCREMENT for table `callgraph.graph`
 --
 ALTER TABLE `callgraph.graph`
-  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=126;
+  MODIFY `callGraphId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Call graph ID. This field is meaningless running number', AUTO_INCREMENT=139;
 --
 -- AUTO_INCREMENT for table `callgraph.guardcondition`
 --
 ALTER TABLE `callgraph.guardcondition`
-  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=8;
+  MODIFY `guardCondId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Guard condition ID. This field is meaningless running number.', AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `callgraph.message`
 --
 ALTER TABLE `callgraph.message`
-  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=67;
+  MODIFY `messageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Message Id. This field is meaningless running number', AUTO_INCREMENT=132;
 --
 -- AUTO_INCREMENT for table `callgraph.objectnode`
 --
 ALTER TABLE `callgraph.objectnode`
-  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=59;
+  MODIFY `objectId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Object Id. This field is meaningless running number', AUTO_INCREMENT=109;
 --
 -- AUTO_INCREMENT for table `classdiagram.class`
 --
 ALTER TABLE `classdiagram.class`
-  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=133;
+  MODIFY `classId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class Id. This field is meaning less running number', AUTO_INCREMENT=177;
 --
 -- AUTO_INCREMENT for table `classdiagram.diagram`
 --
 ALTER TABLE `classdiagram.diagram`
-  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=7;
+  MODIFY `diagramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Class diagram ID. This field is meaningless running number', AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `classdiagram.inheritance`
 --
 ALTER TABLE `classdiagram.inheritance`
-  MODIFY `inheritId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Inheritance pair Id. This field is meaning less running number';
+  MODIFY `inheritId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Inheritance pair Id. This field is meaning less running number', AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `classdiagram.method`
 --
 ALTER TABLE `classdiagram.method`
-  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=595;
+  MODIFY `methodId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Method Id. This field is meaningless running number', AUTO_INCREMENT=793;
 --
 -- AUTO_INCREMENT for table `classdiagram.package`
 --
 ALTER TABLE `classdiagram.package`
-  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=31;
+  MODIFY `packageId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Package Id. This field is meaning less running number', AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT for table `classdiagram.param`
 --
 ALTER TABLE `classdiagram.param`
-  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=643;
+  MODIFY `paramId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Parameter Id. This field is meaningless running number', AUTO_INCREMENT=857;
 --
 -- AUTO_INCREMENT for table `code.sourcecodefile`
 --
 ALTER TABLE `code.sourcecodefile`
-  MODIFY `fileId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'File Id. This field is meaningless running number', AUTO_INCREMENT=2;
+  MODIFY `fileId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'File Id. This field is meaningless running number', AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `logging.event`
 --
 ALTER TABLE `logging.event`
-  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number', AUTO_INCREMENT=77;
+  MODIFY `eventId` int(10) NOT NULL AUTO_INCREMENT COMMENT 'Event Id. This field is meaningless running number';
 --
 -- Constraints for dumped tables
 --
@@ -420,13 +420,6 @@ ALTER TABLE `logging.event`
 ALTER TABLE `callgraph.argument`
   ADD CONSTRAINT `ArguParamFK` FOREIGN KEY (`paramId`) REFERENCES `classdiagram.param` (`paramId`) ON DELETE SET NULL ON UPDATE NO ACTION,
   ADD CONSTRAINT `ArgumentMessageFK` FOREIGN KEY (`messageId`) REFERENCES `callgraph.message` (`messageId`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `callgraph.gateobject`
---
-ALTER TABLE `callgraph.gateobject`
-  ADD CONSTRAINT `GateObjCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `GateObjObjectFK` FOREIGN KEY (`objectId`) REFERENCES `callgraph.objectnode` (`objectId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `callgraph.graph`
@@ -453,6 +446,14 @@ ALTER TABLE `callgraph.message`
 ALTER TABLE `callgraph.objectnode`
   ADD CONSTRAINT `ObjectClassFK` FOREIGN KEY (`classId`) REFERENCES `classdiagram.class` (`classId`) ON DELETE SET NULL ON UPDATE NO ACTION,
   ADD CONSTRAINT `ObjectNodeCallGraphFK` FOREIGN KEY (`callGraphId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `callgraph.referencediagram`
+--
+ALTER TABLE `callgraph.referencediagram`
+  ADD CONSTRAINT `DestinationGraphFK` FOREIGN KEY (`destinationId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `RefObjectFK` FOREIGN KEY (`refObjectId`) REFERENCES `callgraph.objectnode` (`objectId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `SourceGraphFK` FOREIGN KEY (`sourceId`) REFERENCES `callgraph.graph` (`callGraphId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `callgraph.returnmessage`

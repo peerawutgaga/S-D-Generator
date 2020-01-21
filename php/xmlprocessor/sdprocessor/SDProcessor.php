@@ -17,6 +17,8 @@ class SDProcessor
     private static $messageList;
     
     private static $isReferred;
+    
+    private static $gateObjectList;
 
     public static function readSequenceDiagramFile($filename, $filePath)
     {
@@ -51,9 +53,11 @@ class SDProcessor
         self::$objectList = array();
         self::$messageList = array();
         self::$isReferred = false;
+        self::$gateObjectList = array();
         self::identifyObjectNode($diagram, $frame);
         self::identifyMessage($messages, $connectors);
         self::identifyGuardCondition();
+        self::removeGateObject();
     }
 
     private static function identifyObjectNode($diagram, $frame)
@@ -82,6 +86,9 @@ class SDProcessor
         $objectId = CallGraphService::insertIntoObjectNode(self::$callGraphId, $objectName, $baseIdentifier);
         if ($objectId != - 1) {
             self::$objectList[(string) $objectIdStr] = $objectId;
+        }
+        if($baseIdentifier == Constant::GATE_TYPE){
+            array_push(self::$gateObjectList,$objectId);
         }
     }
 
@@ -180,6 +187,11 @@ class SDProcessor
                 $messageId = self::$messageList[(string) $messageIdStr];
                 CallGraphService::insertIntoGuardCondition($messageId, $statement);
             }
+        }
+    }
+    private static function removeGateObject(){
+        foreach(self::$gateObjectList as $objectId){
+            CallGraphService::deleteFromObjectNodeByObjectId($objectId);
         }
     }
 }

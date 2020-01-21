@@ -100,7 +100,7 @@ img{
 	background-color: white;
 	border: 2px solid gray;
 	border-radius: 4px;
-	width: 8%;
+	width: 10%;
 	padding: 8px 10px;
 	margin: 4px 2px;
     text-align: center;
@@ -147,13 +147,26 @@ img{
     padding: 20px;
     border: 1px solid #888;
     border-radius: 4px;
-    width: 20%;
-    height: 30%;
     overflow: auto;
+}
+.linkingSelector{
+	width: 100%;
+	padding: 8px 10px;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: 16px;
 }
 /* --------- CLASS END HERE --------- */
 /*--------- ID START HERE ---------*/
-#renameConfirm{
+#renameModalContent{
+	width: 20%;
+    height: 30%;
+}
+#linkingModalContent{
+	width: 25%;
+    height: 40%;
+}
+#renameConfirmBtn, #linkConfirmBtn{
     background-color: white;
 	border: 2px solid gray;
     border-radius: 4px;

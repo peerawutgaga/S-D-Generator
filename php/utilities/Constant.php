@@ -54,6 +54,10 @@ class Constant
     public const ALL_CLASSES_SELECTED_ERROR_MSG = "All object in call graph is selected. Please revise the selection.";
 
     public const GENERIC_INTERNAL_ERROR_MSG = "Unexpected internal error occured. Please contact system administrator";
+    
+    public const NO_REFERENCE_DIAGRAM_ERROR_MSG = "No reference call graph. Please import and link it with the call graph";
+    
+    public const REF_DIAGRAM_MISFORMAT_ERROR_MSG = "Refernce call graph structure is mismatch format";
 
     // Primitive Data type
     public const INT_TYPE = "int";
