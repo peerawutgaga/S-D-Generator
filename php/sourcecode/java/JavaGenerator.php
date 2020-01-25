@@ -16,11 +16,14 @@ class JavaGenerator
     private static $diagramId;
 
     private static $output;
+    
+    private static $stubObjectList;
 
     public static function generateStubs($diagramId, $stubList)
     {
         self::$diagramId = $diagramId;
         self::$output = array();
+        self::convertStubListToObjectList($stubList);
         foreach ($stubList as $stub) {
             $isSuccess = self::generateStub($stub);
             if (! $isSuccess) {
@@ -29,6 +32,13 @@ class JavaGenerator
         }
         self::$output["isSuccess"] = "true";
         return self::$output;
+    }
+    private static function convertStubListToObjectList($stubList){
+        self::$stubObjectList = array();
+        foreach($stubList as $stub){
+            $objectNode = CallGraphService::selectFromObjectNodeByObjectID($stub["fromObjectId"])[0];
+            array_push(self::$stubObjectList,$objectNode["baseIdentifier"]);
+        }
     }
 
     private static function generateStub($stub)
@@ -39,7 +49,11 @@ class JavaGenerator
         if ($classMethodList == false) {
             return false;
         }
+       
         foreach ($classMethodList as $classMethod) {
+            if(self::checkIfStubIsClassUnderTest($classMethod["class"]["className"])){
+                continue;
+            }
             $filename = $classMethod["class"]["className"] . "Stub.java";
             $file = SourceCodeService::selectFromSourceCodeByFilename($filename);
             if (count($file) == 0) {
@@ -57,7 +71,14 @@ class JavaGenerator
         }
         return true;
     }
-
+    private static function checkIfStubIsClassUnderTest($class){
+        foreach(self::$stubObjectList as $stubObject){
+            if($stubObject == $class){
+                return true;
+            }
+        }
+        return false;
+    }
     private static function getClassesAndMethod($baseIdentifier, $message)
     {
         $classMethodList = array();
