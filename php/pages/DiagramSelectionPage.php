@@ -126,7 +126,15 @@ class DiagramSelectionPage
         foreach ($objectList as $objectNode) {
             $objectId = $objectNode["objectId"];
             $outMessages = CallGraphService::selectFromMessageByFromObjectIDAndMessageType($objectId, Constant::CALLING_MESSAGE_TYPE);
+            $outCreateMessages = CallGraphService::selectFromMessageByFromObjectIDAndMessageType($objectId, Constant::CREATE_MESSAGE_TYPE);
+            foreach($outCreateMessages as $outCreateMessage){
+                array_push($outMessages,$outCreateMessage);
+            }
             $inMessages = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CALLING_MESSAGE_TYPE);
+            $inCreateMessages = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CREATE_MESSAGE_TYPE);
+            foreach($inCreateMessages as $inCreateMessage){
+                array_push($inMessages,$inCreateMessage);
+            }
             if (count($outMessages) == 0) {
                 $outMessages = Constant::TERMINATED_NODE;
             }

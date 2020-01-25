@@ -14,8 +14,6 @@ require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
 require_once $root . "/php/sourcecode/common/GuardConditionProcessor.php";
 
-require_once $root . "/php/utilities/Script.php";
-
 class DriverGenerator
 {
 

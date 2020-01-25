@@ -12,7 +12,6 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
-//require_once $root . "/php/utilities/Script.php";
 
 class StubGenerator
 {

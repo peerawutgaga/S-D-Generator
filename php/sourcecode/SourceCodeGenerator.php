@@ -4,7 +4,6 @@ require_once $root . '/php/sourcecode/java/JavaGenerator.php';
 require_once $root . '/php/database/CallGraphService.php';
 require_once $root . '/php/database/ClassDiagramService.php';
 require_once $root . '/php/utilities/Constant.php';
-require_once $root . '/php/utilities/Script.php';
 
 if (isset($_POST['diagramId']) && isset($_POST['objectList']) && isset($_POST['sourceLang'])) {
     $diagramId = $_POST['diagramId'];

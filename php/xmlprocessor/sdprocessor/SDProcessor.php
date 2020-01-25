@@ -1,7 +1,6 @@
 <?php
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once $root . '/php/database/CallGraphService.php';
-require_once $root . '/php/utilities/Script.php';
 require_once $root . '/php/utilities/Logger.php';
 require_once $root . '/php/utilities/Constant.php';
 

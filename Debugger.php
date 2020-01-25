@@ -5,6 +5,8 @@ $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/pages/DiagramManagerPage.php";
 require_once $root."/php/utilities/Script.php";
 require_once $root . '/php/sourcecode/SourceCodeGenerator.php';
-SourceCodeGenerator::createCode(8, "99,97", "JAVA");
+require_once "$root/php/pages/DiagramSelectionPage.php";
+
+DiagramSelectionPage::checkClassesRelation(135, "97,99");
 
 ?>
