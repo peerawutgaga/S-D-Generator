@@ -14,12 +14,13 @@
          <!-- File List -->
         <table id = "fileTable">
             <thead>
-                <tr>
+                <tr id="fileListTableHeader">
                     <th>Item</th>
                     <th>File Name</th>
                     <th>File Type</th>
                     <th>Language</th>
-                    <th>Created Date</th>
+                    <th>Created Timestamp</th>
+                    <th>Last Update Timestamp</th>
                 </tr>
             </thead>
         </table>
@@ -37,7 +38,7 @@
   <div class = "modal-content"><span class="close">&times;</span>
     <h4>Rename</h4>
     <div align ="center">
-        New filename (Exclude .java or .php)<input type = "text" name = "filename" id = "filename" >
+        Please enter new filename<input type = "text" name = "filename" id = "filename" >
         <button id = "renameConfirm" onclick = "renameFile()">Rename</button>
     </div>
   </div>
@@ -45,6 +46,8 @@
     <footer>2018 Copyright &copy; Department of Computer Engineering<br/>
         Faculty of Engineering, Chulalongkorn University</footer>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/SourceCodeManager.js"></script>
+    <script src="js/sourcecodemanager/SourceCodeManagerProperties.js"></script>
+    <script src="js/sourcecodemanager/SourceCodeManagerStyle.js"></script>
+    <script src="js/sourcecodemanager/SourceCodeManagerFunction.js"></script>
 </body>
 </html>

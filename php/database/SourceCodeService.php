@@ -2,8 +2,10 @@
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
 require_once "$root/php/database/Database.php";
 require_once "$root/php/utilities/Logger.php";
+
 class SourceCodeService
 {
+
     private static function executeSelectStatement($conn, $sql)
     {
         try {
@@ -16,7 +18,7 @@ class SourceCodeService
         }
         return $result;
     }
-    
+
     private static function executeInsertStatement($conn, $sql)
     {
         $lastInsertId = - 1;
@@ -30,17 +32,17 @@ class SourceCodeService
         }
         return $lastInsertId;
     }
-    
+
     private static function executeDeleteStatement($conn, $sql)
     {
         return self::executeSqlStatementWithSuccessFlag($conn, $sql);
     }
-    
+
     private static function executeUpdateStatement($conn, $sql)
     {
         return self::executeSqlStatementWithSuccessFlag($conn, $sql);
     }
-    
+
     private static function executeSqlStatementWithSuccessFlag($conn, $sql)
     {
         $result = false;
@@ -54,7 +56,9 @@ class SourceCodeService
         }
         return $result;
     }
-    public static function insertIntoSourceCodeFile($filename,$filePayload,$language,$sourceType){
+
+    public static function insertIntoSourceCodeFile($filename, $filePayload, $language, $sourceType)
+    {
         $conn = Database::getConnection();
         $language = strtoupper($language);
         $sourceType = strtoupper($sourceType);
@@ -66,19 +70,32 @@ class SourceCodeService
         $fileId = self::executeInsertStatement($conn, $sql);
         return $fileId;
     }
-    public static function selectFromSourceCodeByFileId($fileId){
+
+    public static function selectAllFromSourceCode()
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT fileId, filename,language,createTimeStamp,lastUpdateTimeStamp,sourceType FROM `code.sourcecodefile`");
+        return self::executeSelectStatement($conn, $sql);
+    }
+
+    public static function selectFromSourceCodeByFileId($fileId)
+    {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `code.sourcecodefile` WHERE `fileId` = :fileId");
         $sql->bindParam(":fileId", $fileId);
         return self::executeSelectStatement($conn, $sql);
     }
-    public static function selectFromSourceCodeByFilename($filename){
+
+    public static function selectFromSourceCodeByFilename($filename)
+    {
         $conn = Database::getConnection();
         $sql = $conn->prepare("SELECT * FROM `code.sourcecodefile` WHERE `filename` = :filename");
         $sql->bindParam(":filename", $filename);
         return self::executeSelectStatement($conn, $sql);
     }
-    public static function updateSourceCodeFileSetFilePayloadByFileId($filePayload,$fileId){
+
+    public static function updateSourceCodeFileSetFilePayloadByFileId($filePayload, $fileId)
+    {
         $conn = Database::getConnection();
         $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filePayload = :filePayload WHERE fileId = :fileId");
         $sql->bindParam(":filePayload", $filePayload);
@@ -86,7 +103,9 @@ class SourceCodeService
         $result = self::executeUpdateStatement($conn, $sql);
         return $result;
     }
-    public static function updateSourceCodeFileSetFilenameByFileId($filename,$fileId){
+
+    public static function updateSourceCodeFileSetFilenameByFileId($filename, $fileId)
+    {
         $conn = Database::getConnection();
         $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filename = :filename WHERE fileId = :fileId");
         $sql->bindParam(":filename", $filename);

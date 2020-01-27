@@ -186,7 +186,7 @@ function resetCallGraphSelector() {
 }
 function linkDiagram() {
 	// Get current selector stage
-	callGraphSelector = document.getElementById('callGraphSelector');
+	callGraphSelector = document.getElementById('callGraphSelector'); 
 	refObjectSelector = document.getElementById('referenceSelector');
 	var sourceCallGraphId = callGraphTable.getElementsByClassName('selected')[0].id;
 	var destinationCallGraphId = callGraphSelector.options[callGraphSelector.selectedIndex].id;
