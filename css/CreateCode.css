@@ -28,10 +28,7 @@ select{
 	border-radius: 4px;
 	font-size: 14px;
 }
-#fileInfo{
-	padding: 1em;
-	margin: 0px 20px;
-}
+
 /* --------- TAG END HERE --------- */
 /*--------- CLASS START HERE --------- */
 .UIButton{
@@ -51,9 +48,9 @@ select{
 	background-color: white;
 	border: 2px solid gray;
 	border-radius: 4px;
-	width: 50;
+	width: 100px;
 	padding: 8px 10px;
-	margin: 20px;
+	margin: 8px;
     text-align: center;
 	text-decoration: none;
     font-size: 14px;
@@ -74,6 +71,7 @@ select{
 	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 	text-align: center;
 }
+
 /* The Close Button */
 .close {
     color: #aaaaaa;
@@ -94,13 +92,36 @@ select{
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    border-radius: 4px;
-    width: 20%;
-    height: 35%;
+    border-radius: 4px;  
     overflow: auto;
+}
+.randomCriteriaTextBox{
+	width: 30%;
+	padding: 8px 10px;
+    margin: 8px;
+	box-sizing: border-box;
+	border: 2px solid gray;
+	border-radius: 4px;
+	font-size: small;
 }
 /* --------- CLASS END HERE --------- */
 /*--------- ID START HERE ---------*/
+#generateMaxValueModalContent,#generateMinValueModalContent{
+	width: 20%;
+    height: 20%;
+}
+#generateRandomStringModalContent{
+	width: 20%;
+    height: 30%;
+}
+#generateRandomIntegerModalContent{
+	width: 20%;
+    height: 40%;
+}
+#generateRandomDecimalModalContent{
+	width: 40%;
+    height: 40%;
+}
 #exportBtn, #saveBtn{
 	float: right;
 }
@@ -123,20 +144,13 @@ select{
 	border-radius: 4px;
 	font-size: medium;
 }
-#minimumBox, #maximumBox,#lengthBox{
-	width: 30%;
-	padding: 4px 4px;
-    margin: 8px 8px 0px;
-	box-sizing: border-box;
-	border: 2px solid gray;
-	border-radius: 4px;
-	font-size: small;
-}
-/* --------- ID END HERE --------- */
 
 #insert{
 	padding: 1em;
 	margin: 0px 20px;
 }
-
-
+#fileInfo{
+	padding: 1em;
+	margin: 0px 20px;
+}
+/* --------- ID END HERE --------- */

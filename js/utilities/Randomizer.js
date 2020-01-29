@@ -17,7 +17,6 @@ function randomString(length){
 }
 function randomBoolean(){
     var rndVal = Math.floor(Math.random() * 2 ) + 1;
-    console.log(rndVal);
     if(rndVal == 1){
         return true;
     }

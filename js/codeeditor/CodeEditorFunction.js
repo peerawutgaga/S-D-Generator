@@ -75,31 +75,24 @@ function exportFile(){
 	window.location.href='../php/utilities/Download.php'+queryString;
 }
 
-/*
-function showOption(value){
-    if(value == "byte" || value == "short" || value == "int"||value == "long"){
-        showRangeOption();
-    }else if(value == "float"||value == "double"){
-        showBothOption();
-    }else if(value == "string"){
-        showLengthOption();
-    }else{
-        clearOption();
-    }
-}
-function showDefaultModal(){
-    defaultModal.style.display = "block";
-}
 function showMaxModal(){
-    maxModal.style.display = "block";
+	genMaxValueModal.style.display = "block";
 }
 function showMinModal(){
-    minModal.style.display = "block";
+	genMinValueModal.style.display = "block";
 }
-function showRandomModal(){
-    randomModal.style.display = "block";
+function showRandomStringModal(){
+	generateRandomStringModal.style.display = "block";
 }
-*/
+function showRandomIntegerModal(){
+	generateRandomIntegerModal.style.display = "block";
+}
+
+function showRandomDecimalModal(){
+	generateRandomDecimalModal.style.display = "block";
+}
+
+
 function insertCharacterToCodeEditor(insertValue){
     var currentValue = codeTextArea.value,
     start = codeTextArea.selectionStart,

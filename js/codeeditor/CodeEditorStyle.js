@@ -3,35 +3,39 @@ window.onload = function(){
     var fileId = url.substring(12);//Get file Id after 'sourcecode='
     openFile(fileId);
 };
-/*
 window.onclick = function (event) {
-	if (event.target == defaultModal) {
-		defaultModal.style.display = "none";
+	if (event.target == genMaxValueModal) {
+		genMaxValueModal.style.display = "none";
+	}
+    if (event.target == genMinValueModal) {
+    	genMinValueModal.style.display = "none";
     }
-    if (event.target == minModal) {
-		minModal.style.display = "none";
-    }
-    if (event.target == maxModal) {
-		maxModal.style.display = "none";
-    }
-    if (event.target == randomModal) {
-		randomModal.style.display = "none";
+    if (event.target == generateRandomStringModal) {
+    	generateRandomStringModal.style.display = "none";
+	}
+    if (event.target == generateRandomIntegerModal) {
+    	generateRandomIntegerModal.style.display = "none";
+	}
+    if (event.target == generateRandomDecimalModal) {
+    	generateRandomDecimalModal.style.display = "none";
 	}
 };
 
-closeDefaultBtn.onclick = function(){
-    defaultModal.style.display = "none";
+closeMaxModalBtn.onclick = function(){
+	genMaxValueModal.style.display = "none";
 }
-closeMaxBtn.onclick = function(){
-    maxModal.style.display = "none";
+closeMinModalBtn.onclick = function(){
+	genMinValueModal.style.display = "none";
 }
-closeMinBtn.onclick = function(){
-    minModal.style.display = "none";
+closeRandomStringModalBtn.onclick = function(){
+	generateRandomStringModal.style.display = "none";
 }
-closeRandomBtn.onclick = function(){
-    randomModal.style.display = "none";
+closeRandomIntegerModalBtn.onclick = function(){
+	generateRandomIntegerModal.style.display = "none";
 }
-*/
+closeRandomDecimalModalBtn.onclick = function(){
+	generateRandomDecimalModal.style.display = "none";
+}
 codeTextArea.onkeydown = function(e) {
     if (e.keyCode === 9) {
     	insertCharacterToCodeEditor('\t');//Insert Tab
