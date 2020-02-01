@@ -72,13 +72,13 @@
 				<h3>Generate Random String</h3>
 				<div align="center">
 					<h4>Random any string</h4>
-					<button class="modalButton">Random</button>
+					<button class="modalButton" onclick="randomAnyString()">Random</button>
 				</div>
 				<div align="center">
 					<h4>Random string with specific length</h4>
 					Length: <input type="text" class="randomCriteriaTextBox"
 						name="stringLength" id="stringLengthTextArea">
-					<button class="modalButton">Random</button>
+					<button class="modalButton" onclick="randomStringWithLength()">Random</button>
 				</div>
 			</div>
 		</div>
@@ -92,13 +92,13 @@
 					Min: <input type="text" class="randomCriteriaTextBox" name="minInt"
 						id="minIntTextArea"> Max: <input type="text"
 						class="randomCriteriaTextBox" name="maxInt" id="maxIntTextArea">
-					<button class="modalButton">Random</button>
+					<button class="modalButton" onclick="randomIntegerWithBound()">Random</button>
 				</div>
 				<div align="center">
 					<h4>Random integer with specific digits</h4>
 					Digit(s): <input type="text" class="randomCriteriaTextBox"
 						name="intDigit" id="intDigitTextArea">
-					<button class="modalButton">Random</button>
+					<button class="modalButton" onclick="randomIntegerWithLength()">Random</button>
 				</div>
 			</div>
 		</div>
@@ -114,15 +114,15 @@
 						name="minDecimal" id="minDecimalTextArea"> Max: <input type="text"
 						class="randomCriteriaTextBox" name="maxDecimal"
 						id="maxDecimalTextArea">
-					<button class="modalButton">Random</button>
+					<button class="modalButton" onclick="randomDecimalWithBound()">Random</button>
 				</div>
 				<div align="center">
 					<h4>Random decimal with specific length</h4>
 					Fraction digit(s): <input type="text" class="randomCriteriaTextBox"
-						name="minDecimal" id="minDecimalTextArea"> Decimal digit(s): <input
-						type="text" class="randomCriteriaTextBox" name="maxDecimal"
-						id="maxDecimalTextArea"><br>
-					<button class="modalButton">Random</button>
+						name="fractalLength" id="fractalLengthTextArea"> Decimal digit(s): <input
+						type="text" class="randomCriteriaTextBox" name="decimalLength"
+						id="decimalLengthTextArea"><br>
+					<button class="modalButton" onclick="randomDecimalWithLength()">Random</button>
 				</div>
 			</div>
 		</div>

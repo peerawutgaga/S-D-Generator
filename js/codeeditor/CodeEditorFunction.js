@@ -100,3 +100,86 @@ function insertCharacterToCodeEditor(insertValue){
     codeTextArea.value = currentValue.substring(0, start) + insertValue + currentValue.substring(end);
     codeTextArea.selectionStart = codeTextArea.selectionEnd = start + 1;
 }
+function randomAnyString(){
+	var length = randomInt(1,100);
+	var str = randomString(length);
+	insertCharacterToCodeEditor(str);
+}
+function randomStringWithLength(){
+	var length = document.getElementById("stringLengthTextArea").value;
+	if(isNaN(length)){
+		alert("Length is not a number.");
+		return;
+	}
+	if(length==""){
+		alert("Please specify length.");
+		return;
+	}
+	var str = randomString(Math.floor(length));
+	insertCharacterToCodeEditor(str);
+}
+function randomIntegerWithBound(){
+	var minBound = document.getElementById("minIntTextArea").value;
+	var maxBound = document.getElementById("maxIntTextArea").value;
+	if(isNaN(minBound)){
+		alert("Min value is not a number.");
+		return;
+	}
+	if(isNaN(maxBound)){
+		alert("Max value is not a number.");
+		return;
+	}
+	if(minBound==""){
+		minBound = -2000000000;
+	}
+	if(maxBound==""){
+		maxBound = 2000000000;
+	}
+	var integer = randomInt(Math.floor(minBound),Math.floor(maxBound));
+	insertCharacterToCodeEditor(integer);
+}
+function randomIntegerWithLength(){
+	var length = document.getElementById("intDigitTextArea").value;
+	if(isNaN(length)){
+		alert("Length is not a number.");
+	}
+	if(length==""){
+		alert("Please specify length.");
+		return;
+	}
+	var integer = randomNumberByDigit(Math.floor(length));
+	insertCharacterToCodeEditor(integer);
+}
+function randomDecimalWithBound(){
+	var minBound = document.getElementById("minDecimalTextArea").value;
+	var maxBound = document.getElementById("maxDecimalTextArea").value;
+	if(isNaN(minBound)){
+		alert("Min value is not a number.");
+		return;
+	}
+	if(isNaN(maxBound)){
+		alert("Max value is not a number.");
+		return;
+	}
+	if(minBound==""){
+		minBound = -2000000000;
+	}
+	if(maxBound==""){
+		maxBound = 2000000000;
+	}
+	var decimal = randomDecimal(minBound,maxBound);
+	insertCharacterToCodeEditor(decimal);
+}
+function randomDecimalWithLength(){
+	var fractalLength = document.getElementById("fractalLengthTextArea").value;
+	var decimalLength = document.getElementById("decimalLengthTextArea").value;
+	if(isNaN(fractalLength)||isNaN(decimalLength)){
+		alert("Length is not a number.");
+	}
+	if(fractalLength==""||decimalLength==""){
+		alert("Please specify length.");
+		return;
+	}
+	var decimal = randomDecimalByDigit(Math.floor(fractalLength),Math.floor(decimalLength));
+	insertCharacterToCodeEditor(decimal);
+}
