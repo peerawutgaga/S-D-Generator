@@ -139,7 +139,13 @@ function showRenameDialog() {
 	renameModal.style.display = "block";
 }
 function rename() {
-	// TODO rename diagram in the database
+	var selectedFile = getSelectedFile(); 
+	var newFilename = document.getElementById("newFilenameTextArea").value;
+	if (currentTable == "CallGraph") {
+		deleteCallGraph(selectedFile.id);
+	} else if (currentTable == "ClassDiagram") {
+		deleteClassDiagram(selectedFile.id);
+	}
 }
 
 function showLinkingDialog() {

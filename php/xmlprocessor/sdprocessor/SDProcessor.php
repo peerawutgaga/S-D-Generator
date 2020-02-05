@@ -46,7 +46,8 @@ class SDProcessor
     {
         // Assume that the first interaction diagram is the primary diagram.
         $diagram = self::$xml->Diagrams->InteractionDiagram[0];
-        $frame = self::$xml->Models->Frame[0];
+        $diagramId = $diagram["_rootFrame"];
+        $frame = self::$xml->xpath("./Models/Frame[@Id='$diagramId']")[0];
         $messages = self::$xml->Models->ModelRelationshipContainer->ModelChildren->ModelRelationshipContainer->ModelChildren;
         $connectors = $diagram->Connectors;
         self::$objectList = array();
@@ -62,6 +63,7 @@ class SDProcessor
     private static function identifyObjectNode($diagram, $frame)
     {
         foreach ($diagram->Shapes->children() as $objectNode) {
+            
             $objectName = $objectNode["Name"];
             $modelId = $objectNode["Model"]; // A model id is an object id in model section
             if ($objectNode->getName() == "InteractionLifeLine") {

@@ -57,7 +57,7 @@
 			<h4>Rename</h4>
 			<div align="center">
 				Please enter new filename<input type="text" name="filename"
-					id="filename">
+					id="newFilenameTextArea">
 				<button id="renameConfirmBtn" onclick="rename()">Rename</button>
 			</div>
 		</div>

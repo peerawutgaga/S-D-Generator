@@ -232,7 +232,7 @@ class JavaGenerator
         foreach ($objectList as $objectNode) {
             $objectId = $objectNode["objectId"];
             $baseIdentifier = $objectNode["baseIdentifier"];
-            $inMessages = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CALLING_MESSAGE_TYPE);
+            $inMessages = CallGraphService::selectFromMessageByToObjectIDAndMessageTypeNonRecursive($objectId, Constant::CALLING_MESSAGE_TYPE);
             if (count($inMessages) == 0 && $baseIdentifier != Constant::ACTOR_TYPE) {
                 array_push($rootObjects, $baseIdentifier);
             }

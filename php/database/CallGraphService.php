@@ -213,6 +213,15 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+    public static function selectFromMessageByToObjectIDAndMessageTypeNonRecursive($toObjectId, $messageType)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.message` WHERE `toObjectId` = :toObjectId AND `messageType` = :messageType AND `fromObject` <> `toObjectId`");
+        $sql->bindParam(':toObjectId', $toObjectId);
+        $sql->bindParam(':messageType', $messageType);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
 
     public static function selectFromObjectNodeByCallGraphIdWhereObjectIsRef($callGraphId)
     {
