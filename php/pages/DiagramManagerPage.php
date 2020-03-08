@@ -17,6 +17,10 @@ if (isset($_POST['functionName'])) {
         DiagramManagerPage::getReferenceObjectList($_POST['callGraphId']);
     } else if ($_POST['functionName'] == "connectReferenceDiagram" && isset($_POST['sourceCallGraphId']) && isset($_POST['destinationCallGraphId']) && isset($_POST['referenceObjectId'])) {
         DiagramManagerPage::connectReferenceDiagram($_POST['referenceObjectId'],$_POST['sourceCallGraphId'], $_POST['destinationCallGraphId'] );
+    } else if($_POST['functionName'] == "renameCallGraph"&& isset($_POST['callGraphId'])&& isset($_POST['newFilename'])){
+        DiagramManagerPage::renameCallGraph($_POST['callGraphId'],$_POST['newFilename']);
+    }else if($_POST['functionName'] == "renameClassDiagram"&& isset($_POST['diagramId'])&& isset($_POST['newFilename'])){
+        DiagramManagerPage::renameClassDiagram($_POST['diagramId'], $_POST['newFilename']);
     }
 }
 
@@ -37,12 +41,22 @@ class DiagramManagerPage
 
     public static function deleteCallGraph($callGraphId)
     {
-        // TODO delete call graph
+        $success = CallGraphService::deleteFromGraphByCallGraphId($callGraphId);
+        if($success){
+            echo "success";
+        }else{
+            echo "failed";
+        }
     }
 
     public static function deleteClassDiagram($diagramId)
     {
-        // TODO delete class diagram
+        $success = ClassDiagramService::deleteFromDiagramByDiagramId($diagramId);
+        if($success){
+            echo "success";
+        }else{
+            echo "failed";
+        }
     }
 
     public static function getReferenceObjectList($callGraphId)
@@ -64,6 +78,22 @@ class DiagramManagerPage
         }else{
             CallGraphService::updateRefDiagramSetDestinationGraphIdByObjectId($destinationCallGraphId, $referenceObjectId);
             echo "UPDATE";
+        }
+    }
+    public static function renameCallGraph($callGraphId,$newFilename){
+        $success = CallGraphService::updateGraphSetCallGraphNameByCallGraphId($callGraphId, $newFilename);
+        if($success){
+            echo "success";
+        }else{
+            echo "failed";
+        }
+    }
+    public static function renameClassDiagram($diagramId,$newFilename){
+        $success = ClassDiagramService::updateDiagramSetDiagramNameByDiagramId($diagramId, $newFilename);
+        if($success){
+            echo "success";
+        }else{
+            echo "failed";
         }
     }
 }

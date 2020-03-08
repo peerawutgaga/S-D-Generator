@@ -210,5 +210,15 @@ class ClassDiagramService
         $result = self::executeDeleteStatement($conn, $sql);
         return $result;
     }
+    public static function updateDiagramSetDiagramNameByDiagramId($diagramId, $diagramName)
+    {
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("UPDATE `classdiagram.diagram` SET diagramId = :diagramId WHERE diagramName = :diagramName");
+        $sql->bindParam(":diagramId", $diagramId);
+        $sql->bindParam(":diagramName", $diagramName);
+        $result = self::executeUpdateStatement($conn, $sql);
+        return $result;
+    }
 }
 ?>

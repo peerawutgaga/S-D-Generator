@@ -103,12 +103,12 @@ function deleteCallGraph(callGraphId) {
 		'functionName' : 'deleteCallGraph',
 		'callGraphId' : callGraphId,
 	}, function(returnedData) {
-		if (returnedData == "success") {
+		if (returnedData.trim() == "success") {
 			alert("Deleted");
-			refreshPage();
 		} else {
 			alert("Delete failed");
 		}
+		refreshPage();
 	});
 }
 function deleteClassDiagram(diagramId) {
@@ -116,12 +116,12 @@ function deleteClassDiagram(diagramId) {
 		'functionName' : 'deleteClassDiagram',
 		'diagramId' : diagramId,
 	}, function(returnedData) {
-		if (returnedData == "success") {
+		if (returnedData.trim() == "success") {
 			alert("Deleted");
-			refreshPage();
 		} else {
 			alert("Delete failed");
 		}
+		refreshPage();
 	});
 }
 function refreshPage() {
@@ -133,21 +133,49 @@ function refreshPage() {
 }
 function showRenameDialog() {
 	var selectedFile = getSelectedFile();
+	document.getElementById("newFilenameTextArea").value = selectedFile.cells[1].innerHTML;
 	if (selectedFile == null) {
 		return;
 	}
 	renameModal.style.display = "block";
 }
 function rename() {
-	var selectedFile = getSelectedFile(); 
+	var selectedFile = getSelectedFile();
 	var newFilename = document.getElementById("newFilenameTextArea").value;
 	if (currentTable == "CallGraph") {
-		deleteCallGraph(selectedFile.id);
+		renameCallGraph(selectedFile.id,newFilename);
 	} else if (currentTable == "ClassDiagram") {
-		deleteClassDiagram(selectedFile.id);
+		renameClassDiagram(selectedFile.id,newFilename);
 	}
 }
-
+function renameCallGraph(callGraphId,newFilename){
+	$.post('php/pages/DiagramManagerPage.php', {
+		'functionName' : 'renameCallGraph',
+		'callGraphId' : callGraphId,
+		'newFilename': newFilename
+	}, function(returnedData) {
+		if (returnedData.trim() == "success") {
+			alert("Renamed to "+newFilename);
+		} else {
+			alert("Rename failed");
+		}
+		refreshPage();
+	});
+}
+function renameClassDiagram(diagramId,newFilename){
+	$.post('php/pages/DiagramManagerPage.php', {
+		'functionName' : 'renameClassDiagram',
+		'diagramId' : diagramId,
+		'newFilename': newFilename
+	}, function(returnedData) {
+		if (returnedData.trim() == "success") {
+			alert("Renamed to "+newFilename);
+		} else {
+			alert("Rename failed");
+		}
+		refreshPage();
+	});
+}
 function showLinkingDialog() {
 	var selectedFile = callGraphTable.getElementsByClassName('selected')[0];
 	if (selectedFile.length == 0) {
@@ -192,7 +220,7 @@ function resetCallGraphSelector() {
 }
 function linkDiagram() {
 	// Get current selector stage
-	callGraphSelector = document.getElementById('callGraphSelector'); 
+	callGraphSelector = document.getElementById('callGraphSelector');
 	refObjectSelector = document.getElementById('referenceSelector');
 	var sourceCallGraphId = callGraphTable.getElementsByClassName('selected')[0].id;
 	var destinationCallGraphId = callGraphSelector.options[callGraphSelector.selectedIndex].id;
@@ -208,7 +236,7 @@ function linkDiagram() {
 					},
 					function(returnedData) {
 						if (returnedData.trim() == "INSERT") {
-							var message =  "Linked with "
+							var message = "Linked with "
 									+ callGraphSelector.options[callGraphSelector.selectedIndex].value;
 							alert(message);
 						} else if (returnedData.trim() == "UPDATE") {
