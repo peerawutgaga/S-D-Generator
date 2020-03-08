@@ -214,7 +214,7 @@ class ClassDiagramService
     {
         $conn = Database::getConnection();
         $result = false;
-        $sql = $conn->prepare("UPDATE `classdiagram.diagram` SET diagramId = :diagramId WHERE diagramName = :diagramName");
+        $sql = $conn->prepare("UPDATE `classdiagram.diagram` SET diagramName = :diagramName WHERE diagramId = :diagramId");
         $sql->bindParam(":diagramId", $diagramId);
         $sql->bindParam(":diagramName", $diagramName);
         $result = self::executeUpdateStatement($conn, $sql);

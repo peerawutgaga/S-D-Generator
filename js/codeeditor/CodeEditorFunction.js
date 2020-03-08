@@ -22,10 +22,6 @@ function rename(){
         alert("Cannot change file extension");
         return;
     }
-    if(newFilename == currentFilename){
-        alert("Nothing changed");
-        return;
-    }
     if(currentFilename == ""){
         alert("Filename cannot be empty");
         return;

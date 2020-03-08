@@ -26,7 +26,7 @@
         </table>
         <!-- File Management Panel -->
         <div id = "fileMgr">
-                <button id = "copyBtn" onclick = "duplicateFile()"><img src = "Image/copy.png">Duplicate</button>
+               <!-- <button id = "copyBtn" onclick = "duplicateFile()"><img src = "Image/copy.png">Duplicate</button>-->
                 <button id = "deleteBtn" onclick = "deleteFile()"><img src = "Image/delete.png">Delete</button>
                 <button id = "renameBtn" onclick = "showRenameDialog()"><img src = "Image/rename.png">Rename</button>
                 <button id = "editBtn" onclick = "editFile()"><img src = "Image/edit.png">Edit</button>

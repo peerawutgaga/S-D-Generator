@@ -93,10 +93,18 @@ class SourceCodeService
         $sql->bindParam(":filename", $filename);
         return self::executeSelectStatement($conn, $sql);
     }
-
+    public static function deleteFromSourceCodeByFileId($fileId){
+        $conn = Database::getConnection();
+        $result = false;
+        $sql = $conn->prepare("DELETE FROM `code.sourcecodefile` WHERE fileId = :fileId");
+        $sql->bindParam(":fileId", $fileId);
+        $result = self::executeDeleteStatement($conn, $sql);
+        return $result;
+    }
     public static function updateSourceCodeFileSetFilePayloadByFileId($filePayload, $fileId)
     {
         $conn = Database::getConnection();
+        $result = false;
         $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filePayload = :filePayload WHERE fileId = :fileId");
         $sql->bindParam(":filePayload", $filePayload);
         $sql->bindParam(":fileId", $fileId);
@@ -107,6 +115,7 @@ class SourceCodeService
     public static function updateSourceCodeFileSetFilenameByFileId($filename, $fileId)
     {
         $conn = Database::getConnection();
+        $result = false;
         $sql = $conn->prepare("UPDATE `code.sourcecodefile` SET filename = :filename WHERE fileId = :fileId");
         $sql->bindParam(":filename", $filename);
         $sql->bindParam(":fileId", $fileId);
