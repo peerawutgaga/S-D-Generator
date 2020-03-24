@@ -54,7 +54,7 @@ class StubGenerator
 
     private static function declareClassHeader($class)
     {
-        self::$content .= "class " . $class["className"] . "{\r\n";
+        self::$content .= "class " . $class["className"] . "Stub{\r\n";
     }
 
     private static function generateMethods($methods)
