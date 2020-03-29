@@ -241,7 +241,7 @@ class DriverGenerator
     {
         self::$content .= "package driver.actor;\r\n";//Declare package header
         self::declareImports($toClass);
-        self::$content .= "class Actor{\r\n";//Declare class header
+        self::$content .= "class ActorDriver{\r\n";//Declare class header
         self::generateMethods($toClass, $methods);
         self::closeClass();
     }

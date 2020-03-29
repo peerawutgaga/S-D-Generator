@@ -87,7 +87,7 @@ class JavaGenerator
         }
         $class = ClassDiagramService::selectClassByDiagramIdAndObjectBase(self::$diagramId, $baseIdentifier);
         if (count($class) < 1) {
-            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $baseIdentifier);
+            self::handleError(Constant::NO_CLASS_FOUND_ERROR_MSG, $message);
             return false;
         } else if (count($class) > 1) {
             self::handleError(Constant::CLASS_NOT_UNIQUE_ERROR_MSG, $class);
@@ -214,7 +214,7 @@ class JavaGenerator
             self::handleError(Constant::NO_REFERENCE_DIAGRAM_ERROR_MSG, $message);
             return false;
         }
-        $rootObjects = self::getRootObjectInCallGraph($destinationGraphId);
+        $rootObjects = self::getRootObjectInCallGraph($destinationGraphId);       
         if (count($rootObjects) == 0) {
             self::handleError(Constant::REF_DIAGRAM_MISFORMAT_ERROR_MSG, $destinationGraphId);
             return false;

@@ -12,6 +12,6 @@ require_once "$root/php/pages/DiagramSelectionPage.php";
 //SourceCodeManagerPage::getFileList();
 //SDProcessor::readSequenceDiagramFile("Process_Deposit.xml", "D:\\Development\\S-D-Generator\\SequenceDiagrams\\1580916218_Process_Deposit.xml");
 //CDProcessor::readClassDiagramFile("Bank.xml", "D:\\Development\\S-D-Generator\\ClassDiagrams\\1580917409_Banking_Class_Diagram.xml");
-SourceCodeGenerator::createCode(6, "342", "JAVA");
+SourceCodeGenerator::createCode(12, "3", "JAVA");
 //Script::printObject(ClassDiagramService::selectClassByDiagramIdAndObjectBase(6,"TransactionController"));
 ?>
