@@ -92,7 +92,7 @@ class DriverGenerator
 
     private static function declareClassHeader($class)
     {
-        self::$content .= "class " . $class["className"] . "Driver{\r\n";
+        self::$content .= "public class " . $class["className"] . "Driver{\r\n";
     }
 
     private static function generateMethods($toClass, $methods)
