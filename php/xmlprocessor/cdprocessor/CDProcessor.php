@@ -84,7 +84,11 @@ class CDProcessor
         }
         if(isset($class->FromSimpleRelationships->Realization)){
             $realizations = $class->FromSimpleRelationships->Realization;
-            self::identifyChildClass($classIdStr,$realizations);
+            self::identifyChildClassFromRealization($classIdStr,$realizations);
+        }
+       if(isset($class->FromSimpleRelationships->Generalization)){
+            $generalizations = $class->FromSimpleRelationships->Generalization;
+            self::identifyChildClassFromGeneralization($classIdStr,$generalizations);
         }
     }
 
@@ -138,10 +142,22 @@ class CDProcessor
             $seqIdx++;
         }
     }
-    private static function identifyChildClass($parentId,$realizations){       
+    private static function identifyChildClassFromRealization($parentId,$realizations){       
         foreach($realizations as $realization){
             $realizationId = $realization["Idref"];            
             $childClasses = self::$xml->xpath("//Class[ToSimpleRelationships/Realization[@Idref='$realizationId']]");
+            if(isset($childClasses)){
+                foreach ($childClasses as $childClass){
+                    $childId = $childClass["Id"];
+                    array_push(self::$inheritanceList,array("parent"=>(string)$parentId,"child"=>(string)$childId));
+                }
+            }
+        }
+    }
+    private static function identifyChildClassFromGeneralization($parentId,$generalizations){
+        foreach($generalizations as $generalization){
+            $generalizationId = $generalization["Idref"];
+            $childClasses = self::$xml->xpath("//Class[ToSimpleRelationships/Generalization[@Idref='$generalizationId']]");
             if(isset($childClasses)){
                 foreach ($childClasses as $childClass){
                     $childId = $childClass["Id"];

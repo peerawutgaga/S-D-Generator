@@ -15,7 +15,7 @@ class JavaGenerator
     private static $diagramId;
 
     private static $output;
-    
+
     private static $stubObjectList;
 
     public static function generateStubs($diagramId, $stubList)
@@ -32,11 +32,13 @@ class JavaGenerator
         self::$output["isSuccess"] = "true";
         return self::$output;
     }
-    private static function convertStubListToObjectList($stubList){
+
+    private static function convertStubListToObjectList($stubList)
+    {
         self::$stubObjectList = array();
-        foreach($stubList as $stub){
+        foreach ($stubList as $stub) {
             $objectNode = CallGraphService::selectFromObjectNodeByObjectID($stub["fromObjectId"])[0];
-            array_push(self::$stubObjectList,$objectNode["baseIdentifier"]);
+            array_push(self::$stubObjectList, $objectNode["baseIdentifier"]);
         }
     }
 
@@ -48,9 +50,9 @@ class JavaGenerator
         if ($classMethodList == false) {
             return false;
         }
-       
+
         foreach ($classMethodList as $classMethod) {
-            if(self::checkIfStubIsClassUnderTest($classMethod["class"]["className"])){
+            if (self::checkIfStubIsClassUnderTest($classMethod["class"]["className"])) {
                 continue;
             }
             $filename = $classMethod["class"]["className"] . "Stub.java";
@@ -70,14 +72,17 @@ class JavaGenerator
         }
         return true;
     }
-    private static function checkIfStubIsClassUnderTest($class){
-        foreach(self::$stubObjectList as $stubObject){
-            if($stubObject == $class){
+
+    private static function checkIfStubIsClassUnderTest($class)
+    {
+        foreach (self::$stubObjectList as $stubObject) {
+            if ($stubObject == $class) {
                 return true;
             }
         }
         return false;
     }
+
     private static function getClassesAndMethod($baseIdentifier, $message)
     {
         $classMethodList = array();
@@ -103,21 +108,37 @@ class JavaGenerator
                 "class" => $class,
                 "methods" => $methods
             ));
-        } else {
-            $childClassIdList = ClassDiagramService::selectChildIdFromInheritanceBySuperClassId($class["classId"]);
-            foreach ($childClassIdList as $childClassId) {
-                if ($messageName == "create") {
-                    $messageName = $class["className"];
-                }
-                $childClass = ClassDiagramService::selectFromClassByClassId($childClassId["childClassId"]);
-                $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($childClassId["childClassId"], $messageName);
-                array_push($classMethodList, array(
-                    "class" => $childClass[0],
-                    "methods" => $methods
-                ));
-            }
+        } else {          
+           $concreteClasses = self::getConcreteChildClasses($class["classId"], $messageName, $classMethodList);
+           $classMethodList = self::concatArray($classMethodList, $concreteClasses);
+           Script::printObject($classMethodList);
         }
         return $classMethodList;
+    }
+
+    private static function getConcreteChildClasses($parentClassId, $messageName, $classMethodList)
+    {
+        $childClassIdList = ClassDiagramService::selectChildIdFromInheritanceBySuperClassId($parentClassId);
+        foreach ($childClassIdList as $childClassId) {
+            $childClass = ClassDiagramService::selectFromClassByClassId($childClassId["childClassId"])[0];
+            if ($childClass["InstanceType"] == Constant::CONCRETE_INSTANCE) {
+                $methods = ClassDiagramService::selectMethodByClassIdAndMessageName($childClassId["childClassId"], $messageName);
+                array_push($classMethodList, array(
+                    "class" => $childClass,
+                    "methods" => $methods
+                ));
+            }else{
+                $concreteClasses = self::getConcreteChildClasses($childClassId["childClassId"], $messageName, $classMethodList);
+                $classMethodList = self::concatArray($classMethodList, $concreteClasses);
+            }
+        }         
+        return $classMethodList;
+    }
+    private static function concatArray($sourceArray,$newArray){
+        foreach($newArray as $item){
+            array_push($sourceArray,$item);
+        }
+        return $sourceArray;
     }
 
     public static function generateDrivers($diagramId, $driverList)
@@ -191,7 +212,7 @@ class JavaGenerator
                     return false;
                 }
             } else {
-                $fileId = java\DriverGenerator::addToExistFile($message["messageId"], $file[0],  $toClassMethod["class"], $toClassMethod["methods"]);
+                $fileId = java\DriverGenerator::addToExistFile($message["messageId"], $file[0], $toClassMethod["class"], $toClassMethod["methods"]);
                 self::$output[$fileId] = $filename;
             }
         }
@@ -214,7 +235,7 @@ class JavaGenerator
             self::handleError(Constant::NO_REFERENCE_DIAGRAM_ERROR_MSG, $message);
             return false;
         }
-        $rootObjects = self::getRootObjectInCallGraph($destinationGraphId);       
+        $rootObjects = self::getRootObjectInCallGraph($destinationGraphId);
         if (count($rootObjects) == 0) {
             self::handleError(Constant::REF_DIAGRAM_MISFORMAT_ERROR_MSG, $destinationGraphId);
             return false;
