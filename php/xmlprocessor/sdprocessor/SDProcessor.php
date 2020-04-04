@@ -76,8 +76,6 @@ class SDProcessor
                 $gateModelId = $diagram->xpath("./Shapes/Gate[@Id='$gateIdStr']")[0]["Model"];
                 self::insertObjectNode($gateModelId, $objectName, Constant::REF_DIAGRAM_TYPE);
                 self::$isReferred = true;
-            } else if($objectNode->getName()=="Gate"){
-                self::insertObjectNode($modelId, $objectName, Constant::GATE_TYPE);
             }
         }
     }
@@ -102,14 +100,11 @@ class SDProcessor
             $toObjectId = self::$objectList[(string) $message["EndRelationshipToMetaModelElement"][0]];
             $messageType = $message["Type"];
             $returnMessageIdStr = $message["ReturnMessage"];
-            if ($fromObjectId == null || $toObjectId == null) {
-                Script::alert("Invalid XML file");
-                $eventPayload = print_r($fromObjectId, true) . "\n" . print_r($toObjectId, true);
-                Logger::logInternalError("SDProcessor", $eventPayload);
-                CallGraphService::deleteFromGraphByCallGraphId(self::$graphID);
-                return;
+            if ($fromObjectId == null || $toObjectId == null){
+                Logger::logWarning("SDProcessor", "Invalid XML. Connector=".$messageIdStr);
+                continue;
             }
-            if ($messageType == "Message" || $messageType == "Recursive Message") {
+            if ($messageType == "Message" || $messageType == "Recursive Message"|| $messageType == "Self Message") {
                 $actionType = $message->ActionType->children()[0]["Name"];
                 if ($actionType == "Call") {
                     $operationId = $message->ActionType->ActionTypeCall["Operation"];

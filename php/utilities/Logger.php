@@ -23,7 +23,9 @@ class Logger
             unset($conn);
         }
     }
-
+    public static function logWarning($eventProducer, $eventPayload){
+        self::insertIntoEvent("WARNING", Constant::WARNING_CODE, $eventProducer, $eventPayload);
+    }
     public static function logDatabaseError($eventProducer, $eventPayload)
     {
         self::insertIntoEvent("DATABASE_ERROR", Constant::ERROR_CODE, $eventProducer, $eventPayload);

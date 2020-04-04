@@ -5,6 +5,7 @@ class Constant
 
     // Log level
     public const ERROR_CODE = "ERROR";
+    public const WARNING_CODE = "WARNING";
 
     // Message Type
     public const CALLING_MESSAGE_TYPE = "CALLING";
