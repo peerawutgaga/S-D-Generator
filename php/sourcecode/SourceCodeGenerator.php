@@ -21,10 +21,13 @@ class SourceCodeGenerator
 
     private static $callGraphId;
 
+    private static $objectList;
+
     public static function createCode($callGraphId, $diagramId, $objectList, $sourceLang)
     {
         self::$diagramId = $diagramId;
         self::$callGraphId = $callGraphId;
+        self::$objectList = array();
         $stubList = self::identifyStub($objectList);
         $driverList = self::identifyDriver($objectList);
         $output = array();
@@ -45,17 +48,35 @@ class SourceCodeGenerator
     private static function identifyStub($objectListStr)
     {
         $objectList = explode(",", $objectListStr);
+        self::$objectList = Common::concatArray(self::$objectList, $objectList);
         $stubList = array();
         foreach ($objectList as $objectId) {
             $callingMessageList = self::getCallingMessageList($objectId);
             foreach ($callingMessageList as $sentMessage) {
                 // Check if message is not self calling message
-                if ($objectId != $sentMessage["toObjectId"] && ! in_array($sentMessage["toObjectId"], $objectList)) {
+                if ($objectId != $sentMessage["toObjectId"] && ! in_array($sentMessage["toObjectId"], self::$objectList)) {
                     array_push($stubList, $sentMessage);
                 }
             }
         }
         return $stubList;
+    }
+
+    private static function identifyDriver($objectListStr)
+    {
+        $objectList = explode(",", $objectListStr);
+        self::$objectList = Common::concatArray(self::$objectList, $objectList);
+        $driverList = array();        
+        foreach ($objectList as $objectId) {
+            $calledMessageList = self::getCalledMessageList($objectId);
+            foreach ($calledMessageList as $sentMessage) {
+                // Check if message is not self calling message
+                if ($objectId != $sentMessage["fromObjectId"] && ! in_array($sentMessage["fromObjectId"], self::$objectList)) {
+                    array_push($driverList, $sentMessage);
+                }
+            }
+        }
+        return $driverList;
     }
 
     private static function getCallingMessageList($objectId)
@@ -66,6 +87,7 @@ class SourceCodeGenerator
         if (count($otherObjects) > 0) {
             $otherMessage = array();
             foreach ($otherObjects as $otherObject) {
+                array_push(self::$objectList, $otherObject["objectId"]);
                 $otherCallingMessage = CallGraphService::selectFromMessageByFromObjectIDAndMessageType($otherObject["objectId"], Constant::CALLING_MESSAGE_TYPE);
                 $otherMessage = Common::concatArray($otherMessage, $otherCallingMessage);
                 $otherCreateMessage = CallGraphService::selectFromMessageByFromObjectIDAndMessageType($otherObject["objectId"], Constant::CREATE_MESSAGE_TYPE);
@@ -84,6 +106,7 @@ class SourceCodeGenerator
         }
         return $allMessageList;
     }
+
     private static function getCalledMessageList($objectId)
     {
         $callingMessageList = CallGraphService::selectFromMessageByToObjectIDAndMessageType($objectId, Constant::CALLING_MESSAGE_TYPE);
@@ -92,6 +115,7 @@ class SourceCodeGenerator
         if (count($otherObjects) > 0) {
             $otherMessage = array();
             foreach ($otherObjects as $otherObject) {
+                array_push(self::$objectList, $otherObject["objectId"]);
                 $otherCallingMessage = CallGraphService::selectFromMessageByToObjectIDAndMessageType($otherObject["objectId"], Constant::CALLING_MESSAGE_TYPE);
                 $otherMessage = Common::concatArray($otherMessage, $otherCallingMessage);
                 $otherCreateMessage = CallGraphService::selectFromMessageByToObjectIDAndMessageType($otherObject["objectId"], Constant::CREATE_MESSAGE_TYPE);
@@ -116,22 +140,6 @@ class SourceCodeGenerator
         $baseIdentifier = CallGraphService::selectFromObjectNodeByObjectID($objectId)[0]["baseIdentifier"];
         $otherObject = CallGraphService::selectOtherObjectNodeInCallGraphByBaseIdentifier(self::$callGraphId, $objectId, $baseIdentifier);
         return $otherObject;
-    }
-
-    private static function identifyDriver($objectListStr)
-    {
-        $objectList = explode(",", $objectListStr);
-        $driverList = array();
-        foreach ($objectList as $objectId) {
-            $calledMessageList = self::getCalledMessageList($objectId);
-            foreach ($calledMessageList as $sentMessage) {
-                // Check if message is not self calling message
-                if ($objectId != $sentMessage["fromObjectId"] && ! in_array($sentMessage["fromObjectId"], $objectList)) {
-                    array_push($driverList, $sentMessage);
-                }
-            }
-        }
-        return $driverList;
     }
 }
 ?>

@@ -14,7 +14,7 @@ require_once $root . '/php/database/ClassDiagramService.php';
 //SourceCodeManagerPage::getFileList();
 //SDProcessor::readSequenceDiagramFile("Process_Deposit.xml", "D:\\Development\\S-D-Generator\\SequenceDiagrams\\1580916218_Process_Deposit.xml");
 //CDProcessor::readClassDiagramFile("Bank.xml", "D:\\Development\\S-D-Generator\\ClassDiagrams\\1580917409_Banking_Class_Diagram.xml");
-//SourceCodeGenerator::createCode(23, "105", "JAVA");
-Script::printObject(CallGraphService::selectOtherObjectNodeInCallGraphByBaseIdentifier('25', '127', 'C1'));
+SourceCodeGenerator::createCode(25,24, "128", "JAVA");
+//Script::printObject(CallGraphService::selectOtherObjectNodeInCallGraphByBaseIdentifier('25', '127', 'C1'));
 //Script::printObject(ClassDiagramService::selectClassByDiagramIdAndObjectBase(6,"TransactionController"));
 ?>

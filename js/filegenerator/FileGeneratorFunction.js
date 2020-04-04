@@ -67,7 +67,7 @@ function checkClassesRelation(graphId,classList){
 			if(!confirm(result[0]["errorMessage"])){
 		        return;
 		    }
-			generateSourceCode(diagramId,classList,"JAVA");
+			generateSourceCode(graphId,diagramId,classList,"JAVA");
 		}else if(result[0]["isSuccess"] == "error"){
 			alert(result[0]["errorMessage"]);
 		}
