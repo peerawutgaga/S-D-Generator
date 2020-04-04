@@ -111,7 +111,6 @@ class JavaGenerator
         } else {          
            $concreteClasses = self::getConcreteChildClasses($class["classId"], $messageName, $classMethodList);
            $classMethodList = self::concatArray($classMethodList, $concreteClasses);
-           Script::printObject($classMethodList);
         }
         return $classMethodList;
     }
