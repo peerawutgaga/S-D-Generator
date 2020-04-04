@@ -193,6 +193,16 @@ class CallGraphService
         $result = self::executeSelectStatement($conn, $sql);
         return $result;
     }
+    public static function selectOtherObjectNodeInCallGraphByBaseIdentifier($callGraphId,$objectId,$baseIdentifier)
+    {
+        $conn = Database::getConnection();
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND objectId != :objectId AND baseIdentifier = :baseIdentifier");
+        $sql->bindParam(':callGraphID', $callGraphId);
+        $sql->bindParam(':objectId', $objectId);
+        $sql->bindParam(':baseIdentifier', $baseIdentifier);
+        $result = self::executeSelectStatement($conn, $sql);
+        return $result;
+    }
 
     public static function selectFromMessageByFromObjectIDAndMessageType($fromObjectId, $messageType)
     {

@@ -62,7 +62,7 @@ function checkClassesRelation(graphId,classList){
 	}, function(returnedData){
 		var result = JSON.parse(returnedData);
 		if(result[0]["isSuccess"] == "success"){
-			generateSourceCode(diagramId,classList,"JAVA");
+			generateSourceCode(graphId,diagramId,classList,"JAVA");
 		}else if(result[0]["isSuccess"] == "warning"){
 			if(!confirm(result[0]["errorMessage"])){
 		        return;
@@ -73,9 +73,10 @@ function checkClassesRelation(graphId,classList){
 		}
 	});	
 }
-function generateSourceCode(diagramId,classList,sourceLang){
+function generateSourceCode(graphId,diagramId,classList,sourceLang){
 	
-	$.post('php/sourcecode/SourceCodeGenerator.php', { 
+	$.post('php/sourcecode/SourceCodeGenerator.php', {
+		'callGraphId':graphId,
 		'diagramId' : diagramId,
 		'objectList':classList,
 		'sourceLang':sourceLang

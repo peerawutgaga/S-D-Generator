@@ -7,11 +7,14 @@ require_once "$root/php/pages/SourceCodeManagerPage.php";
 require_once $root."/php/utilities/Script.php";
 require_once $root . '/php/sourcecode/SourceCodeGenerator.php';
 require_once "$root/php/pages/DiagramSelectionPage.php";
+require_once $root . '/php/database/CallGraphService.php';
+require_once $root . '/php/database/ClassDiagramService.php';
 
 //DiagramSelectionPage::checkClassesRelation(135, "97,99");
 //SourceCodeManagerPage::getFileList();
 //SDProcessor::readSequenceDiagramFile("Process_Deposit.xml", "D:\\Development\\S-D-Generator\\SequenceDiagrams\\1580916218_Process_Deposit.xml");
 //CDProcessor::readClassDiagramFile("Bank.xml", "D:\\Development\\S-D-Generator\\ClassDiagrams\\1580917409_Banking_Class_Diagram.xml");
-SourceCodeGenerator::createCode(23, "105", "JAVA");
+//SourceCodeGenerator::createCode(23, "105", "JAVA");
+Script::printObject(CallGraphService::selectOtherObjectNodeInCallGraphByBaseIdentifier('25', '127', 'C1'));
 //Script::printObject(ClassDiagramService::selectClassByDiagramIdAndObjectBase(6,"TransactionController"));
 ?>

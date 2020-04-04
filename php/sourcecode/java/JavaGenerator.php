@@ -110,7 +110,7 @@ class JavaGenerator
             ));
         } else {          
            $concreteClasses = self::getConcreteChildClasses($class["classId"], $messageName, $classMethodList);
-           $classMethodList = self::concatArray($classMethodList, $concreteClasses);
+           $classMethodList = Common::concatArray($classMethodList, $concreteClasses);
         }
         return $classMethodList;
     }
@@ -128,17 +128,12 @@ class JavaGenerator
                 ));
             }else{
                 $concreteClasses = self::getConcreteChildClasses($childClassId["childClassId"], $messageName, $classMethodList);
-                $classMethodList = self::concatArray($classMethodList, $concreteClasses);
+                $classMethodList = Common::concatArray($classMethodList, $concreteClasses);
             }
         }         
         return $classMethodList;
     }
-    private static function concatArray($sourceArray,$newArray){
-        foreach($newArray as $item){
-            array_push($sourceArray,$item);
-        }
-        return $sourceArray;
-    }
+    
 
     public static function generateDrivers($diagramId, $driverList)
     {

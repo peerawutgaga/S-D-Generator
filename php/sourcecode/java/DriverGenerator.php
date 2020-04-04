@@ -4,6 +4,7 @@ namespace php\sourcecode\java;
 use ClassDiagramService;
 use Constant;
 use DataGenerator;
+use Common;
 // use Script;
 use SourceCodeService;
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
@@ -12,6 +13,7 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
+require_once $root . "/php/utilities/Common.php";
 require_once $root . "/php/sourcecode/common/GuardConditionProcessor.php";
 
 class DriverGenerator
@@ -198,7 +200,7 @@ class DriverGenerator
         if (count($params) == 0) {
             return "";
         }
-        $params = DataGenerator::sortBySequenceIndex($params);
+        $params = Common::sortBySequenceIndex($params);
         $guardCondition = \CallGraphService::selectFromGuardConditionByMessageId(self::$messageId)[0];
         $inputValues = self::generateInputParamValue($params, $guardCondition["statement"]);
         return $inputValues;
@@ -223,7 +225,7 @@ class DriverGenerator
             }
             $paramListStr .= $inputValue . ",";
         }
-        $paramListStr = \DataGenerator::removeLastComma($paramListStr);
+        $paramListStr = \Common::removeLastComma($paramListStr);
         return $paramListStr;
     }
 

@@ -4,6 +4,7 @@ namespace php\sourcecode\java;
 use ClassDiagramService;
 use Constant;
 use DataGenerator;
+use Common;
 //use Script;
 use SourceCodeService;
 $root = realpath($_SERVER["DOCUMENT_ROOT"]);
@@ -12,6 +13,7 @@ require_once $root . "/php/database/ClassDiagramService.php";
 require_once $root . "/php/database/SourceCodeService.php";
 require_once $root . "/php/utilities/Constant.php";
 require_once $root . "/php/utilities/DataGenerator.php";
+require_once $root . "/php/utilities/Common.php";
 
 class StubGenerator
 {
@@ -83,7 +85,7 @@ class StubGenerator
         $visibility = $method["visibility"];
         $methodName = $method["methodName"];
         $params = ClassDiagramService::selectParamByMethodId($methodId);
-        $params = DataGenerator::sortBySequenceIndex($params);
+        $params = Common::sortBySequenceIndex($params);
         $paramList = self::generateParamList($params);
         self::$content .= "\t" . $visibility . " " . $methodName . "(" . $paramList . "){\r\n";
         if (count($params) > 0) {
@@ -101,7 +103,7 @@ class StubGenerator
         $methodName = $method["methodName"];
         $returnType = $method["returnType"];
         $params = ClassDiagramService::selectParamByMethodId($methodId);
-        $params = DataGenerator::sortBySequenceIndex($params);
+        $params = Common::sortBySequenceIndex($params);
         $paramList = self::generateParamList($params);
         self::$content .= "\t" . $visibility . " ";
         if ($instanceType == Constant::STATIC_INSTANCE) {
