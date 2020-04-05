@@ -109,6 +109,9 @@ class StubGenerator
         if ($instanceType == Constant::STATIC_INSTANCE) {
             self::$content .= strtolower($instanceType) . " ";
         }
+        if ($returnType == \Constant::STRING_TYPE) {
+            $returnType = "String"; // Upper first character case to match Java string declaration
+        }
         self::$content .= $returnType . $typeModifier . " " . $methodName . "(" . $paramList . "){\r\n";
         if (count($params) > 0) {
             self::generatePrintLine($params);
