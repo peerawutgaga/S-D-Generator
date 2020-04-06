@@ -16,7 +16,7 @@ class DataGenerator
 
     public static function getRandomData($returnType)
     {
-        if ($returnType == Constant::STRING_TYPE) {
+        if ($returnType == Constant::STRING_TYPE||$returnType == Constant::STRING_TYPE_UPPER) {
             return self::getRandomString();
         } else if ($returnType == Constant::INT_TYPE) {
             return self::getRandomInt();

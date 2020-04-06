@@ -78,6 +78,7 @@ class Constant
     public const CHAR_TYPE = "char";
 
     public const STRING_TYPE = "string";
+    public const STRING_TYPE_UPPER = "String";
 
     public const VOID_TYPE = "void";
 
