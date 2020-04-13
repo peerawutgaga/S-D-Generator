@@ -62,3 +62,7 @@ function getObjectList(callGraphId) {
 		});
 	});
 }
+function backToClassSelection(){
+	classSelectionModal.style.display = "block";
+	fileListModal.style.display = "none";
+}
