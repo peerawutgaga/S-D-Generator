@@ -58,7 +58,7 @@ function getObjectList(callGraphId) {
 			var row = classListTable.insertRow(index);
 			row.id = objectNode["objectId"];
 			var cell = row.insertCell(0);
-			cell.innerHTML = objectNode["objectName"]+":"+objectNode["baseIdentifier"];
+			cell.innerHTML = objectNode["baseIdentifier"];
 		});
 	});
 }

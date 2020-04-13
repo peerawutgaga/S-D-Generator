@@ -168,10 +168,10 @@ class CallGraphService
         return $result;
     }
 
-    public static function selectFromObjectNodeByCallGraphIdAndIsNotRef($callGraphId)
+    public static function selectFromObjectNodeByCallGraphIdOnlyClassBased($callGraphId)
     {
         $conn = Database::getConnection();
-        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND baseIdentifier!='REF'");
+        $sql = $conn->prepare("SELECT * FROM `callgraph.objectnode` WHERE callGraphID = :callGraphID AND baseIdentifier!='REF' AND baseIdentifier!='ACTOR'");
         $sql->bindParam(':callGraphID', $callGraphId);
         $result = self::executeSelectStatement($conn, $sql);
         return $result;

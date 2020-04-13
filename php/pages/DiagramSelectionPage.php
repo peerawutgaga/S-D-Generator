@@ -34,8 +34,16 @@ class DiagramSelectionPage
 
     public static function getObjectListByCallGraphId($callGraphId)
     {
-        $objectList = CallGraphService::selectFromObjectNodeByCallGraphIdAndIsNotRef($callGraphId);
-        echo json_encode($objectList);
+        $objectList = CallGraphService::selectFromObjectNodeByCallGraphIdOnlyClassBased($callGraphId);
+        $uniqueList = array();
+        $baseIdentifiers = array();
+        foreach($objectList as $object){
+            if(!in_array($object["baseIdentifier"], $baseIdentifiers)){
+                array_push($baseIdentifiers,$object["baseIdentifier"]);
+                array_push($uniqueList,$object);
+            }
+        }
+        echo json_encode($uniqueList);
     }
 
     public static function checkReferenceDiagram($callGraphId)
