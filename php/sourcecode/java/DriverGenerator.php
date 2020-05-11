@@ -47,6 +47,7 @@ class DriverGenerator
         self::$content = $file["filePayload"];
         self::$content = rtrim(self::$content, "}");
         self::$messageId = $messageId;
+        self::declareImports($toClass);
         self::generateMethods($toClass, $methods);
         self::closeClass();
         SourceCodeService::updateSourceCodeFileSetFilePayloadByFileId(self::$content, $file["fileId"]);
@@ -76,8 +77,10 @@ class DriverGenerator
     {
         $namespace = $class["namespace"];
         $className = $class["className"];
-        $importStatement = "import " . $namespace . "." . $className . ";\r\n/*--- AUTO IMPORT END HERE ---*/";
-        self::$content = str_replace("/*--- AUTO IMPORT END HERE ---*/", $importStatement, self::$content);
+        $importStatement = "import " . $namespace . "." . $className ;
+        if(strpos(self::$content, $importStatement) == false){
+            self::$content = str_replace("/*--- AUTO IMPORT END HERE ---*/", $importStatement. ";\r\n/*--- AUTO IMPORT END HERE ---*/", self::$content);         
+        }
     }
 
     private static function getExistedMethodList($methods, $className)
