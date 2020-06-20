@@ -111,19 +111,21 @@
 					<h4>Random decimal with bound</h4>
 					<p>Leave the bounds blanked for unspecific bound</p>
 					Min: <input type="text" class="randomCriteriaTextBox"
-						name="minDecimal" id="minDecimalTextArea"> Max: <input type="text"
+						name="minDecimal" id="minDecimalTextArea"><br/> Max: <input type="text"
 						class="randomCriteriaTextBox" name="maxDecimal"
-						id="maxDecimalTextArea">
+						id="maxDecimalTextArea"><br/>Digit: <input type="text"
+						class="randomCriteriaTextBox" name="randDecimalDigits"
+						id="randDecimalDigitsTextArea"><br/>
 					<button class="modalButton" onclick="randomDecimalWithBound()">Random</button>
 				</div>
-				<div align="center">
+				<!-- <div align="center">
 					<h4>Random decimal with specific length</h4>
 					Fraction digit(s): <input type="text" class="randomCriteriaTextBox"
 						name="fractalLength" id="fractalLengthTextArea"> Decimal digit(s): <input
 						type="text" class="randomCriteriaTextBox" name="decimalLength"
 						id="decimalLengthTextArea"><br>
 					<button class="modalButton" onclick="randomDecimalWithLength()">Random</button>
-				</div>
+				</div>-->
 			</div>
 		</div>
 	</article>

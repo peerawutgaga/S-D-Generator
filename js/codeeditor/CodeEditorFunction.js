@@ -149,6 +149,7 @@ function randomIntegerWithLength(){
 function randomDecimalWithBound(){
 	var minBound = document.getElementById("minDecimalTextArea").value;
 	var maxBound = document.getElementById("maxDecimalTextArea").value;
+	var digits = document.getElementById("randDecimalDigitsTextArea").value;
 	if(isNaN(minBound)){
 		alert("Min value is not a number.");
 		return;
@@ -157,16 +158,20 @@ function randomDecimalWithBound(){
 		alert("Max value is not a number.");
 		return;
 	}
+	if(isNaN(digits)){
+		alert("Fraction digit is not a number.");
+		return;
+	}
 	if(minBound==""){
 		minBound = -2000000000;
 	}
 	if(maxBound==""){
 		maxBound = 2000000000;
 	}
-	var decimal = randomDecimal(minBound,maxBound);
+	var decimal = randomDecimal(minBound,maxBound,digits);
 	insertCharacterToCodeEditor(decimal);
 }
-function randomDecimalWithLength(){
+/*function randomDecimalWithLength(){
 	var fractalLength = document.getElementById("fractalLengthTextArea").value;
 	var decimalLength = document.getElementById("decimalLengthTextArea").value;
 	if(isNaN(fractalLength)||isNaN(decimalLength)){
@@ -178,4 +183,4 @@ function randomDecimalWithLength(){
 	}
 	var decimal = randomDecimalByDigit(Math.floor(fractalLength),Math.floor(decimalLength));
 	insertCharacterToCodeEditor(decimal);
-}
+}*/

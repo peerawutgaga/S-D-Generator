@@ -3,10 +3,14 @@ function randomInt(from, to) {
 	to=Number(to);
 	return Math.floor(Math.random() * (to - from + 1)) + from;
 }
-function randomDecimal(from, to) {
+function randomDecimal(from, to,digits) {
 	from = Number(from);
-	to=Number(to);
-	return (Math.random() * (to - from)) + from;
+	to = Number(to);
+	var data = (Math.random() * (to - from)) + from;
+	if(digits != ""){
+		data = data.toFixed(digits);
+	}
+	return data;
 }
 function randomChar() {
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
