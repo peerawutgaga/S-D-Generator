@@ -70,6 +70,8 @@ class DriverGenerator
     private static function createNewImportBlock()
     {
         self::$content .= "/*--- AUTO IMPORT START HERE ---*/\r\n";
+        self::$content .= "import org.junit.Test;\r\n";
+        self::$content .= "import static org.junit.Assert.assertEquals;;\r\n";
         self::$content .= "/*--- AUTO IMPORT END HERE ---*/\r\n";
     }
 

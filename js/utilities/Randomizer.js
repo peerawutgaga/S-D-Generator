@@ -1,8 +1,12 @@
 function randomInt(from, to) {
+	from = Number(from);
+	to=Number(to);
 	return Math.floor(Math.random() * (to - from + 1)) + from;
 }
 function randomDecimal(from, to) {
-	return Math.random() * (to - from) + from;
+	from = Number(from);
+	to=Number(to);
+	return (Math.random() * (to - from)) + from;
 }
 function randomChar() {
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
