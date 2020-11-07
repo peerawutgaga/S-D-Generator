@@ -42,7 +42,7 @@ window.onload = function() {
 							cell = row.insertCell(5);
 							cell.innerHTML = fileList[i]["lastUpdateTimeStamp"];
 						}
-						table.innerHTML += '<thead><tr id="fileListTableHeader"><th>Item</th><th>File Name</th><th>File Type</th><th>Language</th><th>Create Date</th><th>Last Update Timestamp</th></tr></thead>';
+						table.innerHTML += '<thead><tr id="fileListTableHeader"><th>Item</th><th>File Name</th><th>Language</th><th>File Type</th><th>Create Date</th><th>Last Update Timestamp</th></tr></thead>';
 					});
 }
 window.onclick = function(event) {
